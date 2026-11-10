@@ -3,23 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Sky Walk Tour & Travels - Premium Quotation & Invoice System</title>
+  <title>Sky Walk Tour & Travels - Premium CRM System</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary-blue: #0F172A;
+      --primary-dark: #0F172A;
       --accent-blue: #2563EB;
       --accent-hover: #1D4ED8;
-      --gradient-start: #0F172A;
-      --gradient-end: #1E293B;
-      --light-bg: #F8FAFC;
-      --card-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+      --gradient-bg: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+      --card-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.08);
+      --glass-bg: rgba(255, 255, 255, 0.95);
     }
     
     body {
-      background: linear-gradient(135deg, #F1F5F9 0%, #E2E8F0 100%);
+      background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%);
       font-family: 'Plus Jakarta Sans', sans-serif;
       text-transform: uppercase !important;
       min-height: 100vh;
@@ -36,13 +35,13 @@
     .navbar-brand {
       font-weight: 800;
       color: #FFFFFF !important;
-      font-size: 1.15rem;
+      font-size: 1.2rem;
       letter-spacing: 0.8px;
     }
 
     .card {
       border: none;
-      border-radius: 16px;
+      border-radius: 20px;
       box-shadow: var(--card-shadow);
       background: #FFFFFF;
       overflow: hidden;
@@ -50,71 +49,82 @@
     }
     
     .card-header {
-      background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+      background: var(--gradient-bg);
       color: white;
       border-bottom: 2px solid rgba(37, 99, 235, 0.3);
-      padding: 1rem 1.25rem;
+      padding: 1.1rem 1.5rem;
       font-weight: 700;
       letter-spacing: 0.5px;
     }
 
     .btn {
-      border-radius: 10px;
+      border-radius: 12px;
       font-weight: 700;
       letter-spacing: 0.4px;
+      padding: 0.6rem 1.2rem;
       transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .btn-primary {
       background: linear-gradient(135deg, #2563EB, #1D4ED8);
       border: none;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
     }
 
     .btn-primary:hover {
       background: linear-gradient(135deg, #1D4ED8, #1E40AF);
-      transform: translateY(-1px);
-      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.4);
     }
 
     .btn-success {
-      background: linear-gradient(135deg, #059669, #047857);
+      background: linear-gradient(135deg, #10B981, #059669);
       border: none;
-      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
     }
 
     .btn-success:hover {
-      background: linear-gradient(135deg, #047857, #065F46);
-      transform: translateY(-1px);
-      box-shadow: 0 6px 16px rgba(5, 150, 105, 0.4);
+      background: linear-gradient(135deg, #059669, #047857);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);
     }
 
     .btn-danger {
-      background: linear-gradient(135deg, #DC2626, #B91C1C);
+      background: linear-gradient(135deg, #EF4444, #DC2626);
       border: none;
     }
 
     .form-control, .form-select {
-      border-radius: 8px;
+      border-radius: 10px;
       border: 1.5px solid #CBD5E1;
       font-size: 0.85rem;
       font-weight: 600;
-      padding: 0.55rem 0.75rem;
+      padding: 0.65rem 0.85rem;
       transition: all 0.2s ease;
       background-color: #F8FAFC;
     }
 
     .form-control:focus, .form-select:focus {
       border-color: #2563EB;
-      box-shadow: 0 0 0 3.5px rgba(37, 99, 235, 0.15);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
       background-color: #FFFFFF;
+    }
+
+    .section-card {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
     }
 
     .section-title {
       position: relative;
-      padding-left: 10px;
-      margin-bottom: 12px;
-      font-size: 0.82rem;
+      padding-left: 12px;
+      margin-bottom: 14px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #0F172A;
       letter-spacing: 0.5px;
     }
 
@@ -329,12 +339,12 @@
 
     .flight-toggle-box {
       background-color: #ffffff;
-      padding: 8px 12px;
-      border-radius: 8px;
+      padding: 10px 14px;
+      border-radius: 10px;
       border: 1.5px solid #3B82F6;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
     .form-switch .form-check-input {
       margin-left: 0 !important;
@@ -351,22 +361,31 @@
 
     .login-card {
       border: none;
-      border-radius: 24px;
+      border-radius: 28px;
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(20px);
-      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.35);
     }
     .brand-glow-icon {
-      width: 80px;
-      height: 80px;
+      width: 85px;
+      height: 85px;
       background: linear-gradient(135deg, #2563EB, #0F172A);
       color: white;
-      border-radius: 20px;
+      border-radius: 22px;
       display: flex;
       align-items: center;
       justify-content: center;
       margin: 0 auto 15px auto;
-      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.35);
+      box-shadow: 0 12px 24px rgba(37, 99, 235, 0.35);
+    }
+    
+    .badge-creator {
+      background-color: #E0E7FF;
+      color: #3730A3;
+      font-weight: 700;
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 0.7rem;
     }
   </style>
 </head>
@@ -374,7 +393,7 @@
 
   <!-- Premium Login Screen -->
   <div id="loginScreen" class="d-flex justify-content-center align-items-center vh-100 no-print" style="background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%);">
-    <div class="card login-card p-4 p-md-5" style="max-width: 420px; width: 90%;">
+    <div class="card login-card p-4 p-md-5" style="max-width: 430px; width: 92%;">
       <div class="text-center mb-4">
         <div class="brand-glow-icon">
           <i class="bi bi-airplane-fill fs-1"></i>
@@ -402,23 +421,26 @@
             </button>
           </div>
         </div>
-        <button type="submit" class="btn btn-primary w-100 fw-bold py-2.5 shadow-sm"><i class="bi bi-box-arrow-in-right me-2"></i> LOGIN TO PORTAL</button>
+        <button type="submit" class="btn btn-primary w-100 fw-bold py-3 shadow"><i class="bi bi-box-arrow-in-right me-2"></i> LOGIN TO PORTAL</button>
       </form>
     </div>
   </div>
 
   <!-- Main Application Wrapper -->
   <div id="mainAppScreen" style="display: none;">
-    <nav class="navbar navbar-expand-lg navbar-dark glass-header sticky-top no-print">
+    <nav class="navbar navbar-expand-lg navbar-dark glass-header sticky-top no-print py-2.5">
       <div class="container-fluid px-3">
         <a class="navbar-brand d-flex align-items-center" href="#">
-          <span class="bg-primary p-2 rounded-3 me-2 d-inline-flex align-items-center justify-content-center" style="width:36px; height:36px;">
+          <span class="bg-primary p-2 rounded-3 me-2.5 d-inline-flex align-items-center justify-content-center" style="width:38px; height:38px;">
             <i class="bi bi-airplane-engines-fill text-white fs-6"></i>
           </span>
           SKY WALK TOUR & TRAVELS
         </a>
         <div class="d-flex gap-2 align-items-center">
           <span class="badge bg-primary bg-opacity-20 text-primary border border-primary border-opacity-30 py-2 px-3 rounded-pill" id="currentLoggedInUserDisplay" style="font-size: 0.75rem;"><i class="bi bi-shield-check me-1"></i> ADMIN</span>
+          <button class="btn btn-warning btn-sm py-1.5 px-3 rounded-3" id="btnPendingQuotationsAdmin" style="font-size: 0.75rem; display:none;" onclick="openPendingQuotationsModal()">
+            <i class="bi bi-telephone-outbound-fill me-1"></i> PENDING QUOTATIONS
+          </button>
           <button class="btn btn-warning btn-sm py-1.5 px-3 rounded-3" style="font-size: 0.75rem;" data-bs-toggle="modal" data-bs-target="#addHotelModal">
             <i class="bi bi-plus-circle-fill me-1"></i> HOTEL
           </button>
@@ -442,98 +464,104 @@
         <div class="col-lg-12" id="formContainer">
           <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-              <span style="font-size: 0.9rem;"><i class="bi bi-file-earmark-plus-fill me-2 text-primary"></i> CREATE QUOTATION / INVOICE</span>
+              <span style="font-size: 0.95rem;"><i class="bi bi-file-earmark-plus-fill me-2 text-primary"></i> CREATE QUOTATION / INVOICE</span>
               <button class="btn btn-sm btn-outline-danger py-1 px-3 rounded-pill" id="btnResetFormMain" style="font-size: 0.7rem;" onclick="resetForm()"><i class="bi bi-arrow-counterclockwise me-1"></i> RESET FORM</button>
             </div>
             <div class="card-body p-4">
               <form id="quotationForm">
                 
-                <div class="row g-3 mb-4 p-3 rounded-3" style="background-color: #F1F5F9; border: 1px solid #E2E8F0;">
-                  <div class="col-12">
-                    <label class="form-label fw-bold text-dark small mb-2">DOCUMENT TYPE SELECT KAREIN *</label>
-                    <div class="btn-group w-100 shadow-sm" role="group">
-                      <input type="radio" class="btn-check" name="docType" id="docTypeQuot" value="QUOTATION" checked onchange="toggleDocType()">
-                      <label class="btn btn-outline-danger py-2 fw-bold" for="docTypeQuot"><i class="bi bi-file-earmark-text me-1"></i> QUOTATION</label>
-                      
-                      <input type="radio" class="btn-check" name="docType" id="docTypeInv" value="INVOICE" onchange="toggleDocType()">
-                      <label class="btn btn-outline-success py-2 fw-bold" for="docTypeInv"><i class="bi bi-receipt me-1"></i> INVOICE</label>
+                <div class="section-card" style="background-color: #F1F5F9; border-color: #CBD5E1;">
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <label class="form-label fw-bold text-dark small mb-2"><i class="bi bi-file-text-fill me-1 text-primary"></i> DOCUMENT TYPE SELECT KAREIN *</label>
+                      <div class="btn-group w-100 shadow-sm" role="group">
+                        <input type="radio" class="btn-check" name="docType" id="docTypeQuot" value="QUOTATION" checked onchange="toggleDocType()">
+                        <label class="btn btn-outline-danger py-2.5 fw-bold" for="docTypeQuot"><i class="bi bi-file-earmark-text me-1"></i> QUOTATION</label>
+                        
+                        <input type="radio" class="btn-check" name="docType" id="docTypeInv" value="INVOICE" onchange="toggleDocType()">
+                        <label class="btn btn-outline-success py-2.5 fw-bold" for="docTypeInv"><i class="bi bi-receipt me-1"></i> INVOICE</label>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label small fw-bold text-secondary" id="lblDocNum">DOC # (AUTO)</label>
+                      <input type="text" class="form-control form-control-sm fw-bold text-primary" id="docNum" readonly>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label small fw-bold text-secondary">DATE</label>
+                      <input type="date" class="form-control form-control-sm" id="quoteDate">
                     </div>
                   </div>
-                  <div class="col-md-6">
-                    <label class="form-label small fw-bold text-secondary" id="lblDocNum">DOC # (AUTO)</label>
-                    <input type="text" class="form-control form-control-sm fw-bold text-primary" id="docNum" readonly>
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label small fw-bold text-secondary">DATE</label>
-                    <input type="date" class="form-control form-control-sm" id="quoteDate">
+                </div>
+
+                <div class="section-card">
+                  <h6 class="section-title"><i class="bi bi-person-vcard me-2 text-primary"></i> CLIENT INFORMATION</h6>
+                  <div class="row g-3">
+                    <div class="col-md-12">
+                      <label class="form-label small fw-bold">CLIENT NAME *</label>
+                      <input type="text" class="form-control" id="clientName" placeholder="ENTER CLIENT NAME" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label small fw-bold">CONTACT NUMBER *</label>
+                      <input type="text" class="form-control" id="clientContact" placeholder="03218144786" required>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label small fw-bold text-danger"><i class="bi bi-lock-fill me-1"></i> REF NAME (OFFICE INTERNAL)</label>
+                      <input type="text" class="form-control border-danger border-opacity-50" id="referenceName" placeholder="INTERNAL REF">
+                    </div>
                   </div>
                 </div>
 
-                <div class="row g-3 mb-4">
-                  <div class="col-12"><h6 class="section-title fw-bold text-dark"><i class="bi bi-person-vcard me-2 text-primary"></i> CLIENT INFORMATION</h6></div>
-                  <div class="col-md-12">
-                    <label class="form-label small fw-bold">CLIENT NAME *</label>
-                    <input type="text" class="form-control" id="clientName" placeholder="ENTER CLIENT NAME" required>
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label small fw-bold">CONTACT NUMBER *</label>
-                    <input type="text" class="form-control" id="clientContact" placeholder="03218144786" required>
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label small fw-bold text-danger"><i class="bi bi-lock-fill me-1"></i> REF NAME (OFFICE INTERNAL)</label>
-                    <input type="text" class="form-control border-danger border-opacity-50" id="referenceName" placeholder="INTERNAL REF">
-                  </div>
-                </div>
-
-                <div class="row g-3 mb-4">
-                  <div class="col-12"><h6 class="section-title fw-bold text-dark"><i class="bi bi-box-seam-fill me-2 text-primary"></i> PACKAGE & PAX DETAILS</h6></div>
-                  <div class="col-12">
-                    <label class="form-label small fw-bold">PACKAGE TITLE / DURATION</label>
-                    <input type="text" class="form-control mb-1" id="pkgTitle" list="pkgPresets" placeholder="SELECT OR TYPE PACKAGE">
-                    <datalist id="pkgPresets">
-                      <option value="15 DAYS UMRAH PACKAGE"></option>
-                      <option value="21 DAYS UMRAH PACKAGE"></option>
-                      <option value="28 DAYS UMRAH PACKAGE"></option>
-                    </datalist>
-                  </div>
-                  <div class="col-4">
-                    <label class="form-label small fw-bold">ADULTS</label>
-                    <input type="number" class="form-control" id="paxAdults" value="0" min="0" oninput="calcTotal()">
-                  </div>
-                  <div class="col-4">
-                    <label class="form-label small fw-bold">CHILDREN</label>
-                    <input type="number" class="form-control" id="paxChildren" value="0" min="0">
-                  </div>
-                  <div class="col-4">
-                    <label class="form-label small fw-bold">INFANTS</label>
-                    <input type="number" class="form-control" id="paxInfants" value="0" min="0" oninput="calcTotal()">
-                  </div>
-                  <div class="col-12">
-                    <label class="form-label small fw-bold">OCCUPANCY</label>
-                    <select class="form-select" id="occupancy">
-                      <option value="">SELECT OCCUPANCY</option>
-                      <option value="DOUBLE">DOUBLE</option>
-                      <option value="TRIPLE">TRIPLE</option>
-                      <option value="QUAD">QUAD</option>
-                      <option value="SHARING">SHARING</option>
-                    </select>
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label small fw-bold">RATE PER HEAD (PKR)</label>
-                    <input type="number" class="form-control" id="ratePerHead" placeholder="0" oninput="calcTotal()">
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label small fw-bold text-info">INFANT RATE (PKR)</label>
-                    <input type="number" class="form-control" id="infantRatePerHead" placeholder="0" oninput="calcTotal()" value="0">
-                  </div>
-                  <div class="col-12">
-                    <label class="form-label small fw-bold text-success">TOTAL AMOUNT (PKR)</label>
-                    <input type="number" class="form-control fw-bold text-success fs-5" id="totalAmount" readonly value="0">
+                <div class="section-card">
+                  <h6 class="section-title"><i class="bi bi-box-seam-fill me-2 text-primary"></i> PACKAGE & PAX DETAILS</h6>
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <label class="form-label small fw-bold">PACKAGE TITLE / DURATION</label>
+                      <input type="text" class="form-control mb-1" id="pkgTitle" list="pkgPresets" placeholder="SELECT OR TYPE PACKAGE">
+                      <datalist id="pkgPresets">
+                        <option value="15 DAYS UMRAH PACKAGE"></option>
+                        <option value="21 DAYS UMRAH PACKAGE"></option>
+                        <option value="28 DAYS UMRAH PACKAGE"></option>
+                      </datalist>
+                    </div>
+                    <div class="col-4">
+                      <label class="form-label small fw-bold">ADULTS</label>
+                      <input type="number" class="form-control" id="paxAdults" value="0" min="0" oninput="calcTotal()">
+                    </div>
+                    <div class="col-4">
+                      <label class="form-label small fw-bold">CHILDREN</label>
+                      <input type="number" class="form-control" id="paxChildren" value="0" min="0">
+                    </div>
+                    <div class="col-4">
+                      <label class="form-label small fw-bold">INFANTS</label>
+                      <input type="number" class="form-control" id="paxInfants" value="0" min="0" oninput="calcTotal()">
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label small fw-bold">OCCUPANCY</label>
+                      <select class="form-select" id="occupancy">
+                        <option value="">SELECT OCCUPANCY</option>
+                        <option value="DOUBLE">DOUBLE</option>
+                        <option value="TRIPLE">TRIPLE</option>
+                        <option value="QUAD">QUAD</option>
+                        <option value="SHARING">SHARING</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label small fw-bold">RATE PER HEAD (PKR)</label>
+                      <input type="number" class="form-control" id="ratePerHead" placeholder="0" oninput="calcTotal()">
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label small fw-bold text-info">INFANT RATE (PKR)</label>
+                      <input type="number" class="form-control" id="infantRatePerHead" placeholder="0" oninput="calcTotal()" value="0">
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label small fw-bold text-success">TOTAL AMOUNT (PKR)</label>
+                      <input type="number" class="form-control fw-bold text-success fs-5" id="totalAmount" readonly value="0">
+                    </div>
                   </div>
                 </div>
 
-                <div class="row g-3 mb-4 p-3 rounded-3" style="background-color: #F0F9FF; border: 1px solid #BAE6FD;">
-                  <div class="col-12 d-flex flex-column gap-2 border-bottom border-info border-opacity-25 pb-2">
+                <div class="section-card" style="background-color: #F0F9FF; border-color: #BAE6FD;">
+                  <div class="d-flex flex-column gap-2 border-bottom border-info border-opacity-25 pb-2 mb-3">
                     <div class="d-flex align-items-center justify-content-between">
                       <h6 class="fw-bold text-info mb-0 small"><i class="bi bi-airplane-fill me-2"></i> FLIGHT SCHEDULE</h6>
                       <button type="button" class="btn btn-sm btn-outline-info py-1 px-3 fw-bold" style="font-size: 0.7rem;" id="btnAddFlightBtn" onclick="addFlightRow()"><i class="bi bi-plus-circle me-1"></i> ADD ROW</button>
@@ -548,7 +576,7 @@
                       </label>
                     </div>
                   </div>
-                  <div class="col-12">
+                  <div>
                     <div id="flightRowsContainer"></div>
                     <div id="noTicketNoticeBox" class="p-3 bg-warning bg-opacity-10 border border-warning rounded-3 text-center" style="display:none;">
                       <i class="bi bi-info-circle-fill text-warning fs-5 me-1"></i>
@@ -557,50 +585,50 @@
                   </div>
                 </div>
 
-                <div class="row g-3 mb-4 p-3 rounded-3" style="background-color: #FEFCE8; border: 1px solid #FEF08A;">
-                  <div class="col-12"><h6 class="fw-bold text-dark mb-0 small"><i class="bi bi-geo-alt-fill text-warning me-2"></i> ZIYARAT OPTIONS</h6></div>
-                  <div class="col-12">
-                    <div class="d-flex flex-wrap gap-3">
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="ziyaratMakkah" value="MAKKAH ZIYARAT">
-                        <label class="form-check-label fw-bold small" for="ziyaratMakkah">1. MAKKAH ZIYARAT</label>
-                      </div>
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="ziyaratMadinah" value="MADINAH ZIYARAT">
-                        <label class="form-check-label fw-bold small" for="ziyaratMadinah">2. MADINAH ZIYARAT</label>
-                      </div>
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="ziyaratBadar" value="BADAR ZIYARAT">
-                        <label class="form-check-label fw-bold small" for="ziyaratBadar">3. BADAR ZIYARAT</label>
-                      </div>
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="ziyaratTaif" value="TAIF ZIYARAT">
-                        <label class="form-check-label fw-bold small" for="ziyaratTaif">4. TAIF ZIYARAT</label>
-                      </div>
+                <div class="section-card" style="background-color: #FEFCE8; border-color: #FEF08A;">
+                  <h6 class="fw-bold text-dark mb-3 small"><i class="bi bi-geo-alt-fill text-warning me-2"></i> ZIYARAT OPTIONS</h6>
+                  <div class="d-flex flex-wrap gap-3">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="ziyaratMakkah" value="MAKKAH ZIYARAT">
+                      <label class="form-check-label fw-bold small" for="ziyaratMakkah">1. MAKKAH ZIYARAT</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="ziyaratMadinah" value="MADINAH ZIYARAT">
+                      <label class="form-check-label fw-bold small" for="ziyaratMadinah">2. MADINAH ZIYARAT</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="ziyaratBadar" value="BADAR ZIYARAT">
+                      <label class="form-check-label fw-bold small" for="ziyaratBadar">3. BADAR ZIYARAT</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="ziyaratTaif" value="TAIF ZIYARAT">
+                      <label class="form-check-label fw-bold small" for="ziyaratTaif">4. TAIF ZIYARAT</label>
                     </div>
                   </div>
                 </div>
 
-                <div class="row g-3 mb-4 p-3 rounded-3" style="background-color: #ECFDF5; border: 1px solid #A7F3D0;" id="invoicePaymentSection" style="display:none;">
-                  <div class="col-12"><h6 class="fw-bold text-success mb-0 small"><i class="bi bi-cash-stack me-2"></i> PAYMENT & INSTALLMENT LEDGER (INVOICE)</h6></div>
-                  <div class="col-12">
-                    <label class="form-label small fw-bold">TOTAL AMOUNT (PKR)</label>
-                    <input type="number" class="form-control fw-bold" id="invTotalAmount" readonly value="0">
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label small fw-bold text-primary">INITIAL / NEW PAYMENT (PKR)</label>
-                    <input type="number" class="form-control fw-bold text-primary" id="receivedAmount" value="0" oninput="calcBalance()">
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label small fw-bold text-danger">BALANCE (PKR)</label>
-                    <input type="number" class="form-control fw-bold text-danger" id="balanceAmount" readonly value="0">
+                <div class="section-card" style="background-color: #ECFDF5; border-color: #A7F3D0; display:none;" id="invoicePaymentSection">
+                  <h6 class="fw-bold text-success mb-3 small"><i class="bi bi-cash-stack me-2"></i> PAYMENT & INSTALLMENT LEDGER (INVOICE)</h6>
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <label class="form-label small fw-bold">TOTAL AMOUNT (PKR)</label>
+                      <input type="number" class="form-control fw-bold" id="invTotalAmount" readonly value="0">
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label small fw-bold text-primary">INITIAL / NEW PAYMENT (PKR)</label>
+                      <input type="number" class="form-control fw-bold text-primary" id="receivedAmount" value="0" oninput="calcBalance()">
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label small fw-bold text-danger">BALANCE (PKR)</label>
+                      <input type="number" class="form-control fw-bold text-danger" id="balanceAmount" readonly value="0">
+                    </div>
                   </div>
                 </div>
 
-                <div class="row g-3 mb-4">
-                  <div class="col-12"><h6 class="section-title fw-bold text-dark"><i class="bi bi-bus-front-fill me-2 text-primary"></i> TRANSPORT SCHEDULE</h6></div>
-                  <div class="col-12" id="transportContainer">
-                    <div class="p-3 border rounded-3 bg-light mb-2">
+                <div class="section-card">
+                  <h6 class="section-title"><i class="bi bi-bus-front-fill me-2 text-primary"></i> TRANSPORT SCHEDULE</h6>
+                  <div id="transportContainer">
+                    <div class="p-3 border rounded-3 bg-white mb-2">
                       <label class="form-label micro-label fw-bold text-dark small">SECTOR 1</label>
                       <select class="form-select mb-2" id="transSec1">
                         <option value="">SELECT SECTOR</option>
@@ -620,7 +648,7 @@
                         <option value="">SELECT VEHICLE</option>
                       </select>
                     </div>
-                    <div class="p-3 border rounded-3 bg-light mb-2">
+                    <div class="p-3 border rounded-3 bg-white mb-2">
                       <label class="form-label micro-label fw-bold text-dark small">SECTOR 2</label>
                       <select class="form-select mb-2" id="transSec2">
                         <option value="">SELECT SECTOR</option>
@@ -640,7 +668,7 @@
                         <option value="">SELECT VEHICLE</option>
                       </select>
                     </div>
-                    <div class="p-3 border rounded-3 bg-light mb-2">
+                    <div class="p-3 border rounded-3 bg-white mb-2">
                       <label class="form-label micro-label fw-bold text-dark small">SECTOR 3</label>
                       <select class="form-select mb-2" id="transSec3">
                         <option value="">SELECT SECTOR</option>
@@ -660,7 +688,7 @@
                         <option value="">SELECT VEHICLE</option>
                       </select>
                     </div>
-                    <div class="p-3 border rounded-3 bg-light mb-2">
+                    <div class="p-3 border rounded-3 bg-white mb-2">
                       <label class="form-label micro-label fw-bold text-dark small">SECTOR 4</label>
                       <select class="form-select mb-2" id="transSec4">
                         <option value="">SELECT SECTOR</option>
@@ -683,45 +711,45 @@
                   </div>
                 </div>
 
-                <div class="row g-3 mb-4">
-                  <div class="col-12 d-flex justify-content-between align-items-center">
-                    <h6 class="section-title fw-bold text-dark mb-0"><i class="bi bi-buildings-fill me-2 text-primary"></i> HOTEL ACCOMMODATIONS</h6>
+                <div class="section-card">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="section-title mb-0"><i class="bi bi-buildings-fill me-2 text-primary"></i> HOTEL ACCOMMODATIONS</h6>
                     <button type="button" class="btn btn-sm btn-outline-warning py-1 px-3 rounded-pill" style="font-size: 0.7rem;" data-bs-toggle="modal" data-bs-target="#addHotelModal"><i class="bi bi-plus-circle me-1"></i> ADD HOTEL</button>
                   </div>
-                  <div class="col-md-6 mt-2">
-                    <div class="p-3 border rounded-3 bg-light">
-                      <label class="form-label small fw-bold">MAKKAH HOTEL</label>
-                      <select class="form-select mb-2" id="makkahHotelSelect">
-                        <option value="">SELECT MAKKAH HOTEL</option>
-                      </select>
-                      <div class="row g-2">
-                        <div class="col-6"><input type="text" class="form-control" id="makkahDist" placeholder="DISTANCE (E.G. 150 M)"></div>
-                        <div class="col-6"><input type="text" class="form-control" id="makkahNights" placeholder="NIGHTS (3 NIGHTS)"></div>
+                  <div class="row g-3 mt-1">
+                    <div class="col-md-6">
+                      <div class="p-3 border rounded-3 bg-white">
+                        <label class="form-label small fw-bold">MAKKAH HOTEL</label>
+                        <select class="form-select mb-2" id="makkahHotelSelect">
+                          <option value="">SELECT MAKKAH HOTEL</option>
+                        </select>
+                        <div class="row g-2">
+                          <div class="col-6"><input type="text" class="form-control" id="makkahDist" placeholder="DISTANCE (E.G. 150 M)"></div>
+                          <div class="col-6"><input type="text" class="form-control" id="makkahNights" placeholder="NIGHTS (3 NIGHTS)"></div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="col-md-6 mt-2">
-                    <div class="p-3 border rounded-3 bg-light">
-                      <label class="form-label small fw-bold">MADINAH HOTEL</label>
-                      <select class="form-select mb-2" id="madinahHotelSelect">
-                        <option value="">SELECT MADINAH HOTEL</option>
-                      </select>
-                      <div class="row g-2">
-                        <div class="col-6"><input type="text" class="form-control" id="madinahDist" placeholder="DISTANCE (E.G. 50 M)"></div>
-                        <div class="col-6"><input type="text" class="form-control" id="madinahNights" placeholder="NIGHTS (3 NIGHTS)"></div>
+                    <div class="col-md-6">
+                      <div class="p-3 border rounded-3 bg-white">
+                        <label class="form-label small fw-bold">MADINAH HOTEL</label>
+                        <select class="form-select mb-2" id="madinahHotelSelect">
+                          <option value="">SELECT MADINAH HOTEL</option>
+                        </select>
+                        <div class="row g-2">
+                          <div class="col-6"><input type="text" class="form-control" id="madinahDist" placeholder="DISTANCE (E.G. 50 M)"></div>
+                          <div class="col-6"><input type="text" class="form-control" id="madinahNights" placeholder="NIGHTS (3 NIGHTS)"></div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div class="row g-3 mb-4 p-3 rounded-3" style="background-color: #F8FAFC; border: 1px solid #E2E8F0;">
-                  <div class="col-12 d-flex justify-content-between align-items-center border-bottom pb-2">
+                <div class="section-card">
+                  <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
                     <h6 class="fw-bold text-dark mb-0 small"><i class="bi bi-file-text-fill me-2 text-primary"></i> TERMS & CONDITIONS</h6>
                     <button type="button" class="btn btn-sm btn-outline-primary py-1 px-3 fw-bold rounded-pill" style="font-size: 0.7rem;" id="btnAddTermBtn" onclick="addTermsRow()"><i class="bi bi-plus-circle me-1"></i> ADD POINT</button>
                   </div>
-                  <div class="col-12 mt-2">
-                    <div id="termsContainer"></div>
-                  </div>
+                  <div id="termsContainer"></div>
                 </div>
 
                 <div class="d-flex gap-3">
@@ -759,6 +787,7 @@
                     <tr>
                       <th class="ps-3">TYPE</th>
                       <th>DOC #</th>
+                      <th id="thCreatedBy" class="text-indigo" style="display:none;">CREATED BY</th>
                       <th>DATE</th>
                       <th>CLIENT</th>
                       <th>CONTACT</th>
@@ -771,13 +800,48 @@
                   </thead>
                   <tbody id="crmTableBody">
                     <tr>
-                      <td colspan="10" class="text-center text-muted py-4">NO CRM RECORDS FOUND.</td>
+                      <td colspan="11" class="text-center text-muted py-4">NO CRM RECORDS FOUND.</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="pendingQuotationsModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header bg-warning text-dark py-3">
+          <h5 class="modal-title fw-extrabold fs-6"><i class="bi bi-telephone-outbound-fill me-2"></i> PENDING QUOTATIONS CALLING LEDGER (ADMIN VIEW)</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-3">
+          <div class="table-responsive rounded-3 border">
+            <table class="table table-bordered table-hover align-middle mb-0" style="font-size: 0.82rem;">
+              <thead class="table-dark text-center">
+                <tr>
+                  <th>QUOT #</th>
+                  <th>CLIENT NAME</th>
+                  <th>CONTACT NUMBER</th>
+                  <th>PACKAGE TITLE</th>
+                  <th>PAX DETAILS</th>
+                  <th>TOTAL AMOUNT</th>
+                  <th>DATE</th>
+                  <th>CREATED BY</th>
+                  <th>CALL ACTION</th>
+                </tr>
+              </thead>
+              <tbody id="pendingQuotTableBody">
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer py-2">
+          <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">CLOSE</button>
         </div>
       </div>
     </div>
@@ -1107,11 +1171,17 @@
       const btnProfile = document.getElementById('btnProfileSetup');
       const btnAddTerm = document.getElementById('btnAddTermBtn');
       const btnResetForm = document.getElementById('btnResetFormMain');
+      const thCreatedBy = document.getElementById('thCreatedBy');
+      const btnPending = document.getElementById('btnPendingQuotationsAdmin');
 
       if (btnUserMgmt) btnUserMgmt.style.display = isAdmin ? 'inline-block' : 'none';
       if (btnProfile) btnProfile.style.display = isAdmin ? 'inline-block' : 'none';
       if (btnAddTerm) btnAddTerm.style.display = isAdmin ? 'inline-block' : 'none';
       if (btnResetForm) btnResetForm.style.display = isAdmin ? 'inline-block' : 'none';
+      if (btnPending) btnPending.style.display = isAdmin ? 'inline-block' : 'none';
+      
+      // Admin sees "CREATED BY" column header, Regular User does not
+      if (thCreatedBy) thCreatedBy.style.display = isAdmin ? 'table-cell' : 'none';
 
       // Re-render terms rows so delete buttons hide for regular users
       reindexTerms();
@@ -1457,7 +1527,7 @@
     function toggleDocType() {
       autoGenDocNum();
       const isInv = document.getElementById('docTypeInv').checked;
-      document.getElementById('invoicePaymentSection').style.display = isInv ? 'flex' : 'none';
+      document.getElementById('invoicePaymentSection').style.display = isInv ? 'block' : 'none';
       calcTotal();
     }
 
@@ -1858,6 +1928,12 @@
       const received = isQuot ? 0 : (parseFloat(document.getElementById('receivedAmount').value) || 0);
       const balance = total - received;
 
+      const adults = parseInt(document.getElementById('paxAdults').value) || 0;
+      const children = parseInt(document.getElementById('paxChildren').value) || 0;
+      const infants = parseInt(document.getElementById('paxInfants').value) || 0;
+      const paxSummary = `${adults}A + ${children}C + ${infants}I`;
+      const pkgTitle = (document.getElementById('pkgTitle').value || 'UMRAH PACKAGE').toUpperCase();
+
       const record = {
         id: Date.now(),
         type: type,
@@ -1866,10 +1942,13 @@
         name: name,
         contact: document.getElementById('clientContact').value || '-',
         refName: document.getElementById('referenceName').value || 'DIRECT CLIENT',
+        pkgTitle: pkgTitle,
+        paxSummary: paxSummary,
         total: total,
         received: received,
         balance: balance,
-        status: balance <= 0 && !isQuot ? 'COMPLETED' : 'PENDING'
+        status: isQuot ? 'QUOTATION' : (balance <= 0 ? 'COMPLETED' : 'PENDING'),
+        createdBy: currentUser ? currentUser.username : 'SYSTEM'
       };
 
       crmRecords.push(record);
@@ -1878,6 +1957,60 @@
       autoGenDocNum();
       renderCRM();
       alert(`${type} (${docNum}) SUCCESSFULLY SAVED TO DATABASE!`);
+    }
+
+    function convertQuotationToInvoice(id) {
+      const record = crmRecords.find(r => r.id === id);
+      if (!record) return;
+
+      if (confirm(`ARE YOU SURE YOU WANT TO CONVERT QUOTATION (${record.docNum}) TO INVOICE?`)) {
+        record.type = 'INVOICE';
+        record.docNum = 'SAI-' + invCounter++;
+        record.status = record.balance <= 0 ? 'COMPLETED' : 'PENDING';
+        saveCRMToStorage();
+        renderCRM();
+        if (currentUser && currentUser.role === 'ADMIN') {
+          renderPendingQuotationsTable();
+        }
+        alert(`SUCCESSFULLY CONVERTED TO INVOICE (${record.docNum})!`);
+      }
+    }
+
+    function openPendingQuotationsModal() {
+      if (currentUser && currentUser.role !== 'ADMIN') {
+        alert("ACCESS DENIED: ONLY ADMIN CAN VIEW PENDING QUOTATIONS LEDGER!");
+        return;
+      }
+      renderPendingQuotationsTable();
+      const modal = new bootstrap.Modal(document.getElementById('pendingQuotationsModal'));
+      modal.show();
+    }
+
+    function renderPendingQuotationsTable() {
+      const tbody = document.getElementById('pendingQuotTableBody');
+      const pendingQuots = crmRecords.filter(r => r.type === 'QUOTATION');
+
+      if (pendingQuots.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted py-4">NO PENDING QUOTATIONS FOUND.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = pendingQuots.map(r => `
+        <tr>
+          <td class="fw-bold text-primary">${r.docNum}</td>
+          <td class="fw-bold">${r.name}</td>
+          <td class="fw-bold text-dark"><i class="bi bi-telephone-fill me-1 text-success"></i> ${r.contact}</td>
+          <td>${r.pkgTitle || 'UMRAH PACKAGE'}</td>
+          <td class="text-center">${r.paxSummary || '-'}</td>
+          <td class="fw-bold text-success">PKR ${r.total.toLocaleString()}</td>
+          <td>${r.date}</td>
+          <td><span class="badge-creator">${r.createdBy || 'SYSTEM'}</span></td>
+          <td class="text-center">
+            <a href="tel:${r.contact}" class="btn btn-sm btn-success py-1 px-2 me-1" title="Call Now"><i class="bi bi-telephone-outbound-fill"></i> CALL</a>
+            <button class="btn btn-sm btn-outline-primary py-1 px-2" onclick="convertQuotationToInvoice(${r.id})" title="Convert to Invoice"><i class="bi bi-arrow-repeat"></i> CONVERT TO INV</button>
+          </td>
+        </tr>
+      `).join('');
     }
 
     let currentFilter = 'All';
@@ -1900,30 +2033,31 @@
 
       const filtered = crmRecords.filter(r => {
         const matchesFilter = (currentFilter === 'All') || (r.type === currentFilter);
-        const matchesSearch = !keyword || r.docNum.toLowerCase().includes(keyword) || r.name.toLowerCase().includes(keyword) || r.contact.toLowerCase().includes(keyword);
+        const matchesSearch = !keyword || r.docNum.toLowerCase().includes(keyword) || r.name.toLowerCase().includes(keyword) || r.contact.toLowerCase().includes(keyword) || (r.createdBy && r.createdBy.toLowerCase().includes(keyword));
         return matchesFilter && matchesSearch;
       });
 
+      const isAdmin = currentUser && currentUser.role === 'ADMIN';
+
       if(filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted py-4">NO CRM RECORDS FOUND.</td></tr>';
+        tbody.innerHTML = `<tr><td colspan="${isAdmin ? 11 : 10}" class="text-center text-muted py-4">NO CRM RECORDS FOUND.</td></tr>`;
         return;
       }
-
-      const isAdmin = currentUser && currentUser.role === 'ADMIN';
 
       tbody.innerHTML = filtered.map(r => `
         <tr>
           <td class="ps-3"><span class="badge ${r.type === 'QUOTATION' ? 'bg-danger' : 'bg-success'} rounded-pill" style="font-size:0.65rem;">${r.type}</span></td>
           <td class="fw-bold text-primary">${r.docNum}</td>
+          ${isAdmin ? `<td><span class="badge-creator"><i class="bi bi-person-fill me-1"></i>${r.createdBy || 'SYSTEM'}</span></td>` : ''}
           <td>${r.date}</td>
           <td class="fw-bold">${r.name}</td>
           <td>${r.contact}</td>
           <td class="fw-bold">PKR ${r.total.toLocaleString()}</td>
           <td class="text-primary fw-bold cursor-pointer" onclick="openLedgerModal(${r.id})" title="Click to View/Add Installment">PKR ${r.received.toLocaleString()} <i class="bi bi-pencil-square small"></i></td>
           <td class="text-danger fw-bold">PKR ${r.balance.toLocaleString()}</td>
-          <td><span class="badge ${r.status === 'COMPLETED' ? 'bg-success' : 'bg-warning text-dark'} rounded-pill" style="font-size:0.65rem;">${r.status}</span></td>
+          <td><span class="badge ${r.status === 'COMPLETED' ? 'bg-success' : (r.status === 'QUOTATION' ? 'bg-secondary' : 'bg-warning text-dark')} rounded-pill" style="font-size:0.65rem;">${r.status}</span></td>
           <td class="text-end pe-3">
-            <button class="btn btn-sm btn-outline-success py-1 px-2 me-1 rounded-3" onclick="openLedgerModal(${r.id})" title="Ledger"><i class="bi bi-wallet2"></i></button>
+            ${r.type === 'QUOTATION' ? `<button class="btn btn-sm btn-outline-primary py-1 px-2 me-1 rounded-3" onclick="convertQuotationToInvoice(${r.id})" title="Convert Quotation to Invoice"><i class="bi bi-arrow-repeat"></i> CONVERT TO INV</button>` : `<button class="btn btn-sm btn-outline-success py-1 px-2 me-1 rounded-3" onclick="openLedgerModal(${r.id})" title="Add Payment / View Ledger"><i class="bi bi-wallet2"></i> PAY</button>`}
             ${isAdmin ? `<button class="btn btn-sm btn-outline-danger py-1 px-2 rounded-3" onclick="deleteCRM(${r.id})" title="Delete Record"><i class="bi bi-trash"></i></button>` : ''}
           </td>
         </tr>
