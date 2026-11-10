@@ -563,7 +563,7 @@
                 <div class="section-card" style="background-color: #F0F9FF; border-color: #BAE6FD;">
                   <div class="d-flex flex-column gap-2 border-bottom border-info border-opacity-25 pb-2 mb-3">
                     <div class="d-flex align-items-center justify-content-between">
-                      <h6 class="fw-bold text-info mb-0 small"><i class="bi bi-airplane-fill me-2"></i> FLIGHT SCHEDULE (24-HR MILITARY TIME 00:00 - 23:59)</h6>
+                      <h6 class="fw-bold text-info mb-0 small"><i class="bi bi-airplane-fill me-2"></i> FLIGHT SCHEDULE (24-HR FORMAT: HH : MM)</h6>
                       <button type="button" class="btn btn-sm btn-outline-info py-1 px-3 fw-bold" style="font-size: 0.7rem;" id="btnAddFlightBtn" onclick="addFlightRow()"><i class="bi bi-plus-circle me-1"></i> ADD ROW</button>
                     </div>
                     
@@ -1381,44 +1381,50 @@
       }
     }
 
-    // Generate 24-Hour Time Options (00:00 to 23:30 in 30-min intervals)
-    function build24HourTimeOptions(selectedVal) {
-      let options = '<option value="">SELECT TIME (24H)</option>';
+    // Build Hour Dropdown Options (00 to 23)
+    function buildHourOptions(selectedHour) {
+      let html = '<option value="">HH</option>';
       for (let h = 0; h < 24; h++) {
-        for (let m of [0, 30]) {
-          const hh = h.toString().padStart(2, '0');
-          const mm = m.toString().padStart(2, '0');
-          const val = `${hh}:${mm}`;
-          
-          let ampmDisplay = '';
-          if (h === 0) ampmDisplay = `12:${mm} AM (NIGHT)`;
-          else if (h < 12) ampmDisplay = `${h}:${mm} AM`;
-          else if (h === 12) ampmDisplay = `12:${mm} PM (NOON)`;
-          else ampmDisplay = `${h - 12}:${mm} PM`;
-
-          const label = `${val} HRS  (${ampmDisplay})`;
-          const isSelected = (selectedVal === val) ? 'selected' : '';
-          options += `<option value="${val}" ${isSelected}>${label}</option>`;
-        }
+        const hh = h.toString().padStart(2, '0');
+        const sel = (selectedHour === hh) ? 'selected' : '';
+        html += `<option value="${hh}" ${sel}>${hh}</option>`;
       }
-      return options;
+      return html;
     }
 
-    function formatFlightTime24(timeVal) {
-      if (!timeVal) return '-';
-      const parts = timeVal.split(':');
-      if (parts.length >= 2) return `${parts[0]}:${parts[1]} HRS`;
-      return timeVal.toUpperCase();
+    // Build Minute Dropdown Options (00 to 59 - All exact minutes allowed)
+    function buildMinuteOptions(selectedMin) {
+      let html = '<option value="">MM</option>';
+      for (let m = 0; m < 60; m++) {
+        const mm = m.toString().padStart(2, '0');
+        const sel = (selectedMin === mm) ? 'selected' : '';
+        html += `<option value="${mm}" ${sel}>${mm}</option>`;
+      }
+      return html;
     }
 
-    function addFlightRow(airline = '', flightType = 'DIRECT FLIGHT', route = '', depDate = '', flightTime = '14:30') {
+    function formatFlightTime24(hhVal, mmVal) {
+      if (!hhVal || !mmVal) return '-';
+      return `${hhVal}:${mmVal} HRS`;
+    }
+
+    function addFlightRow(airline = '', flightType = 'DIRECT FLIGHT', route = '', depDate = '', initialTimeStr = '14:30') {
       flightRowCount++;
       const container = document.getElementById('flightRowsContainer');
       const rowDiv = document.createElement('div');
       rowDiv.className = 'p-3 border rounded-3 bg-white mb-2 shadow-sm flight-row-item';
       rowDiv.id = `flightRow_${flightRowCount}`;
 
-      const timeOptionsHtml = build24HourTimeOptions(flightTime);
+      let initHH = '14';
+      let initMM = '30';
+      if(initialTimeStr && initialTimeStr.includes(':')) {
+        const parts = initialTimeStr.split(':');
+        initHH = parts[0].padStart(2, '0');
+        initMM = parts[1].padStart(2, '0');
+      }
+
+      const hourOptionsHtml = buildHourOptions(initHH);
+      const minuteOptionsHtml = buildMinuteOptions(initMM);
 
       rowDiv.innerHTML = `
         <div class="row g-2 align-items-center">
@@ -1442,10 +1448,16 @@
             <input type="date" class="form-control form-control-sm f-dep" value="${depDate}">
           </div>
           <div class="col-5 col-md-2">
-            <label class="form-label text-danger fw-bold mb-0" style="font-size:0.75rem;"><i class="bi bi-clock-history me-1"></i> 24-HR TIME</label>
-            <select class="form-select form-select-sm f-time fw-bold text-primary">
-              ${timeOptionsHtml}
-            </select>
+            <label class="form-label text-danger fw-bold mb-0" style="font-size:0.72rem;"><i class="bi bi-clock-history me-1"></i> 24-HR TIME (HH:MM)</label>
+            <div class="d-flex gap-1 align-items-center">
+              <select class="form-select form-select-sm f-time-hh fw-bold text-primary px-1 text-center">
+                ${hourOptionsHtml}
+              </select>
+              <span class="fw-bold text-dark">:</span>
+              <select class="form-select form-select-sm f-time-mm fw-bold text-primary px-1 text-center">
+                ${minuteOptionsHtml}
+              </select>
+            </div>
           </div>
           <div class="col-1 text-end">
             <button type="button" class="btn btn-sm btn-outline-danger py-1 px-2 mt-3" onclick="removeFlightRow(${flightRowCount})"><i class="bi bi-trash"></i></button>
@@ -1537,7 +1549,7 @@
     addTermsRow('UNFORESEEN CIRCUMSTANCES: THE COMPANY WILL NOT BE RESPONSIBLE FOR DELAYS, CANCELLATIONS, OR CHANGES CAUSED BY AIRLINES, HOTELS, GOVERNMENT AUTHORITIES, OR CIRCUMSTANCES BEYOND ITS CONTROL.');
     addTermsRow('ACCEPTANCE OF TERMS: CONFIRMATION OF BOOKING AND PAYMENT SHALL BE CONSIDERED ACCEPTANCE OF ALL THE ABOVE-MENTIONED TERMS AND CONDITIONS.');
 
-    addFlightRow('SAUDI ARABIAN AIRLINES (SAUDIA)', 'DIRECT FLIGHT', 'LAHORE TO JEDDAH (LHE - JED)', '', '14:30');
+    addFlightRow('SAUDI ARABIAN AIRLINES (SAUDIA)', 'DIRECT FLIGHT', 'LAHORE TO JEDDAH (LHE - JED)', '', '13:05');
     addFlightRow('SAUDI ARABIAN AIRLINES (SAUDIA)', 'DIRECT FLIGHT', 'JEDDAH TO LAHORE (JED - LHE)', '', '21:15');
 
     function autoGenDocNum() {
@@ -1648,8 +1660,9 @@
           const fType = (r.querySelector('.f-type').value || '-').toUpperCase();
           const route = (r.querySelector('.f-route').value || '-').toUpperCase();
           const dep = r.querySelector('.f-dep').value || '-';
-          const rawTime = r.querySelector('.f-time').value || '';
-          const formatted24Time = formatFlightTime24(rawTime);
+          const hh = r.querySelector('.f-time-hh').value || '';
+          const mm = r.querySelector('.f-time-mm').value || '';
+          const formatted24Time = formatFlightTime24(hh, mm);
           flightBodyHtml += `<tr><td class="fw-bold text-primary">${airline}</td><td>${fType}</td><td>${route}</td><td class="fw-bold text-success">${dep}</td><td class="fw-bold text-info">${formatted24Time}</td></tr>`;
         });
         if(!flightBodyHtml) flightBodyHtml = `<tr><td colspan="5" class="text-muted">NO FLIGHT SCHEDULE ADDED</td></tr>`;
@@ -2197,7 +2210,7 @@
       addTermsRow('UNFORESEEN CIRCUMSTANCES: THE COMPANY WILL NOT BE RESPONSIBLE FOR DELAYS, CANCELLATIONS, OR CHANGES CAUSED BY AIRLINES, HOTELS, GOVERNMENT AUTHORITIES, OR CIRCUMSTANCES BEYOND ITS CONTROL.');
       addTermsRow('ACCEPTANCE OF TERMS: CONFIRMATION OF BOOKING AND PAYMENT SHALL BE CONSIDERED ACCEPTANCE OF ALL THE ABOVE-MENTIONED TERMS AND CONDITIONS.');
 
-      addFlightRow('SAUDI ARABIAN AIRLINES (SAUDIA)', 'DIRECT FLIGHT', 'LAHORE TO JEDDAH (LHE - JED)', '', '14:30');
+      addFlightRow('SAUDI ARABIAN AIRLINES (SAUDIA)', 'DIRECT FLIGHT', 'LAHORE TO JEDDAH (LHE - JED)', '', '13:05');
       addFlightRow('SAUDI ARABIAN AIRLINES (SAUDIA)', 'DIRECT FLIGHT', 'JEDDAH TO LAHORE (JED - LHE)', '', '21:15');
       toggleDocType();
     }
