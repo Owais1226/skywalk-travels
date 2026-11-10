@@ -1044,6 +1044,8 @@
         if(uStore) {
           const parsedU = JSON.parse(uStore);
           if(Array.isArray(parsedU) && parsedU.length > 0) systemUsers = parsedU;
+        } else {
+          localStorage.setItem('skywalk_users', JSON.stringify(defaultUsersList));
         }
         const cStore = localStorage.getItem('skywalk_crm_records');
         if(cStore) {
@@ -1068,22 +1070,10 @@
       const inputPass = pInp ? pInp.value.toString().trim() : '';
       const errBox = document.getElementById('loginErrorMsg');
 
-      let foundUser = null;
-      if (inputUser === 'ADMIN' && inputPass === '123') {
-        foundUser = { id: 1, username: 'ADMIN', password: '123', role: 'ADMIN' };
-      } else if (inputUser === 'STAFF' && inputPass === '123') {
-        foundUser = { id: 2, username: 'STAFF', role: 'USER' };
-      } else {
-        try {
-          const stored = localStorage.getItem('skywalk_users');
-          if (stored) {
-            const parsed = JSON.parse(stored);
-            if (Array.isArray(parsed)) {
-              foundUser = parsed.find(u => u.username.toString().trim().toUpperCase() === inputUser && u.password.toString().trim() === inputPass);
-            }
-          }
-        } catch(err) {}
-      }
+      // Refresh system users from storage to ensure we have latest password updates
+      loadStorageData();
+
+      let foundUser = systemUsers.find(u => u.username.toString().trim().toUpperCase() === inputUser && u.password.toString().trim() === inputPass);
 
       if (foundUser) {
         currentUser = foundUser;
