@@ -26,7 +26,6 @@
       color: #1E293B;
     }
 
-    /* Glassmorphism Header & Cards */
     .glass-header {
       background: rgba(15, 23, 42, 0.95);
       backdrop-filter: blur(12px);
@@ -59,7 +58,6 @@
       letter-spacing: 0.5px;
     }
 
-    /* Modernized Buttons */
     .btn {
       border-radius: 10px;
       font-weight: 700;
@@ -96,7 +94,6 @@
       border: none;
     }
 
-    /* Form Controls */
     .form-control, .form-select {
       border-radius: 8px;
       border: 1.5px solid #CBD5E1;
@@ -132,7 +129,6 @@
       border-radius: 4px;
     }
 
-    /* Print Specific Styles for Browser Print */
     @media print {
       @page {
         size: A4 portrait;
@@ -180,7 +176,6 @@
       }
     }
 
-    /* Printable Page Styling */
     .pdf-page {
       width: 210mm;
       height: 297mm;
@@ -354,7 +349,6 @@
       border-left: none;
     }
 
-    /* Login Screen Design */
     .login-card {
       border: none;
       border-radius: 24px;
@@ -415,7 +409,6 @@
 
   <!-- Main Application Wrapper -->
   <div id="mainAppScreen" style="display: none;">
-    <!-- Modern Glass Header Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark glass-header sticky-top no-print">
       <div class="container-fluid px-3">
         <a class="navbar-brand d-flex align-items-center" href="#">
@@ -455,7 +448,6 @@
             <div class="card-body p-4">
               <form id="quotationForm">
                 
-                <!-- Document Type Toggle -->
                 <div class="row g-3 mb-4 p-3 rounded-3" style="background-color: #F1F5F9; border: 1px solid #E2E8F0;">
                   <div class="col-12">
                     <label class="form-label fw-bold text-dark small mb-2">DOCUMENT TYPE SELECT KAREIN *</label>
@@ -477,7 +469,6 @@
                   </div>
                 </div>
 
-                <!-- Client Information -->
                 <div class="row g-3 mb-4">
                   <div class="col-12"><h6 class="section-title fw-bold text-dark"><i class="bi bi-person-vcard me-2 text-primary"></i> CLIENT INFORMATION</h6></div>
                   <div class="col-md-12">
@@ -494,7 +485,6 @@
                   </div>
                 </div>
 
-                <!-- Package Details -->
                 <div class="row g-3 mb-4">
                   <div class="col-12"><h6 class="section-title fw-bold text-dark"><i class="bi bi-box-seam-fill me-2 text-primary"></i> PACKAGE & PAX DETAILS</h6></div>
                   <div class="col-12">
@@ -542,7 +532,6 @@
                   </div>
                 </div>
 
-                <!-- Flight Schedule Section -->
                 <div class="row g-3 mb-4 p-3 rounded-3" style="background-color: #F0F9FF; border: 1px solid #BAE6FD;">
                   <div class="col-12 d-flex flex-column gap-2 border-bottom border-info border-opacity-25 pb-2">
                     <div class="d-flex align-items-center justify-content-between">
@@ -568,7 +557,6 @@
                   </div>
                 </div>
 
-                <!-- Ziyarat Options -->
                 <div class="row g-3 mb-4 p-3 rounded-3" style="background-color: #FEFCE8; border: 1px solid #FEF08A;">
                   <div class="col-12"><h6 class="fw-bold text-dark mb-0 small"><i class="bi bi-geo-alt-fill text-warning me-2"></i> ZIYARAT OPTIONS</h6></div>
                   <div class="col-12">
@@ -593,7 +581,6 @@
                   </div>
                 </div>
 
-                <!-- Invoice Installment Ledger Input -->
                 <div class="row g-3 mb-4 p-3 rounded-3" style="background-color: #ECFDF5; border: 1px solid #A7F3D0;" id="invoicePaymentSection" style="display:none;">
                   <div class="col-12"><h6 class="fw-bold text-success mb-0 small"><i class="bi bi-cash-stack me-2"></i> PAYMENT & INSTALLMENT LEDGER (INVOICE)</h6></div>
                   <div class="col-12">
@@ -610,7 +597,6 @@
                   </div>
                 </div>
 
-                <!-- Transport Schedule -->
                 <div class="row g-3 mb-4">
                   <div class="col-12"><h6 class="section-title fw-bold text-dark"><i class="bi bi-bus-front-fill me-2 text-primary"></i> TRANSPORT SCHEDULE</h6></div>
                   <div class="col-12" id="transportContainer">
@@ -697,7 +683,6 @@
                   </div>
                 </div>
 
-                <!-- Hotel Accommodations -->
                 <div class="row g-3 mb-4">
                   <div class="col-12 d-flex justify-content-between align-items-center">
                     <h6 class="section-title fw-bold text-dark mb-0"><i class="bi bi-buildings-fill me-2 text-primary"></i> HOTEL ACCOMMODATIONS</h6>
@@ -729,7 +714,6 @@
                   </div>
                 </div>
 
-                <!-- Terms & Conditions Section -->
                 <div class="row g-3 mb-4 p-3 rounded-3" style="background-color: #F8FAFC; border: 1px solid #E2E8F0;">
                   <div class="col-12 d-flex justify-content-between align-items-center border-bottom pb-2">
                     <h6 class="fw-bold text-dark mb-0 small"><i class="bi bi-file-text-fill me-2 text-primary"></i> TERMS & CONDITIONS</h6>
@@ -740,7 +724,6 @@
                   </div>
                 </div>
 
-                <!-- Action Buttons -->
                 <div class="d-flex gap-3">
                   <button type="button" class="btn btn-primary flex-fill py-3 shadow" data-bs-toggle="modal" data-bs-target="#previewModal" onclick="generatePreview()"><i class="bi bi-eye-fill me-2"></i> PREVIEW DOCUMENT</button>
                   <button type="button" class="btn btn-success flex-fill py-3 shadow" onclick="saveRecord()"><i class="bi bi-save-fill me-2"></i> SAVE RECORD</button>
@@ -752,7 +735,6 @@
         </div>
       </div>
 
-      <!-- Modern CRM Record Table Card -->
       <div class="row mt-4 no-print">
         <div class="col-12">
           <div class="card">
@@ -801,7 +783,6 @@
     </div>
   </div>
 
-  <!-- User Management Modal -->
   <div class="modal fade" id="userMgmtModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg rounded-4">
@@ -860,7 +841,6 @@
     </div>
   </div>
 
-  <!-- Installment Ledger Modal -->
   <div class="modal fade" id="ledgerModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg rounded-4">
@@ -905,7 +885,6 @@
     </div>
   </div>
 
-  <!-- Add Hotel Modal -->
   <div class="modal fade" id="addHotelModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg rounded-4">
@@ -936,7 +915,6 @@
     </div>
   </div>
 
-  <!-- Document Preview Modal -->
   <div class="modal fade" id="previewModal" tabindex="-1">
     <div class="modal-dialog modal-xl modal-fullscreen-sm-down">
       <div class="modal-content border-0 shadow-lg">
@@ -956,10 +934,8 @@
     </div>
   </div>
 
-  <!-- Printable Hidden Container -->
   <div id="printArea"></div>
 
-  <!-- Profile Setup Modal -->
   <div class="modal fade" id="profileModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg rounded-4">
@@ -1107,14 +1083,21 @@
 
         document.getElementById('currentLoggedInUserDisplay').innerHTML = `<i class="bi bi-person-fill me-1"></i> ${currentUser.username} (${currentUser.role})`;
         
+        // Strict Role-Based UI Permissions (Standard User cannot see Profile, Users, or Term modification)
         if (currentUser.role !== 'ADMIN') {
-          document.getElementById('btnUserManager').style.display = 'none';
-          document.getElementById('btnProfileSetup').style.display = 'none';
-          document.getElementById('btnAddTermBtn').style.display = 'none';
+          const btnUserMgmt = document.getElementById('btnUserManager');
+          const btnProfile = document.getElementById('btnProfileSetup');
+          const btnAddTerm = document.getElementById('btnAddTermBtn');
+          if(btnUserMgmt) btnUserMgmt.style.display = 'none';
+          if(btnProfile) btnProfile.style.display = 'none';
+          if(btnAddTerm) btnAddTerm.style.display = 'none';
         } else {
-          document.getElementById('btnUserManager').style.display = 'inline-block';
-          document.getElementById('btnProfileSetup').style.display = 'inline-block';
-          document.getElementById('btnAddTermBtn').style.display = 'inline-block';
+          const btnUserMgmt = document.getElementById('btnUserManager');
+          const btnProfile = document.getElementById('btnProfileSetup');
+          const btnAddTerm = document.getElementById('btnAddTermBtn');
+          if(btnUserMgmt) btnUserMgmt.style.display = 'inline-block';
+          if(btnProfile) btnProfile.style.display = 'inline-block';
+          if(btnAddTerm) btnAddTerm.style.display = 'inline-block';
         }
 
         renderCRM();
@@ -1995,6 +1978,10 @@
     }
 
     function resetForm() {
+      if(currentUser && currentUser.role !== 'ADMIN') {
+        alert("ACCESS DENIED!");
+        return;
+      }
       document.getElementById('quotationForm').reset();
       document.getElementById('quoteDate').valueAsDate = new Date();
       document.getElementById('flightRowsContainer').innerHTML = '';
@@ -2002,7 +1989,7 @@
       document.getElementById('ziyaratMakkah').checked = false;
       document.getElementById('ziyaratMadinah').checked = false;
       document.getElementById('ziyaratBadar').checked = false;
-      document.getElementById('ziyaratTaif').checked = false;
+      document.getElementById('ziyaratTaif').checked, false;
 
       document.getElementById('chkIncludeTicket').checked = true;
       toggleFlightTicketSection();
@@ -2013,13 +2000,13 @@
       addTermsRow('VISA APPROVAL: UMRAH VISA APPROVAL IS SUBJECT TO SAUDI GOVERNMENT RULES AND REGULATIONS. THE COMPANY WILL NOT BE RESPONSIBLE FOR VISA REJECTION OR DELAYS CAUSED BY AUTHORITIES.');
       addTermsRow('AIRLINE POLICY: AIR TICKETS ARE SUBJECT TO AIRLINE RULES AND REGULATIONS. ANY CANCELLATION, RESCHEDULING, OR DATE CHANGE CHARGES WILL BE BORNE BY THE PASSENGER.');
       addTermsRow('HOTEL ACCOMMODATION: HOTEL BOOKINGS ARE SUBJECT TO AVAILABILITY. ANY CHANGE IN HOTEL, IF REQUIRED, WILL BE SUBJECT TO AVAILABILITY AND SUITABLE ALTERNATIVE ARRANGEMENTS.');
-      addTermsRow('CANCELLATION POLICY: CANCELLATION CHARGES WILL APPLY ACCORDING TO THE POLICIES OF AIRLINES, HOTELS, VISA SERVICES, AND OTHER SERVICE PROVIDERS.');
+      addTermsRow('CFANCELLATION POLICY: CANCELLATION CHARGES WILL APPLY ACCORDING TO THE POLICIES OF AIRLINES, HOTELS, VISA SERVICES, AND OTHER SERVICE PROVIDERS.');
       addTermsRow('REFUND POLICY: REFUNDS, IF APPLICABLE, WILL BE PROCESSED AFTER DEDUCTION OF ACTUAL EXPENSES AND APPLICABLE CANCELLATION CHARGES.');
       addTermsRow('ROOM SHARING: ROOM SHARING AND ACCOMMODATION ARRANGEMENTS WILL BE PROVIDED ACCORDING TO THE SELECTED UMRAH PACKAGE.');
       addTermsRow('TRAVEL DATES: ANY CHANGES IN TRAVEL DATES OR PACKAGE SERVICES MAY RESULT IN ADDITIONAL CHARGES.');
       addTermsRow('ADDITIONAL EXPENSES: ANY EXTRA EXPENSES DUE TO PERSONAL REQUESTS, DELAYS, FLIGHT CHANGES, OR UNFORESEEN CIRCUMSTANCES WILL BE PAYABLE BY THE PASSENGER.');
       addTermsRow('UNFORESEEN CIRCUMSTANCES: THE COMPANY WILL NOT BE RESPONSIBLE FOR DELAYS, CANCELLATIONS, OR CHANGES CAUSED BY AIRLINES, HOTELS, GOVERNMENT AUTHORITIES, OR CIRCUMSTANCES BEYOND ITS CONTROL.');
-      addTermsRow('ACCEPTANCE OF TERMS: CONFIRMATION OF BOOKING AND PAYMENT SHALL BE CONSIDERED ACCEPTANCE OF ALL THE ABOVE-MENTIONED TERMS AND CONDITIONS.');
+      addTermsRow('ACCEPTANCE OF TERMS: CONFIRMATION OF BOOKING AND PAYMENT SHALL BE CONSIDERED ACCEPTANCE OFALL THE ABOVE-MENTIONED TERMS AND CONDITIONS.');
 
       addFlightRow('SAUDI ARABIAN AIRLINES (SAUDIA)', 'DIRECT FLIGHT', 'LAHORE TO JEDDAH (LHE - JED)', '', '14:30');
       addFlightRow('SAUDI ARABIAN AIRLINES (SAUDIA)', 'DIRECT FLIGHT', 'JEDDAH TO LAHORE (JED - LHE)', '', '21:15');
