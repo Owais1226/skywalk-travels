@@ -563,7 +563,7 @@
                 <div class="section-card" style="background-color: #F0F9FF; border-color: #BAE6FD;">
                   <div class="d-flex flex-column gap-2 border-bottom border-info border-opacity-25 pb-2 mb-3">
                     <div class="d-flex align-items-center justify-content-between">
-                      <h6 class="fw-bold text-info mb-0 small"><i class="bi bi-airplane-fill me-2"></i> FLIGHT SCHEDULE</h6>
+                      <h6 class="fw-bold text-info mb-0 small"><i class="bi bi-airplane-fill me-2"></i> FLIGHT SCHEDULE (24-HR MILITARY TIME 00:00 - 23:59)</h6>
                       <button type="button" class="btn btn-sm btn-outline-info py-1 px-3 fw-bold" style="font-size: 0.7rem;" id="btnAddFlightBtn" onclick="addFlightRow()"><i class="bi bi-plus-circle me-1"></i> ADD ROW</button>
                     </div>
                     
@@ -1381,10 +1381,33 @@
       }
     }
 
+    // Generate 24-Hour Time Options (00:00 to 23:30 in 30-min intervals)
+    function build24HourTimeOptions(selectedVal) {
+      let options = '<option value="">SELECT TIME (24H)</option>';
+      for (let h = 0; h < 24; h++) {
+        for (let m of [0, 30]) {
+          const hh = h.toString().padStart(2, '0');
+          const mm = m.toString().padStart(2, '0');
+          const val = `${hh}:${mm}`;
+          
+          let ampmDisplay = '';
+          if (h === 0) ampmDisplay = `12:${mm} AM (NIGHT)`;
+          else if (h < 12) ampmDisplay = `${h}:${mm} AM`;
+          else if (h === 12) ampmDisplay = `12:${mm} PM (NOON)`;
+          else ampmDisplay = `${h - 12}:${mm} PM`;
+
+          const label = `${val} HRS  (${ampmDisplay})`;
+          const isSelected = (selectedVal === val) ? 'selected' : '';
+          options += `<option value="${val}" ${isSelected}>${label}</option>`;
+        }
+      }
+      return options;
+    }
+
     function formatFlightTime24(timeVal) {
       if (!timeVal) return '-';
       const parts = timeVal.split(':');
-      if (parts.length >= 2) return `${parts[0]}${parts[1]} HRS`;
+      if (parts.length >= 2) return `${parts[0]}:${parts[1]} HRS`;
       return timeVal.toUpperCase();
     }
 
@@ -1394,6 +1417,8 @@
       const rowDiv = document.createElement('div');
       rowDiv.className = 'p-3 border rounded-3 bg-white mb-2 shadow-sm flight-row-item';
       rowDiv.id = `flightRow_${flightRowCount}`;
+
+      const timeOptionsHtml = build24HourTimeOptions(flightTime);
 
       rowDiv.innerHTML = `
         <div class="row g-2 align-items-center">
@@ -1417,8 +1442,10 @@
             <input type="date" class="form-control form-control-sm f-dep" value="${depDate}">
           </div>
           <div class="col-5 col-md-2">
-            <label class="form-label text-muted mb-0" style="font-size:0.75rem;">TIME (24H)</label>
-            <input type="time" class="form-control form-control-sm f-time" value="${flightTime}">
+            <label class="form-label text-danger fw-bold mb-0" style="font-size:0.75rem;"><i class="bi bi-clock-history me-1"></i> 24-HR TIME</label>
+            <select class="form-select form-select-sm f-time fw-bold text-primary">
+              ${timeOptionsHtml}
+            </select>
           </div>
           <div class="col-1 text-end">
             <button type="button" class="btn btn-sm btn-outline-danger py-1 px-2 mt-3" onclick="removeFlightRow(${flightRowCount})"><i class="bi bi-trash"></i></button>
