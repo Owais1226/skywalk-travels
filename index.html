@@ -443,7 +443,7 @@
           <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
               <span style="font-size: 0.9rem;"><i class="bi bi-file-earmark-plus-fill me-2 text-primary"></i> CREATE QUOTATION / INVOICE</span>
-              <button class="btn btn-sm btn-outline-danger py-1 px-3 rounded-pill" style="font-size: 0.7rem;" onclick="resetForm()"><i class="bi bi-arrow-counterclockwise me-1"></i> RESET FORM</button>
+              <button class="btn btn-sm btn-outline-danger py-1 px-3 rounded-pill" id="btnResetFormMain" style="font-size: 0.7rem;" onclick="resetForm()"><i class="bi bi-arrow-counterclockwise me-1"></i> RESET FORM</button>
             </div>
             <div class="card-body p-4">
               <form id="quotationForm">
@@ -1087,22 +1087,7 @@
 
         document.getElementById('currentLoggedInUserDisplay').innerHTML = `<i class="bi bi-person-fill me-1"></i> ${currentUser.username} (${currentUser.role})`;
         
-        if (currentUser.role !== 'ADMIN') {
-          const btnUserMgmt = document.getElementById('btnUserManager');
-          const btnProfile = document.getElementById('btnProfileSetup');
-          const btnAddTerm = document.getElementById('btnAddTermBtn');
-          if(btnUserMgmt) btnUserMgmt.style.display = 'none';
-          if(btnProfile) btnProfile.style.display = 'none';
-          if(btnAddTerm) btnAddTerm.style.display = 'none';
-        } else {
-          const btnUserMgmt = document.getElementById('btnUserManager');
-          const btnProfile = document.getElementById('btnProfileSetup');
-          const btnAddTerm = document.getElementById('btnAddTermBtn');
-          if(btnUserMgmt) btnUserMgmt.style.display = 'inline-block';
-          if(btnProfile) btnProfile.style.display = 'inline-block';
-          if(btnAddTerm) btnAddTerm.style.display = 'inline-block';
-        }
-
+        applyRolePermissions();
         renderCRM();
       } else {
         if(errBox) {
@@ -1113,6 +1098,23 @@
         }
       }
       return false;
+    }
+
+    function applyRolePermissions() {
+      const isAdmin = currentUser && currentUser.role === 'ADMIN';
+
+      const btnUserMgmt = document.getElementById('btnUserManager');
+      const btnProfile = document.getElementById('btnProfileSetup');
+      const btnAddTerm = document.getElementById('btnAddTermBtn');
+      const btnResetForm = document.getElementById('btnResetFormMain');
+
+      if (btnUserMgmt) btnUserMgmt.style.display = isAdmin ? 'inline-block' : 'none';
+      if (btnProfile) btnProfile.style.display = isAdmin ? 'inline-block' : 'none';
+      if (btnAddTerm) btnAddTerm.style.display = isAdmin ? 'inline-block' : 'none';
+      if (btnResetForm) btnResetForm.style.display = isAdmin ? 'inline-block' : 'none';
+
+      // Re-render terms rows so delete buttons hide for regular users
+      reindexTerms();
     }
 
     function togglePasswordVisibility(inputId, iconId) {
@@ -1372,10 +1374,12 @@
       rowDiv.className = 'terms-item-row';
       rowDiv.id = `termsRow_${termsRowCount}`;
 
+      const isAdmin = currentUser && currentUser.role === 'ADMIN';
+
       rowDiv.innerHTML = `
         <span class="fw-bold text-primary" style="font-size:0.75rem;">${termsRowCount}.</span>
-        <input type="text" class="form-control form-control-sm term-input-val" placeholder="ENTER TERM..." value="${termsText}">
-        <button type="button" class="btn btn-sm btn-outline-danger py-1 px-2" onclick="removeTermsRow(${termsRowCount})"><i class="bi bi-trash"></i></button>
+        <input type="text" class="form-control form-control-sm term-input-val" placeholder="ENTER TERM..." value="${termsText}" ${!isAdmin ? 'readonly' : ''}>
+        ${isAdmin ? `<button type="button" class="btn btn-sm btn-outline-danger py-1 px-2 btn-delete-term" onclick="removeTermsRow(${termsRowCount})"><i class="bi bi-trash"></i></button>` : ''}
       `;
       container.appendChild(rowDiv);
     }
@@ -1392,12 +1396,33 @@
 
     function reindexTerms() {
       const rows = document.querySelectorAll('.terms-item-row');
+      const isAdmin = currentUser && currentUser.role === 'ADMIN';
       termsRowCount = 0;
+
       rows.forEach((row, idx) => {
         termsRowCount = idx + 1;
         row.id = `termsRow_${termsRowCount}`;
         row.querySelector('span').innerText = `${termsRowCount}.`;
-        row.querySelector('button').setAttribute('onclick', `removeTermsRow(${termsRowCount})`);
+        
+        const input = row.querySelector('.term-input-val');
+        if(input) {
+          if(!isAdmin) input.setAttribute('readonly', 'readonly');
+          else input.removeAttribute('readonly');
+        }
+
+        let delBtn = row.querySelector('.btn-delete-term');
+        if (!isAdmin && delBtn) {
+          delBtn.remove();
+        } else if (isAdmin && !delBtn) {
+          const newBtn = document.createElement('button');
+          newBtn.type = 'button';
+          newBtn.className = 'btn btn-sm btn-outline-danger py-1 px-2 btn-delete-term';
+          newBtn.setAttribute('onclick', `removeTermsRow(${termsRowCount})`);
+          newBtn.innerHTML = '<i class="bi bi-trash"></i>';
+          row.appendChild(newBtn);
+        } else if (delBtn) {
+          delBtn.setAttribute('onclick', `removeTermsRow(${termsRowCount})`);
+        }
       });
     }
 
@@ -1992,7 +2017,7 @@
       document.getElementById('ziyaratMakkah').checked = false;
       document.getElementById('ziyaratMadinah').checked = false;
       document.getElementById('ziyaratBadar').checked = false;
-      document.getElementById('ziyaratTaif').checked, false;
+      document.getElementById('ziyaratTaif').checked = false;
 
       document.getElementById('chkIncludeTicket').checked = true;
       toggleFlightTicketSection();
