@@ -1015,6 +1015,20 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
+    // Real-time Capitalization for all Text Inputs
+    document.addEventListener('input', function (e) {
+      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
+        if (e.target.type !== 'password' && e.target.type !== 'file' && e.target.type !== 'date' && e.target.type !== 'number') {
+          const start = e.target.selectionStart;
+          const end = e.target.selectionEnd;
+          e.target.value = e.target.value.toUpperCase();
+          if (start !== null && end !== null) {
+            e.target.setSelectionRange(start, end);
+          }
+        }
+      }
+    });
+
     const defaultUsersList = [
       { id: 1, username: 'ADMIN', password: '123', role: 'ADMIN' },
       { id: 2, username: 'STAFF', password: '123', role: 'USER' }
@@ -1313,3 +1327,707 @@
     }
 
     function addFlightRow(airline = '', flightType = 'DIRECT FLIGHT', route = '', depDate = '', flightTime = '14:30') {
+      flightRowCount++;
+      const container = document.getElementById('flightRowsContainer');
+      const rowDiv = document.createElement('div');
+      rowDiv.className = 'p-3 border rounded-3 bg-white mb-2 shadow-sm flight-row-item';
+      rowDiv.id = `flightRow_${flightRowCount}`;
+
+      rowDiv.innerHTML = `
+        <div class="row g-2 align-items-center">
+          <div class="col-md-12">
+            <label class="form-label text-muted mb-0" style="font-size:0.75rem;">AIRLINE NAME</label>
+            <input type="text" class="form-control form-control-sm f-airline" list="airlinePresets" placeholder="AIRLINE" value="${airline}">
+          </div>
+          <div class="col-6 col-md-3">
+            <label class="form-label text-muted mb-0" style="font-size:0.75rem;">TYPE</label>
+            <select class="form-select form-select-sm f-type">
+              <option value="DIRECT FLIGHT" ${flightType === 'DIRECT FLIGHT' ? 'selected' : ''}>DIRECT</option>
+              <option value="VIA / CONNECTING" ${flightType === 'VIA / CONNECTING' ? 'selected' : ''}>CONNECTING</option>
+            </select>
+          </div>
+          <div class="col-6 col-md-3">
+            <label class="form-label text-muted mb-0" style="font-size:0.75rem;">ROUTE</label>
+            <input type="text" class="form-control form-control-sm f-route" list="routePresets" placeholder="LHE-JED" value="${route}">
+          </div>
+          <div class="col-6 col-md-3">
+            <label class="form-label text-muted mb-0" style="font-size:0.75rem;">DATE</label>
+            <input type="date" class="form-control form-control-sm f-dep" value="${depDate}">
+          </div>
+          <div class="col-5 col-md-2">
+            <label class="form-label text-muted mb-0" style="font-size:0.75rem;">TIME (24H)</label>
+            <input type="time" class="form-control form-control-sm f-time" value="${flightTime}">
+          </div>
+          <div class="col-1 text-end">
+            <button type="button" class="btn btn-sm btn-outline-danger py-1 px-2 mt-3" onclick="removeFlightRow(${flightRowCount})"><i class="bi bi-trash"></i></button>
+          </div>
+        </div>
+      `;
+      container.appendChild(rowDiv);
+    }
+
+    function removeFlightRow(id) {
+      const elem = document.getElementById(`flightRow_${id}`);
+      if(elem) elem.remove();
+    }
+
+    function addTermsRow(termsText = '') {
+      if(currentUser && currentUser.role !== 'ADMIN') {
+        alert("ACCESS DENIED: ONLY ADMIN CAN MODIFY TERMS & CONDITIONS!");
+        return;
+      }
+      termsRowCount++;
+      const container = document.getElementById('termsContainer');
+      const rowDiv = document.createElement('div');
+      rowDiv.className = 'terms-item-row';
+      rowDiv.id = `termsRow_${termsRowCount}`;
+
+      rowDiv.innerHTML = `
+        <span class="fw-bold text-primary" style="font-size:0.75rem;">${termsRowCount}.</span>
+        <input type="text" class="form-control form-control-sm term-input-val" placeholder="ENTER TERM..." value="${termsText}">
+        <button type="button" class="btn btn-sm btn-outline-danger py-1 px-2" onclick="removeTermsRow(${termsRowCount})"><i class="bi bi-trash"></i></button>
+      `;
+      container.appendChild(rowDiv);
+    }
+
+    function removeTermsRow(id) {
+      if(currentUser && currentUser.role !== 'ADMIN') {
+        alert("ACCESS DENIED!");
+        return;
+      }
+      const elem = document.getElementById(`termsRow_${id}`);
+      if(elem) elem.remove();
+      reindexTerms();
+    }
+
+    function reindexTerms() {
+      const rows = document.querySelectorAll('.terms-item-row');
+      termsRowCount = 0;
+      rows.forEach((row, idx) => {
+        termsRowCount = idx + 1;
+        row.id = `termsRow_${termsRowCount}`;
+        row.querySelector('span').innerText = `${termsRowCount}.`;
+        row.querySelector('button').setAttribute('onclick', `removeTermsRow(${termsRowCount})`);
+      });
+    }
+
+    addTermsRow('100% ADVANCE PAYMENT: FULL PAYMENT (100%) IS REQUIRED IN ADVANCE AT THE TIME OF BOOKING CONFIRMATION. NO BOOKING WILL BE CONFIRMED WITHOUT FULL PAYMENT.');
+    addTermsRow('BOOKING CONFIRMATION: ALL BOOKINGS ARE SUBJECT TO AVAILABILITY AND CONFIRMATION AFTER RECEIPT OF FULL PAYMENT.');
+    addTermsRow('PASSPORT & DOCUMENTS: PASSENGERS MUST PROVIDE VALID PASSPORTS AND ALL REQUIRED DOCUMENTS WITHIN THE GIVEN TIME.');
+    addTermsRow('VISA APPROVAL: UMRAH VISA APPROVAL IS SUBJECT TO SAUDI GOVERNMENT RULES AND REGULATIONS. THE COMPANY WILL NOT BE RESPONSIBLE FOR VISA REJECTION OR DELAYS CAUSED BY AUTHORITIES.');
+    addTermsRow('AIRLINE POLICY: AIR TICKETS ARE SUBJECT TO AIRLINE RULES AND REGULATIONS. ANY CANCELLATION, RESCHEDULING, OR DATE CHANGE CHARGES WILL BE BORNE BY THE PASSENGER.');
+    addTermsRow('HOTEL ACCOMMODATION: HOTEL BOOKINGS ARE SUBJECT TO AVAILABILITY. ANY CHANGE IN HOTEL, IF REQUIRED, WILL BE SUBJECT TO AVAILABILITY AND SUITABLE ALTERNATIVE ARRANGEMENTS.');
+    addTermsRow('CANCELLATION POLICY: CANCELLATION CHARGES WILL APPLY ACCORDING TO THE POLICIES OF AIRLINES, HOTELS, VISA SERVICES, AND OTHER SERVICE PROVIDERS.');
+    addTermsRow('REFUND POLICY: REFUNDS, IF APPLICABLE, WILL BE PROCESSED AFTER DEDUCTION OF ACTUAL EXPENSES AND APPLICABLE CANCELLATION CHARGES.');
+    addTermsRow('ROOM SHARING: ROOM SHARING AND ACCOMMODATION ARRANGEMENTS WILL BE PROVIDED ACCORDING TO THE SELECTED UMRAH PACKAGE.');
+    addTermsRow('TRAVEL DATES: ANY CHANGES IN TRAVEL DATES OR PACKAGE SERVICES MAY RESULT IN ADDITIONAL CHARGES.');
+    addTermsRow('ADDITIONAL EXPENSES: ANY EXTRA EXPENSES DUE TO PERSONAL REQUESTS, DELAYS, FLIGHT CHANGES, OR UNFORESEEN CIRCUMSTANCES WILL BE PAYABLE BY THE PASSENGER.');
+    addTermsRow('UNFORESEEN CIRCUMSTANCES: THE COMPANY WILL NOT BE RESPONSIBLE FOR DELAYS, CANCELLATIONS, OR CHANGES CAUSED BY AIRLINES, HOTELS, GOVERNMENT AUTHORITIES, OR CIRCUMSTANCES BEYOND ITS CONTROL.');
+    addTermsRow('ACCEPTANCE OF TERMS: CONFIRMATION OF BOOKING AND PAYMENT SHALL BE CONSIDERED ACCEPTANCE OF ALL THE ABOVE-MENTIONED TERMS AND CONDITIONS.');
+
+    addFlightRow('SAUDI ARABIAN AIRLINES (SAUDIA)', 'DIRECT FLIGHT', 'LAHORE TO JEDDAH (LHE - JED)', '', '14:30');
+    addFlightRow('SAUDI ARABIAN AIRLINES (SAUDIA)', 'DIRECT FLIGHT', 'JEDDAH TO LAHORE (JED - LHE)', '', '21:15');
+
+    function autoGenDocNum() {
+      const isQuot = document.getElementById('docTypeQuot').checked;
+      if(isQuot) {
+        document.getElementById('docNum').value = 'SAQ-' + quotCounter;
+        document.getElementById('lblDocNum').innerText = 'QUOTATION #';
+      } else {
+        document.getElementById('docNum').value = 'SAI-' + invCounter;
+        document.getElementById('lblDocNum').innerText = 'INVOICE #';
+      }
+    }
+
+    function toggleDocType() {
+      autoGenDocNum();
+      const isInv = document.getElementById('docTypeInv').checked;
+      document.getElementById('invoicePaymentSection').style.display = isInv ? 'flex' : 'none';
+      calcTotal();
+    }
+
+    function populateDropdowns() {
+      const mSelect = document.getElementById('makkahHotelSelect');
+      mSelect.innerHTML = '<option value="">SELECT MAKKAH HOTEL</option>' + makkahHotels.map(h => `<option value="${h}">${h}</option>`).join('');
+
+      const madSelect = document.getElementById('madinahHotelSelect');
+      madSelect.innerHTML = '<option value="">SELECT MADINAH HOTEL</option>' + madinahHotels.map(h => `<option value="${h}">${h}</option>`).join('');
+
+      for(let i=1; i<=4; i++) {
+        const vSelect = document.getElementById(`transVehicle${i}`);
+        vSelect.innerHTML = '<option value="">SELECT VEHICLE</option>' + vehicleList.map(v => `<option value="${v}">${v}</option>`).join('');
+      }
+    }
+
+    function saveNewHotelModal() {
+      const isMakkah = document.getElementById('cityMakkah').checked;
+      const name = document.getElementById('newHotelNameModal').value.trim().toUpperCase();
+      if(!name) {
+        alert("PLEASE ENTER HOTEL NAME!");
+        return;
+      }
+      if(isMakkah) makkahHotels.push(name);
+      else madinahHotels.push(name);
+      
+      populateDropdowns();
+      document.getElementById('newHotelNameModal').value = '';
+      
+      const modal = bootstrap.Modal.getInstance(document.getElementById('addHotelModal'));
+      modal.hide();
+      alert(`HOTEL SUCCESSFULLY ADDED TO ${isMakkah ? 'MAKKAH' : 'MADINAH'} LIST!`);
+    }
+
+    function calcTotal() {
+      const adults = parseInt(document.getElementById('paxAdults').value) || 0;
+      const rate = parseFloat(document.getElementById('ratePerHead').value) || 0;
+      const infants = parseInt(document.getElementById('paxInfants').value) || 0;
+      const infantRate = parseFloat(document.getElementById('infantRatePerHead').value) || 0;
+
+      const total = (adults * rate) + (infants * infantRate);
+      document.getElementById('totalAmount').value = total;
+      document.getElementById('invTotalAmount').value = total;
+      calcBalance();
+    }
+
+    function calcBalance() {
+      const total = parseFloat(document.getElementById('totalAmount').value) || 0;
+      const rec = parseFloat(document.getElementById('receivedAmount').value) || 0;
+      const bal = total - rec;
+      document.getElementById('balanceAmount').value = bal;
+    }
+
+    function buildCleanDocumentHTML() {
+      const isQuot = document.getElementById('docTypeQuot').checked;
+      const docTypeStr = isQuot ? 'QUOTATION' : 'INVOICE';
+      const docNumVal = document.getElementById('docNum').value;
+
+      const compName = (document.getElementById('cfgCompName').value || 'SKY WALK TOUR & TRAVELS').toUpperCase();
+      const compAddr = (document.getElementById('cfgCompAddr').value || '').toUpperCase();
+      const p1 = document.getElementById('cfgCompPhone1').value || '';
+      const p2 = document.getElementById('cfgCompPhone2').value || '';
+      const email = (document.getElementById('cfgCompEmail').value || '').toUpperCase();
+      const logoSrc = uploadedLogoBase64 || document.getElementById('cfgLogoUrl').value || 'https://i.ibb.co/L50nLrq/skywalk-logo.jpg';
+
+      const clientName = (document.getElementById('clientName').value || '-').toUpperCase();
+      const clientContact = document.getElementById('clientContact').value || '-';
+      const quoteDate = document.getElementById('quoteDate').value || '-';
+      const pkgTitle = (document.getElementById('pkgTitle').value || 'UMRAH PACKAGE').toUpperCase();
+
+      const adults = parseInt(document.getElementById('paxAdults').value) || 0;
+      const children = parseInt(document.getElementById('paxChildren').value) || 0;
+      const infants = parseInt(document.getElementById('paxInfants').value) || 0;
+      const travelersStr = `${adults} ADULTS + ${children} CHILDREN + ${infants} INFANTS`;
+      const occ = (document.getElementById('occupancy').value || '-').toUpperCase();
+
+      const rate = parseFloat(document.getElementById('ratePerHead').value) || 0;
+      const infantRate = parseFloat(document.getElementById('infantRatePerHead').value) || 0;
+      const total = (adults * rate) + (infants * infantRate);
+
+      const isTicketIncluded = document.getElementById('chkIncludeTicket').checked;
+      let flightSectionContentHtml = '';
+
+      if (isTicketIncluded) {
+        const flightRows = document.querySelectorAll('.flight-row-item');
+        let flightHeaderHtml = `<th>AIRLINE NAME</th><th>FLIGHT TYPE</th><th>SECTOR / ROUTE</th><th>FLIGHT DATE</th><th>FLIGHT TIME (24-HR)</th>`;
+        let flightBodyHtml = '';
+
+        flightRows.forEach(r => {
+          const airline = (r.querySelector('.f-airline').value || '-').toUpperCase();
+          const fType = (r.querySelector('.f-type').value || '-').toUpperCase();
+          const route = (r.querySelector('.f-route').value || '-').toUpperCase();
+          const dep = r.querySelector('.f-dep').value || '-';
+          const rawTime = r.querySelector('.f-time').value || '';
+          const formatted24Time = formatFlightTime24(rawTime);
+          flightBodyHtml += `<tr><td class="fw-bold text-primary">${airline}</td><td>${fType}</td><td>${route}</td><td class="fw-bold text-success">${dep}</td><td class="fw-bold text-info">${formatted24Time}</td></tr>`;
+        });
+        if(!flightBodyHtml) flightBodyHtml = `<tr><td colspan="5" class="text-muted">NO FLIGHT SCHEDULE ADDED</td></tr>`;
+
+        flightSectionContentHtml = `
+          <table class="pdf-table mb-2">
+            <thead><tr>${flightHeaderHtml}</tr></thead>
+            <tbody class="text-center">${flightBodyHtml}</tbody>
+          </table>
+        `;
+      } else {
+        flightSectionContentHtml = `
+          <div class="p-3 mb-2 rounded text-center border" style="background-color: #FEF3C7 !important; border-color: #F59E0B !important;">
+            <strong style="color: #92400E !important; font-size: 11px;">
+              <i class="bi bi-info-circle-fill me-2"></i>THIS PACKAGE IS WITHOUT TICKET. AIR TICKET FARE WILL BE ADDED AT THE TIME OF BOOKING ACCORDING TO PREVAILING AIRLINE FARES.
+            </strong>
+          </div>
+        `;
+      }
+
+      const ziyaratList = [];
+      if(document.getElementById('ziyaratMakkah').checked) ziyaratList.push("MAKKAH ZIYARAT");
+      if(document.getElementById('ziyaratMadinah').checked) ziyaratList.push("MADINAH ZIYARAT");
+      if(document.getElementById('ziyaratBadar').checked) ziyaratList.push("BADAR ZIYARAT");
+      if(document.getElementById('ziyaratTaif').checked) ziyaratList.push("TAIF ZIYARAT");
+
+      let ziyaratHtmlSection = '';
+      if(ziyaratList.length > 0) {
+        ziyaratHtmlSection = `
+          <div class="section-banner" style="background: #005B96 !important; color: #ffffff !important;"><i class="bi bi-geo-alt-fill me-2"></i> INCLUDED ZIYARAT TOURS</div>
+          <table class="pdf-table mb-2">
+            <thead>
+              <tr>
+                <th style="background-color: #E6F0FA !important; color: #0A3960 !important;">ZIYARAT TOUR NAME</th>
+                <th style="background-color: #E6F0FA !important; color: #0A3960 !important;">STATUS</th>
+              </tr>
+            </thead>
+            <tbody class="text-center">
+              ${ziyaratList.map(z => `<tr><td class="fw-bold">${z}</td><td class="text-success fw-bold"><i class="bi bi-check-circle-fill me-1"></i> INCLUDED IN PACKAGE</td></tr>`).join('')}
+            </tbody>
+          </table>
+        `;
+      }
+
+      const makkahH = document.getElementById('makkahHotelSelect').value.toUpperCase();
+      const madinahH = document.getElementById('madinahHotelSelect').value.toUpperCase();
+      let hotelHtml = '';
+      if(makkahH) hotelHtml += `<tr><td class="fw-bold">MAKKAH</td><td>${makkahH}</td><td>${(document.getElementById('makkahDist').value || '-').toUpperCase()}</td><td>${(document.getElementById('makkahNights').value || '-').toUpperCase()}</td></tr>`;
+      if(madinahH) hotelHtml += `<tr><td class="fw-bold">MADINAH</td><td>${madinahH}</td><td>${(document.getElementById('madinahDist').value || '-').toUpperCase()}</td><td>${(document.getElementById('madinahNights').value || '-').toUpperCase()}</td></tr>`;
+      if(!hotelHtml) hotelHtml = `<tr><td colspan="4" class="text-muted">NO HOTEL SELECTED</td></tr>`;
+
+      let transHtml = '';
+      for(let i=1; i<=4; i++) {
+        const sec = document.getElementById(`transSec${i}`).value.toUpperCase();
+        const cat = document.getElementById(`transCategory${i}`).value.toUpperCase();
+        const veh = document.getElementById(`transVehicle${i}`).value.toUpperCase();
+        if(sec || cat || veh) transHtml += `<tr><td>${sec || '-'}</td><td>${cat || '-'}</td><td>${veh || '-'}</td></tr>`;
+      }
+      if(!transHtml) transHtml = `<tr><td colspan="3" class="text-muted">NO TRANSPORT SCHEDULE SELECTED</td></tr>`;
+
+      let pricingHtml = `
+        <tr>
+          <td class="fw-bold">${occ ? occ + ' OCCUPANCY (ADULTS)' : 'ADULT PACKAGE'}</td>
+          <td>PKR ${rate.toLocaleString()}</td>
+          <td>${adults}</td>
+          <td class="fw-bold text-success">PKR ${(adults * rate).toLocaleString()}</td>
+        </tr>
+      `;
+      if(infants > 0) {
+        pricingHtml += `
+          <tr>
+            <td class="fw-bold">INFANT CHARGES</td>
+            <td>PKR ${infantRate.toLocaleString()}</td>
+            <td>${infants}</td>
+            <td class="fw-bold text-success">PKR ${(infants * infantRate).toLocaleString()}</td>
+          </tr>
+          <tr class="table-light">
+            <th colspan="3" class="text-end">GRAND TOTAL PACKAGE COST:</th>
+            <th class="text-success fs-6">PKR ${total.toLocaleString()}</th>
+          </tr>
+        `;
+      }
+
+      let accountsTableHtml = '';
+      if(!isQuot) {
+        const rec = parseFloat(document.getElementById('receivedAmount').value) || 0;
+        const bal = total - rec;
+        accountsTableHtml = `
+          <div class="section-banner-green"><i class="bi bi-receipt-cutoff me-2"></i> PAYMENT RECEIPT & ACCOUNT SUMMARY</div>
+          <table class="pdf-table mb-2">
+            <thead>
+              <tr>
+                <th style="background-color: #E8F5E9 !important; color: #1B5E20 !important;">TOTAL PACKAGE AMOUNT</th>
+                <th style="background-color: #E3F2FD !important; color: #0D47A1 !important;">INITIAL RECEIVED</th>
+                <th style="background-color: #FFEBEE !important; color: #B71C1C !important;">BALANCE OUTSTANDING</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="text-center">
+                <td class="fw-bold">PKR ${total.toLocaleString()}</td>
+                <td class="fw-bold text-primary">PKR ${rec.toLocaleString()}</td>
+                <td class="fw-bold text-danger">PKR ${bal.toLocaleString()}</td>
+              </tr>
+            </tbody>
+          </table>
+        `;
+      }
+
+      const termInputs = document.querySelectorAll('.term-input-val');
+      let termsListHtml = '';
+      termInputs.forEach((inp, idx) => {
+        const val = inp.value.trim().toUpperCase();
+        if(val) {
+          termsListHtml += `<div><strong>${idx + 1}.</strong> ${val}</div>`;
+        }
+      });
+      if(!termsListHtml) termsListHtml = '<div>NO TERMS & CONDITIONS ADDED.</div>';
+
+      return `
+        <!-- PAGE 1 -->
+        <div class="pdf-page">
+          <img src="${logoSrc}" class="watermark" alt="WATERMARK">
+          <div class="pdf-content">
+            
+            <div class="pdf-header-container d-flex justify-content-between align-items-center">
+              <div>
+                <div class="company-title">${compName}</div>
+                <div class="small text-muted" style="font-size: 10px; font-weight: 600;">${compAddr}</div>
+                <div class="small text-muted" style="font-size: 10px; font-weight: 600;">${p1} | ${p2} | ${email}</div>
+              </div>
+              <div class="text-end">
+                <img src="${logoSrc}" alt="LOGO" style="max-height: 160px; max-width: 250px; object-fit: contain;">
+              </div>
+            </div>
+
+            <div class="doc-badge-center-wrapper">
+              <span class="doc-badge ${isQuot ? 'doc-badge-quotation' : 'doc-badge-invoice'}">${docTypeStr}</span>
+            </div>
+
+            <div class="info-box mb-2">
+              <div class="row g-2 text-center">
+                <div class="col-3 border-end">
+                  <div class="text-uppercase text-muted small fw-bold" style="font-size: 9px;">${isQuot ? 'QUOTATION #' : 'INVOICE #'}</div>
+                  <div class="fw-bold text-primary" style="font-size: 12px;">${docNumVal}</div>
+                </div>
+                <div class="col-3 border-end">
+                  <div class="text-uppercase text-muted small fw-bold" style="font-size: 9px;">DATE</div>
+                  <div class="fw-bold text-dark" style="font-size: 12px;">${quoteDate}</div>
+                </div>
+                <div class="col-3 border-end">
+                  <div class="text-uppercase text-muted small fw-bold" style="font-size: 9px;">CLIENT NAME</div>
+                  <div class="fw-bold text-dark" style="font-size: 12px;">${clientName}</div>
+                </div>
+                <div class="col-3">
+                  <div class="text-uppercase text-muted small fw-bold" style="font-size: 9px;">CONTACT</div>
+                  <div class="fw-bold text-dark" style="font-size: 12px;">${clientContact}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-banner"><i class="bi bi-airplane-engines me-2"></i> PACKAGE SUMMARY & DETAILS</div>
+            <table class="pdf-table mb-2">
+              <thead>
+                <tr>
+                  <th>PACKAGE TITLE</th>
+                  <th>TRAVELERS</th>
+                  <th>OCCUPANCY</th>
+                  <th>TOTAL COST</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="text-center">
+                  <td class="fw-bold text-primary">${pkgTitle}</td>
+                  <td>${travelersStr}</td>
+                  <td>${occ}</td>
+                  <td class="fw-bold text-success">PKR ${total.toLocaleString()}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="section-banner"><i class="bi bi-airplane-fill me-2"></i> FLIGHT & AIRLINE DETAILS</div>
+            ${flightSectionContentHtml}
+
+            <div class="section-banner"><i class="bi bi-buildings me-2"></i> HOTEL ACCOMMODATION & STAY SCHEDULE</div>
+            <table class="pdf-table mb-2">
+              <thead>
+                <tr>
+                  <th style="width: 20%;">CITY</th>
+                  <th style="width: 45%;">HOTEL NAME</th>
+                  <th style="width: 18%;">DISTANCE</th>
+                  <th style="width: 17%;">DURATION</th>
+                </tr>
+              </thead>
+              <tbody class="text-center">${hotelHtml}</tbody>
+            </table>
+
+            <div class="section-banner"><i class="bi bi-bus-front me-2"></i> TRANSPORT SCHEDULE & ROUTE</div>
+            <table class="pdf-table mb-2">
+              <thead>
+                <tr>
+                  <th style="width: 40%;">SECTOR / ROUTE</th>
+                  <th style="width: 30%;">SERVICE TYPE</th>
+                  <th style="width: 30%;">VEHICLE / TRANSPORT</th>
+                </tr>
+              </thead>
+              <tbody class="text-center">${transHtml}</tbody>
+            </table>
+
+            ${ziyaratHtmlSection}
+          </div>
+
+          <div class="pdf-footer d-flex justify-content-between">
+            <span>${docTypeStr} | ${compName}</span>
+            <span>PAGE 1 OF 2</span>
+          </div>
+        </div>
+
+        <!-- PAGE 2 -->
+        <div class="pdf-page">
+          <img src="${logoSrc}" class="watermark" alt="WATERMARK">
+          <div class="pdf-content">
+            <div class="pdf-header-container d-flex justify-content-between align-items-center">
+              <div class="company-title">PACKAGE PRICING & INCLUSIONS</div>
+              <span class="badge bg-primary fs-6">#${docNumVal}</span>
+            </div>
+
+            <div class="section-banner"><i class="bi bi-calculator me-2"></i> PRICING BREAKDOWN</div>
+            <table class="pdf-table mb-2">
+              <thead>
+                <tr>
+                  <th>CATEGORY / DESCRIPTION</th>
+                  <th>RATE PER HEAD (PKR)</th>
+                  <th>PAX COUNT</th>
+                  <th>TOTAL PRICE (PKR)</th>
+                </tr>
+              </thead>
+              <tbody class="text-center">${pricingHtml}</tbody>
+            </table>
+
+            ${accountsTableHtml}
+
+            <div class="row g-2 mb-2">
+              <div class="col-6">
+                <div class="p-2 border rounded bg-light h-100">
+                  <h6 class="fw-bold text-success mb-1" style="font-size: 11px;"><i class="bi bi-check-circle-fill me-1"></i> INCLUDED SERVICES</h6>
+                  <ul class="small mb-0 ps-3" style="font-size: 10px;">
+                    <li>UMRAH VISA PROCESSING</li>
+                    <li>MANDATORY TRAVEL INSURANCE</li>
+                    <li>COMPLETE TRANSPORT AS PER ITINERARY</li>
+                    <li>MAKKAH & MADINAH HOTEL ACCOMMODATION</li>
+                    ${isTicketIncluded ? '<li>AIR TICKET INCLUDED</li>' : ''}
+                  </ul>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="p-2 border rounded bg-light h-100">
+                  <h6 class="fw-bold text-danger mb-1" style="font-size: 11px;"><i class="bi bi-x-circle-fill me-1"></i> EXCLUDED / NOT INCLUDED</h6>
+                  <ul class="small mb-0 ps-3" style="font-size: 10px;">
+                    <li>PERSONAL EXPENSES & SHOPPING</li>
+                    <li>HOTEL LAUNDRY & EXTRA ROOM SERVICES</li>
+                    ${!isTicketIncluded ? '<li class="fw-bold text-danger">AIR TICKET (WITHOUT TICKET PACKAGE)</li>' : ''}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-banner"><i class="bi bi-file-earmark-text me-2"></i> TERMS & CONDITIONS</div>
+            <div class="p-2 border rounded bg-light">
+              <div class="small text-dark mb-0" style="font-size: 9px; line-height: 1.4;">${termsListHtml}</div>
+            </div>
+          </div>
+
+          <div class="pdf-footer d-flex justify-content-between">
+            <span>${docTypeStr} | ${compName}</span>
+            <span>PAGE 2 OF 2</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function generatePreview() {
+      const htmlContent = buildCleanDocumentHTML();
+      document.getElementById('modalPreviewContainer').innerHTML = htmlContent;
+      document.getElementById('printArea').innerHTML = htmlContent;
+    }
+
+    function printPDFDocument() {
+      const htmlContent = buildCleanDocumentHTML();
+      document.getElementById('printArea').innerHTML = htmlContent;
+      window.print();
+    }
+
+    function saveRecord() {
+      const name = document.getElementById('clientName').value;
+      if(!name) {
+        alert("PLEASE ENTER CLIENT NAME!");
+        return;
+      }
+      const isQuot = document.getElementById('docTypeQuot').checked;
+      const type = isQuot ? 'QUOTATION' : 'INVOICE';
+      const docNum = document.getElementById('docNum').value;
+      const total = parseFloat(document.getElementById('totalAmount').value) || 0;
+      const received = isQuot ? 0 : (parseFloat(document.getElementById('receivedAmount').value) || 0);
+      const balance = total - received;
+
+      const record = {
+        id: Date.now(),
+        type: type,
+        docNum: docNum,
+        date: document.getElementById('quoteDate').value,
+        name: name,
+        contact: document.getElementById('clientContact').value || '-',
+        refName: document.getElementById('referenceName').value || 'DIRECT CLIENT',
+        total: total,
+        received: received,
+        balance: balance,
+        status: balance <= 0 && !isQuot ? 'COMPLETED' : 'PENDING'
+      };
+
+      crmRecords.push(record);
+      saveCRMToStorage();
+      if(isQuot) quotCounter++; else invCounter++;
+      autoGenDocNum();
+      renderCRM();
+      alert(`${type} (${docNum}) SUCCESSFULLY SAVED TO DATABASE!`);
+    }
+
+    let currentFilter = 'All';
+
+    function filterCRM(filterType) {
+      currentFilter = filterType;
+      document.getElementById('btnFilterAll').classList.toggle('active', filterType === 'All');
+      document.getElementById('btnFilterQuot').classList.toggle('active', filterType === 'QUOTATION');
+      document.getElementById('btnFilterInv').classList.toggle('active', filterType === 'INVOICE');
+      renderCRM();
+    }
+
+    function searchRecords() {
+      renderCRM();
+    }
+
+    function renderCRM() {
+      const tbody = document.getElementById('crmTableBody');
+      const keyword = document.getElementById('searchKeyword').value.trim().toLowerCase();
+
+      const filtered = crmRecords.filter(r => {
+        const matchesFilter = (currentFilter === 'All') || (r.type === currentFilter);
+        const matchesSearch = !keyword || r.docNum.toLowerCase().includes(keyword) || r.name.toLowerCase().includes(keyword) || r.contact.toLowerCase().includes(keyword);
+        return matchesFilter && matchesSearch;
+      });
+
+      if(filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted py-4">NO CRM RECORDS FOUND.</td></tr>';
+        return;
+      }
+
+      const isAdmin = currentUser && currentUser.role === 'ADMIN';
+
+      tbody.innerHTML = filtered.map(r => `
+        <tr>
+          <td class="ps-3"><span class="badge ${r.type === 'QUOTATION' ? 'bg-danger' : 'bg-success'} rounded-pill" style="font-size:0.65rem;">${r.type}</span></td>
+          <td class="fw-bold text-primary">${r.docNum}</td>
+          <td>${r.date}</td>
+          <td class="fw-bold">${r.name}</td>
+          <td>${r.contact}</td>
+          <td class="fw-bold">PKR ${r.total.toLocaleString()}</td>
+          <td class="text-primary fw-bold cursor-pointer" onclick="openLedgerModal(${r.id})" title="Click to View/Add Installment">PKR ${r.received.toLocaleString()} <i class="bi bi-pencil-square small"></i></td>
+          <td class="text-danger fw-bold">PKR ${r.balance.toLocaleString()}</td>
+          <td><span class="badge ${r.status === 'COMPLETED' ? 'bg-success' : 'bg-warning text-dark'} rounded-pill" style="font-size:0.65rem;">${r.status}</span></td>
+          <td class="text-end pe-3">
+            <button class="btn btn-sm btn-outline-success py-1 px-2 me-1 rounded-3" onclick="openLedgerModal(${r.id})" title="Ledger"><i class="bi bi-wallet2"></i></button>
+            ${isAdmin ? `<button class="btn btn-sm btn-outline-danger py-1 px-2 rounded-3" onclick="deleteCRM(${r.id})" title="Delete Record"><i class="bi bi-trash"></i></button>` : ''}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function openLedgerModal(id) {
+      const record = crmRecords.find(r => r.id === id);
+      if(!record) return;
+
+      document.getElementById('ledgerRecordId').value = record.id;
+      document.getElementById('ledgerDocNum').value = record.docNum;
+      document.getElementById('ledgerClientName').value = record.name;
+      document.getElementById('ledgerTotal').value = record.total.toLocaleString();
+      document.getElementById('ledgerReceived').value = record.received.toLocaleString();
+      document.getElementById('ledgerBalance').value = record.balance.toLocaleString();
+      document.getElementById('newInstallmentAmount').value = '';
+
+      const modal = new bootstrap.Modal(document.getElementById('ledgerModal'));
+      modal.show();
+    }
+
+    function saveInstallmentPayment() {
+      const id = parseInt(document.getElementById('ledgerRecordId').value);
+      const addAmount = parseFloat(document.getElementById('newInstallmentAmount').value) || 0;
+
+      if(addAmount <= 0) {
+        alert("PLEASE ENTER A VALID INSTALLMENT AMOUNT!");
+        return;
+      }
+
+      const record = crmRecords.find(r => r.id === id);
+      if(record) {
+        record.received += addAmount;
+        record.balance = record.total - record.received;
+        if(record.balance <= 0) {
+          record.balance = 0;
+          record.status = 'COMPLETED';
+        } else {
+          record.status = 'PENDING';
+        }
+
+        saveCRMToStorage();
+        renderCRM();
+
+        const modal = bootstrap.Modal.getInstance(document.getElementById('ledgerModal'));
+        modal.hide();
+        alert(`SUCCESSFULLY ADDED PKR ${addAmount.toLocaleString()} TO LEDGER!`);
+      }
+    }
+
+    function deleteCRM(id) {
+      if(currentUser && currentUser.role !== 'ADMIN') {
+        alert("ACCESS DENIED: ONLY ADMIN CAN DELETE RECORDS!");
+        return;
+      }
+      if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS RECORD?")) {
+        crmRecords = crmRecords.filter(r => r.id !== id);
+        saveCRMToStorage();
+        renderCRM();
+      }
+    }
+
+    function previewUploadedImage(input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) { uploadedLogoBase64 = e.target.result; }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function saveProfile() {
+      if(currentUser && currentUser.role !== 'ADMIN') {
+        alert("ACCESS DENIED!");
+        return;
+      }
+      const modal = bootstrap.Modal.getInstance(document.getElementById('profileModal'));
+      modal.hide();
+      alert("COMPANY PROFILE SAVED!");
+    }
+
+    function resetForm() {
+      if(currentUser && currentUser.role !== 'ADMIN') {
+        alert("ACCESS DENIED!");
+        return;
+      }
+      document.getElementById('quotationForm').reset();
+      document.getElementById('quoteDate').valueAsDate = new Date();
+      document.getElementById('flightRowsContainer').innerHTML = '';
+      document.getElementById('termsContainer').innerHTML = '';
+      document.getElementById('ziyaratMakkah').checked = false;
+      document.getElementById('ziyaratMadinah').checked = false;
+      document.getElementById('ziyaratBadar').checked = false;
+      document.getElementById('ziyaratTaif').checked, false;
+
+      document.getElementById('chkIncludeTicket').checked = true;
+      toggleFlightTicketSection();
+
+      addTermsRow('100% ADVANCE PAYMENT: FULL PAYMENT (100%) IS REQUIRED IN ADVANCE AT THE TIME OF BOOKING CONFIRMATION. NO BOOKING WILL BE CONFIRMED WITHOUT FULL PAYMENT.');
+      addTermsRow('BOOKING CONFIRMATION: ALL BOOKINGS ARE SUBJECT TO AVAILABILITY AND CONFIRMATION AFTER RECEIPT OF FULL PAYMENT.');
+      addTermsRow('PASSPORT & DOCUMENTS: PASSENGERS MUST PROVIDE VALID PASSPORTS AND ALL REQUIRED DOCUMENTS WITHIN THE GIVEN TIME.');
+      addTermsRow('VISA APPROVAL: UMRAH VISA APPROVAL IS SUBJECT TO SAUDI GOVERNMENT RULES AND REGULATIONS. THE COMPANY WILL NOT BE RESPONSIBLE FOR VISA REJECTION OR DELAYS CAUSED BY AUTHORITIES.');
+      addTermsRow('AIRLINE POLICY: AIR TICKETS ARE SUBJECT TO AIRLINE RULES AND REGULATIONS. ANY CANCELLATION, RESCHEDULING, OR DATE CHANGE CHARGES WILL BE BORNE BY THE PASSENGER.');
+      addTermsRow('HOTEL ACCOMMODATION: HOTEL BOOKINGS ARE SUBJECT TO AVAILABILITY. ANY CHANGE IN HOTEL, IF REQUIRED, WILL BE SUBJECT TO AVAILABILITY AND SUITABLE ALTERNATIVE ARRANGEMENTS.');
+      addTermsRow('CANCELLATION POLICY: CANCELLATION CHARGES WILL APPLY ACCORDING TO THE POLICIES OF AIRLINES, HOTELS, VISA SERVICES, AND OTHER SERVICE PROVIDERS.');
+      addTermsRow('REFUND POLICY: REFUNDS, IF APPLICABLE, WILL BE PROCESSED AFTER DEDUCTION OF ACTUAL EXPENSES AND APPLICABLE CANCELLATION CHARGES.');
+      addTermsRow('ROOM SHARING: ROOM SHARING AND ACCOMMODATION ARRANGEMENTS WILL BE PROVIDED ACCORDING TO THE SELECTED UMRAH PACKAGE.');
+      addTermsRow('TRAVEL DATES: ANY CHANGES IN TRAVEL DATES OR PACKAGE SERVICES MAY RESULT IN ADDITIONAL CHARGES.');
+      addTermsRow('ADDITIONAL EXPENSES: ANY EXTRA EXPENSES DUE TO PERSONAL REQUESTS, DELAYS, FLIGHT CHANGES, OR UNFORESEEN CIRCUMSTANCES WILL BE PAYABLE BY THE PASSENGER.');
+      addTermsRow('UNFORESEEN CIRCUMSTANCES: THE COMPANY WILL NOT BE RESPONSIBLE FOR DELAYS, CANCELLATIONS, OR CHANGES CAUSED BY AIRLINES, HOTELS, GOVERNMENT AUTHORITIES, OR CIRCUMSTANCES BEYOND ITS CONTROL.');
+      addTermsRow('ACCEPTANCE OF TERMS: CONFIRMATION OF BOOKING AND PAYMENT SHALL BE CONSIDERED ACCEPTANCE OF ALL THE ABOVE-MENTIONED TERMS AND CONDITIONS.');
+
+      addFlightRow('SAUDI ARABIAN AIRLINES (SAUDIA)', 'DIRECT FLIGHT', 'LAHORE TO JEDDAH (LHE - JED)', '', '14:30');
+      addFlightRow('SAUDI ARABIAN AIRLINES (SAUDIA)', 'DIRECT FLIGHT', 'JEDDAH TO LAHORE (JED - LHE)', '', '21:15');
+      toggleDocType();
+    }
+
+    autoGenDocNum();
+    populateDropdowns();
+  </script>
+</body>
+</html>
