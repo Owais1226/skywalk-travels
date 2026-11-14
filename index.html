@@ -3,996 +3,398 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Sky Walk Tour & Travels - Premium CRM System</title>
+  <title>SkyWalk Tour & Travels - Enterprise SaaS CRM & Vendor Ledger v6.0</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
+      --sidebar-width: 260px;
       --primary-dark: #0F172A;
       --accent-blue: #2563EB;
       --accent-hover: #1D4ED8;
       --gradient-bg: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
       --card-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.08);
-      --glass-bg: rgba(255, 255, 255, 0.95);
     }
     
     body {
-      background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%);
+      background: #F1F5F9;
       font-family: 'Plus Jakarta Sans', sans-serif;
       text-transform: uppercase !important;
       min-height: 100vh;
       color: #1E293B;
+      overflow-x: hidden;
     }
 
-    .glass-header {
-      background: rgba(15, 23, 42, 0.95);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-    }
-    
-    .navbar-brand {
-      font-weight: 800;
-      color: #FFFFFF !important;
-      font-size: 1.2rem;
-      letter-spacing: 0.8px;
+    .sidebar {
+      position: fixed; top: 0; left: 0; width: var(--sidebar-width); height: 100vh;
+      background: var(--primary-dark); color: #FFFFFF; z-index: 1050;
+      transition: all 0.3s ease; box-shadow: 4px 0 25px rgba(0,0,0,0.1); display: flex; flex-direction: column;
     }
 
-    .card {
-      border: none;
-      border-radius: 20px;
-      box-shadow: var(--card-shadow);
-      background: #FFFFFF;
-      overflow: hidden;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    
-    .card-header {
-      background: var(--gradient-bg);
-      color: white;
-      border-bottom: 2px solid rgba(37, 99, 235, 0.3);
-      padding: 1.1rem 1.5rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
+    .sidebar-brand {
+      padding: 1.5rem 1.2rem; font-size: 1.05rem; font-weight: 800; letter-spacing: 0.8px;
+      border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; gap: 12px; background: rgba(15, 23, 42, 0.98);
     }
 
-    .btn {
-      border-radius: 12px;
-      font-weight: 700;
-      letter-spacing: 0.4px;
-      padding: 0.6rem 1.2rem;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+    .sidebar-menu { padding: 1rem 0.8rem; flex-grow: 1; overflow-y: auto; }
+    .sidebar-menu .menu-label { font-size: 0.68rem; font-weight: 700; color: #64748B; padding: 0.8rem 0.8rem 0.4rem 0.8rem; letter-spacing: 1px; }
 
-    .btn-primary {
-      background: linear-gradient(135deg, #2563EB, #1D4ED8);
-      border: none;
-      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+    .sidebar-item {
+      display: flex; align-items: center; gap: 12px; padding: 0.75rem 1rem; color: #94A3B8;
+      font-weight: 600; font-size: 0.8rem; border-radius: 12px; margin-bottom: 4px; text-decoration: none; transition: all 0.2s ease; cursor: pointer;
     }
+    .sidebar-item:hover, .sidebar-item.active { color: #FFFFFF; background: linear-gradient(135deg, #2563EB, #1D4ED8); box-shadow: 0 4px 15px rgba(37, 99, 235, 0.35); }
+    .sidebar-footer { padding: 1rem; border-top: 1px solid rgba(255,255,255,0.08); background: rgba(15, 23, 42, 0.98); }
 
-    .btn-primary:hover {
-      background: linear-gradient(135deg, #1D4ED8, #1E40AF);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.4);
-    }
+    .main-content { margin-left: var(--sidebar-width); min-height: 100vh; display: flex; flex-direction: column; transition: all 0.3s ease; }
+    .top-header { background: #FFFFFF; border-bottom: 1px solid #E2E8F0; padding: 0.85rem 1.5rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1040; }
 
-    .btn-success {
-      background: linear-gradient(135deg, #10B981, #059669);
-      border: none;
-      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
-    }
+    .card { border: none; border-radius: 20px; box-shadow: var(--card-shadow); background: #FFFFFF; overflow: hidden; }
+    .card-header { background: var(--gradient-bg); color: white; border-bottom: 2px solid rgba(37, 99, 235, 0.3); padding: 1.1rem 1.5rem; font-weight: 700; }
 
-    .btn-success:hover {
-      background: linear-gradient(135deg, #059669, #047857);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);
-    }
+    .btn { border-radius: 12px; font-weight: 700; letter-spacing: 0.4px; padding: 0.6rem 1.2rem; transition: all 0.25s ease; }
+    .btn-primary { background: linear-gradient(135deg, #2563EB, #1D4ED8); border: none; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3); }
+    .btn-success { background: linear-gradient(135deg, #10B981, #059669); border: none; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3); }
 
-    .btn-danger {
-      background: linear-gradient(135deg, #EF4444, #DC2626);
-      border: none;
-    }
+    .form-control, .form-select { border-radius: 10px; border: 1.5px solid #CBD5E1; font-size: 0.82rem; font-weight: 600; padding: 0.6rem 0.8rem; background-color: #F8FAFC; }
+    .form-control:focus, .form-select:focus { border-color: #2563EB; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15); background-color: #FFFFFF; }
 
-    .form-control, .form-select {
-      border-radius: 10px;
-      border: 1.5px solid #CBD5E1;
-      font-size: 0.85rem;
-      font-weight: 600;
-      padding: 0.65rem 0.85rem;
-      transition: all 0.2s ease;
-      background-color: #F8FAFC;
-    }
+    .section-card { background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 16px; padding: 1.25rem; margin-bottom: 1.25rem; }
+    .section-title { position: relative; padding-left: 12px; margin-bottom: 14px; font-size: 0.88rem; font-weight: 800; color: #0F172A; }
+    .section-title::before { content: ''; position: absolute; left: 0; top: 15%; height: 70%; width: 4px; background: #2563EB; border-radius: 4px; }
 
-    .form-control:focus, .form-select:focus {
-      border-color: #2563EB;
-      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
-      background-color: #FFFFFF;
-    }
+    .kpi-card { border-radius: 20px; padding: 1.4rem; color: white; box-shadow: 0 12px 25px rgba(0,0,0,0.08); position: relative; border: 1px solid rgba(255,255,255,0.15); }
+    .kpi-revenue { background: linear-gradient(135deg, #2563EB, #1E40AF); }
+    .kpi-expense { background: linear-gradient(135deg, #DC2626, #991B1B); }
+    .kpi-profit  { background: linear-gradient(135deg, #059669, #065F46); }
+    .kpi-leads   { background: linear-gradient(135deg, #D97706, #B45309); }
 
-    .section-card {
-      background: #F8FAFC;
-      border: 1px solid #E2E8F0;
-      border-radius: 16px;
-      padding: 1.25rem;
-      margin-bottom: 1.25rem;
-    }
+    /* Kanban Board Styles */
+    .kanban-col { background: #F8FAFC; border-radius: 16px; border: 1px solid #E2E8F0; min-height: 500px; padding: 1rem; }
+    .kanban-card { background: #FFFFFF; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.04); border-left: 4px solid #2563EB; cursor: pointer; transition: transform 0.2s; }
+    .kanban-card:hover { transform: translateY(-3px); }
 
-    .section-title {
-      position: relative;
-      padding-left: 12px;
-      margin-bottom: 14px;
-      font-size: 0.88rem;
-      font-weight: 800;
-      color: #0F172A;
-      letter-spacing: 0.5px;
-    }
-
-    .section-title::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 15%;
-      height: 70%;
-      width: 4px;
-      background: #2563EB;
-      border-radius: 4px;
-    }
-
+    #printArea { display: none !important; }
     @media print {
-      @page {
-        size: A4 portrait;
-        margin: 0mm !important;
-      }
-      body {
-        background: none !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-      body * {
-        visibility: hidden !important;
-      }
-      #printArea, #printArea * {
-        visibility: visible !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-      #printArea {
-        position: absolute !important;
-        left: 0 !important;
-        top: 0 !important;
-        width: 210mm !important;
-        margin: 0 !important;
-        padding: 0 !important;
-      }
-      .no-print, #loginScreen {
-        display: none !important;
-      }
-      .pdf-page {
-        width: 210mm !important;
-        height: 297mm !important;
-        max-height: 297mm !important;
-        page-break-after: always !important;
-        page-break-inside: avoid !important;
-        box-shadow: none !important;
-        margin: 0 !important;
-        padding: 6mm 10mm !important;
-        box-sizing: border-box !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-      .pdf-page:last-child {
-        page-break-after: auto !important;
-      }
+      body * { visibility: hidden !important; }
+      #printArea, #printArea * { visibility: visible !important; display: block !important; position: absolute; left: 0; top: 0; width: 210mm; }
+      .no-print { display: none !important; }
     }
-
-    .pdf-page {
-      width: 210mm;
-      height: 297mm;
-      box-sizing: border-box;
-      padding: 6mm 10mm;
-      margin: 0 auto 20px auto;
-      background: white;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-      border-radius: 4px;
-    }
-
-    .watermark {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      opacity: 0.05;
-      width: 60%;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .pdf-content {
-      position: relative;
-      z-index: 1;
-      flex-grow: 1;
-    }
-
-    .pdf-header-container {
-      border-bottom: 3px solid #005B96 !important;
-      padding-bottom: 6px;
-      margin-bottom: 8px;
-    }
-
-    .company-title {
-      font-size: 22px;
-      font-weight: 800;
-      color: #0A3960 !important;
-      letter-spacing: 0.5px;
-    }
-
-    .doc-badge-center-wrapper {
-      text-align: center;
-      margin-top: 6px;
-      margin-bottom: 6px;
-    }
-
-    .doc-badge {
-      padding: 5px 22px;
-      border-radius: 6px;
-      font-weight: 800;
-      font-size: 16px;
-      letter-spacing: 1.5px;
-      display: inline-block;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-    }
-    
-    .doc-badge-quotation {
-      background: #DC3545 !important;
-      color: #ffffff !important;
-    }
-    .doc-badge-invoice {
-      background: #198754 !important;
-      color: #ffffff !important;
-    }
-
-    .section-banner {
-      background: #0A3960 !important;
-      color: #ffffff !important;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 4px 8px;
-      border-radius: 4px;
-      margin-bottom: 6px;
-      border-left: 5px solid #005B96 !important;
-      text-transform: uppercase !important;
-      letter-spacing: 0.5px;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-    }
-
-    .section-banner-green {
-      background: #198754 !important;
-      color: #ffffff !important;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 4px 8px;
-      border-radius: 4px;
-      margin-bottom: 6px;
-      border-left: 5px solid #20c997 !important;
-      text-transform: uppercase !important;
-      letter-spacing: 0.5px;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-    }
-
-    .pdf-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 6px;
-      font-size: 10px;
-    }
-    .pdf-table th {
-      background-color: #E6F0FA !important;
-      color: #0A3960 !important;
-      font-weight: 700;
-      padding: 5px 6px;
-      border: 1px solid #CBD5E1 !important;
-      text-align: center;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-    }
-    .pdf-table td {
-      padding: 5px 6px;
-      border: 1px solid #E2E8F0 !important;
-      color: #1E293B !important;
-    }
-
-    .info-box {
-      background-color: #F4F7FA !important;
-      border: 1px solid #CBD5E1 !important;
-      border-radius: 6px;
-      padding: 6px 8px;
-      margin-bottom: 8px;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-    }
-
-    .pdf-footer {
-      border-top: 1px solid #E2E8F0 !important;
-      padding-top: 4px;
-      margin-top: auto;
-      font-size: 9px;
-      color: #64748B !important;
-    }
-
-    .terms-item-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 6px;
-    }
-
-    .flight-toggle-box {
-      background-color: #ffffff;
-      padding: 10px 14px;
-      border-radius: 10px;
-      border: 1.5px solid #3B82F6;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .form-switch .form-check-input {
-      margin-left: 0 !important;
-      float: none !important;
-      cursor: pointer;
-      width: 2.5em;
-      height: 1.3em;
-    }
-    .pwd-toggle-btn {
-      cursor: pointer;
-      background-color: #ffffff;
-      border-left: none;
-    }
-
-    .login-card {
-      border: none;
-      border-radius: 28px;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(20px);
-      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.35);
-    }
-    .brand-glow-icon {
-      width: 85px;
-      height: 85px;
-      background: linear-gradient(135deg, #2563EB, #0F172A);
-      color: white;
-      border-radius: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 15px auto;
-      box-shadow: 0 12px 24px rgba(37, 99, 235, 0.35);
-    }
-    
-    .badge-creator {
-      background-color: #E0E7FF;
-      color: #3730A3;
-      font-weight: 700;
-      border-radius: 6px;
-      padding: 4px 8px;
-      font-size: 0.7rem;
-    }
+    .pdf-page { width: 210mm; height: 297mm; padding: 10mm; margin: 0 auto; background: white; box-sizing: border-box; position: relative; }
+    .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.05; width: 60%; pointer-events: none; }
+    .pdf-table { width: 100%; border-collapse: collapse; font-size: 10px; margin-bottom: 10px; }
+    .pdf-table th { background: #0A3960 !important; color: white !important; padding: 5px; border: 1px solid #CBD5E1; }
+    .pdf-table td { padding: 5px; border: 1px solid #CBD5E1; }
   </style>
 </head>
 <body>
 
-  <!-- Premium Login Screen -->
-  <div id="loginScreen" class="d-flex justify-content-center align-items-center vh-100 no-print" style="background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%);">
-    <div class="card login-card p-4 p-md-5" style="max-width: 430px; width: 92%;">
+  <!-- LOGIN SCREEN -->
+  <div id="loginScreen" class="d-flex justify-content-center align-items-center vh-100 no-print" style="background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%);">
+    <div class="card p-4 p-md-5" style="max-width: 430px; width: 92%; border-radius: 28px;">
       <div class="text-center mb-4">
-        <div class="brand-glow-icon">
-          <i class="bi bi-airplane-fill fs-1"></i>
-        </div>
-        <h3 class="fw-extrabold text-dark mb-1" style="letter-spacing: 0.5px;">SKY WALK</h3>
-        <p class="text-primary fw-bold mb-0" style="font-size: 0.75rem; letter-spacing: 1.5px;">TOUR & TRAVELS CRM</p>
+        <div class="rounded-3 d-inline-flex align-items-center justify-content-center mb-2" style="width:75px; height:75px; background:var(--accent-blue); color:white; font-size:2rem;"><i class="bi bi-airplane-fill"></i></div>
+        <h3 class="fw-extrabold mb-1">SKY WALK CRM</h3>
+        <p class="text-primary fw-bold mb-0" style="font-size: 0.75rem;">ENTERPRISE V6.0 SUITE</p>
       </div>
-
       <div class="alert alert-danger d-none py-2 px-3 small rounded-3" id="loginErrorMsg"></div>
       <form id="loginForm" onsubmit="handleLogin(event)">
-        <div class="mb-3">
-          <label class="form-label small fw-bold text-secondary">USERNAME</label>
-          <div class="input-group">
-            <span class="input-group-text bg-light border-end-0"><i class="bi bi-person text-muted"></i></span>
-            <input type="text" class="form-control border-start-0" id="loginUsername" placeholder="ENTER USERNAME" required autocomplete="off">
-          </div>
-        </div>
-        <div class="mb-4">
-          <label class="form-label small fw-bold text-secondary">PASSWORD</label>
-          <div class="input-group">
-            <span class="input-group-text bg-light border-end-0"><i class="bi bi-key text-muted"></i></span>
-            <input type="password" class="form-control border-start-0 border-end-0" id="loginPassword" placeholder="ENTER PASSWORD" required autocomplete="off">
-            <button class="btn btn-outline-secondary pwd-toggle-btn border-start-0" type="button" onclick="togglePasswordVisibility('loginPassword', 'loginEyeIcon')">
-              <i class="bi bi-eye-slash-fill" id="loginEyeIcon"></i>
-            </button>
-          </div>
-        </div>
-        <button type="submit" class="btn btn-primary w-100 fw-bold py-3 shadow"><i class="bi bi-box-arrow-in-right me-2"></i> LOGIN TO PORTAL</button>
+        <div class="mb-3"><label class="form-label small fw-bold">USERNAME</label><input type="text" class="form-control" id="loginUsername" required autocomplete="off"></div>
+        <div class="mb-4"><label class="form-label small fw-bold">PASSWORD</label><input type="password" class="form-control" id="loginPassword" required autocomplete="off"></div>
+        <button type="submit" class="btn btn-primary w-100 fw-bold py-3 shadow">LOGIN TO PORTAL</button>
       </form>
     </div>
   </div>
 
-  <!-- Main Application Wrapper -->
+  <!-- MAIN APP -->
   <div id="mainAppScreen" style="display: none;">
-    <nav class="navbar navbar-expand-lg navbar-dark glass-header sticky-top no-print py-2.5">
-      <div class="container-fluid px-3">
-        <a class="navbar-brand d-flex align-items-center" href="#">
-          <span class="bg-primary p-2 rounded-3 me-2.5 d-inline-flex align-items-center justify-content-center" style="width:38px; height:38px;">
-            <i class="bi bi-airplane-engines-fill text-white fs-6"></i>
-          </span>
-          SKY WALK TOUR & TRAVELS
-        </a>
-        <div class="d-flex gap-2 align-items-center">
-          <span class="badge bg-primary bg-opacity-20 text-primary border border-primary border-opacity-30 py-2 px-3 rounded-pill" id="currentLoggedInUserDisplay" style="font-size: 0.75rem;"><i class="bi bi-shield-check me-1"></i> ADMIN</span>
-          <button class="btn btn-warning btn-sm py-1.5 px-3 rounded-3" id="btnPendingQuotationsAdmin" style="font-size: 0.75rem; display:none;" onclick="openPendingQuotationsModal()">
-            <i class="bi bi-telephone-outbound-fill me-1"></i> PENDING QUOTATIONS
-          </button>
-          <button class="btn btn-warning btn-sm py-1.5 px-3 rounded-3" style="font-size: 0.75rem;" data-bs-toggle="modal" data-bs-target="#addHotelModal">
-            <i class="bi bi-plus-circle-fill me-1"></i> HOTEL
-          </button>
-          <button class="btn btn-outline-light btn-sm py-1.5 px-3 rounded-3" id="btnProfileSetup" style="font-size: 0.75rem;" data-bs-toggle="modal" data-bs-target="#profileModal">
-            <i class="bi bi-building me-1"></i> PROFILE
-          </button>
-          <button class="btn btn-outline-info btn-sm py-1.5 px-3 rounded-3" id="btnUserManager" style="font-size: 0.75rem;" data-bs-toggle="modal" data-bs-target="#userMgmtModal" onclick="renderUsersTable()">
-            <i class="bi bi-people-fill me-1"></i> USERS
-          </button>
-          <button class="btn btn-danger btn-sm py-1.5 px-2.5 rounded-3" style="font-size: 0.75rem;" onclick="handleLogout()" title="Logout">
-            <i class="bi bi-power"></i>
-          </button>
-        </div>
+    <div class="sidebar no-print">
+      <div class="sidebar-brand">
+        <span class="bg-primary p-2 rounded-3 text-white"><i class="bi bi-airplane-engines-fill"></i></span>
+        <span>SKY WALK V6.0</span>
       </div>
-    </nav>
-
-    <div class="container-fluid px-3 my-4 no-print">
-      <div class="row g-4">
+      <div class="sidebar-menu">
+        <div class="menu-label">CORE MODULES</div>
+        <a class="sidebar-item active" onclick="switchView('dashboard')" id="nav-dashboard"><i class="bi bi-grid-1x2-fill fs-5"></i><span>DASHBOARD</span></a>
+        <a class="sidebar-item" onclick="switchView('form')" id="nav-form"><i class="bi bi-file-earmark-plus-fill fs-5"></i><span>CREATE DOC / QUOT</span></a>
+        <a class="sidebar-item" onclick="switchView('kanban')" id="nav-kanban"><i class="bi bi-kanban-fill fs-5"></i><span>KANBAN LEADS</span></a>
+        <a class="sidebar-item" onclick="switchView('vendors')" id="nav-vendors"><i class="bi bi-truck fs-5"></i><span>VENDOR LEDGER</span></a>
+        <a class="sidebar-item" onclick="switchView('vault')" id="nav-vault"><i class="bi bi-shield-lock-fill fs-5"></i><span>DOCUMENT VAULT</span></a>
+        <a class="sidebar-item" onclick="switchView('pl-report')" id="nav-pl-report"><i class="bi bi-file-earmark-bar-graph-fill fs-5"></i><span>P&L STATEMENT</span></a>
+        <a class="sidebar-item" onclick="switchView('daily-report')" id="nav-daily-report"><i class="bi bi-calendar-check-fill fs-5"></i><span>DAILY COLLECTION</span></a>
         
-        <!-- Main Form Card -->
-        <div class="col-lg-12" id="formContainer">
-          <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-              <span style="font-size: 0.95rem;"><i class="bi bi-file-earmark-plus-fill me-2 text-primary"></i> CREATE QUOTATION / INVOICE</span>
-              <button class="btn btn-sm btn-outline-danger py-1 px-3 rounded-pill" id="btnResetFormMain" style="font-size: 0.7rem;" onclick="resetForm()"><i class="bi bi-arrow-counterclockwise me-1"></i> RESET FORM</button>
+        <div class="menu-label mt-3">ADMINISTRATION</div>
+        <a class="sidebar-item" onclick="switchView('audit-logs')" id="nav-audit-logs"><i class="bi bi-journal-text fs-5"></i><span>AUDIT TRAIL LOGS</span></a>
+        <a class="sidebar-item" data-bs-toggle="modal" data-bs-target="#currencyModal"><i class="bi bi-currency-exchange fs-5"></i><span>CURRENCY RATES</span></a>
+        <a class="sidebar-item" data-bs-toggle="modal" data-bs-target="#userMgmtModal" onclick="renderUsersTable()"><i class="bi bi-people-fill fs-5"></i><span>USER MANAGEMENT</span></a>
+      </div>
+      <div class="sidebar-footer">
+        <button class="btn btn-danger btn-sm w-100 fw-bold py-2" onclick="handleLogout()"><i class="bi bi-power me-1"></i> LOGOUT</button>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="top-header no-print">
+        <h5 class="fw-extrabold m-0 fs-6" id="headerTitle">DASHBOARD & OVERVIEW</h5>
+        <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 py-2 px-3 rounded-pill" id="currentLoggedInUserDisplay">ADMIN</span>
+      </div>
+
+      <!-- VIEW: DASHBOARD -->
+      <div id="view-dashboard" class="container-fluid px-4 my-4 app-view">
+        <div id="expiryAlertBanner" class="alert alert-warning d-none mb-4 shadow-sm border-0 rounded-4">
+          <div class="d-flex align-items-center gap-3">
+            <i class="bi bi-exclamation-triangle-fill fs-3 text-warning"></i>
+            <div>
+              <h6 class="fw-bold mb-0">PASSPORT EXPIRY ALERT!</h6>
+              <p class="small mb-0 text-dark" id="expiryAlertText">Some passenger passports are expiring within 60 days. Check Document Vault.</p>
             </div>
-            <div class="card-body p-4">
-              <form id="quotationForm">
-                
-                <div class="section-card" style="background-color: #F1F5F9; border-color: #CBD5E1;">
-                  <div class="row g-3">
-                    <div class="col-12">
-                      <label class="form-label fw-bold text-dark small mb-2"><i class="bi bi-file-text-fill me-1 text-primary"></i> DOCUMENT TYPE SELECT KAREIN *</label>
-                      <div class="btn-group w-100 shadow-sm" role="group">
-                        <input type="radio" class="btn-check" name="docType" id="docTypeQuot" value="QUOTATION" checked onchange="toggleDocType()">
-                        <label class="btn btn-outline-danger py-2.5 fw-bold" for="docTypeQuot"><i class="bi bi-file-earmark-text me-1"></i> QUOTATION</label>
-                        
-                        <input type="radio" class="btn-check" name="docType" id="docTypeInv" value="INVOICE" onchange="toggleDocType()">
-                        <label class="btn btn-outline-success py-2.5 fw-bold" for="docTypeInv"><i class="bi bi-receipt me-1"></i> INVOICE</label>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label small fw-bold text-secondary" id="lblDocNum">DOC # (AUTO)</label>
-                      <input type="text" class="form-control form-control-sm fw-bold text-primary" id="docNum" readonly>
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label small fw-bold text-secondary">DATE</label>
-                      <input type="date" class="form-control form-control-sm" id="quoteDate">
-                    </div>
-                  </div>
-                </div>
+          </div>
+        </div>
 
-                <div class="section-card">
-                  <h6 class="section-title"><i class="bi bi-person-vcard me-2 text-primary"></i> CLIENT INFORMATION</h6>
-                  <div class="row g-3">
-                    <div class="col-md-12">
-                      <label class="form-label small fw-bold">CLIENT NAME *</label>
-                      <input type="text" class="form-control" id="clientName" placeholder="ENTER CLIENT NAME" required>
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label small fw-bold">CONTACT NUMBER *</label>
-                      <input type="text" class="form-control" id="clientContact" placeholder="03218144786" required>
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label small fw-bold text-danger"><i class="bi bi-lock-fill me-1"></i> REF NAME (OFFICE INTERNAL)</label>
-                      <input type="text" class="form-control border-danger border-opacity-50" id="referenceName" placeholder="INTERNAL REF">
-                    </div>
-                  </div>
-                </div>
+        <div class="row g-3 mb-4">
+          <div class="col-xl-3 col-md-6"><div class="kpi-card kpi-revenue"><div class="text-uppercase small fw-bold opacity-75">TOTAL REVENUE</div><h4 class="fw-extrabold mb-0 mt-1" id="kpiTotalRevenue">PKR 0</h4></div></div>
+          <div class="col-xl-3 col-md-6"><div class="kpi-card kpi-expense"><div class="text-uppercase small fw-bold opacity-75">VENDOR EXPENSES</div><h4 class="fw-extrabold mb-0 mt-1" id="kpiTotalExpenses">PKR 0</h4></div></div>
+          <div class="col-xl-3 col-md-6"><div class="kpi-card kpi-profit"><div class="text-uppercase small fw-bold opacity-75">NET PROFIT</div><h4 class="fw-extrabold mb-0 mt-1" id="kpiNetProfit">PKR 0</h4></div></div>
+          <div class="col-xl-3 col-md-6"><div class="kpi-card kpi-leads"><div class="text-uppercase small fw-bold opacity-75">ACTIVE LEADS</div><h4 class="fw-extrabold mb-0 mt-1" id="kpiActiveLeads">0</h4></div></div>
+        </div>
 
-                <div class="section-card">
-                  <h6 class="section-title"><i class="bi bi-box-seam-fill me-2 text-primary"></i> PACKAGE & PAX DETAILS</h6>
-                  <div class="row g-3">
-                    <div class="col-12">
-                      <label class="form-label small fw-bold">PACKAGE TITLE / DURATION</label>
-                      <input type="text" class="form-control mb-1" id="pkgTitle" list="pkgPresets" placeholder="SELECT OR TYPE PACKAGE">
-                      <datalist id="pkgPresets">
-                        <option value="15 DAYS UMRAH PACKAGE"></option>
-                        <option value="21 DAYS UMRAH PACKAGE"></option>
-                        <option value="28 DAYS UMRAH PACKAGE"></option>
-                      </datalist>
-                    </div>
-                    <div class="col-4">
-                      <label class="form-label small fw-bold">ADULTS</label>
-                      <input type="number" class="form-control" id="paxAdults" value="0" min="0" oninput="calcTotal()">
-                    </div>
-                    <div class="col-4">
-                      <label class="form-label small fw-bold">CHILDREN</label>
-                      <input type="number" class="form-control" id="paxChildren" value="0" min="0">
-                    </div>
-                    <div class="col-4">
-                      <label class="form-label small fw-bold">INFANTS</label>
-                      <input type="number" class="form-control" id="paxInfants" value="0" min="0" oninput="calcTotal()">
-                    </div>
-                    <div class="col-12">
-                      <label class="form-label small fw-bold">OCCUPANCY</label>
-                      <select class="form-select" id="occupancy">
-                        <option value="">SELECT OCCUPANCY</option>
-                        <option value="DOUBLE">DOUBLE</option>
-                        <option value="TRIPLE">TRIPLE</option>
-                        <option value="QUAD">QUAD</option>
-                        <option value="SHARING">SHARING</option>
-                      </select>
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label small fw-bold">RATE PER HEAD (PKR)</label>
-                      <input type="number" class="form-control" id="ratePerHead" placeholder="0" oninput="calcTotal()">
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label small fw-bold text-info">INFANT RATE (PKR)</label>
-                      <input type="number" class="form-control" id="infantRatePerHead" placeholder="0" oninput="calcTotal()" value="0">
-                    </div>
-                    <div class="col-12">
-                      <label class="form-label small fw-bold text-success">TOTAL AMOUNT (PKR)</label>
-                      <input type="number" class="form-control fw-bold text-success fs-5" id="totalAmount" readonly value="0">
-                    </div>
-                  </div>
-                </div>
-
-                <div class="section-card" style="background-color: #F0F9FF; border-color: #BAE6FD;">
-                  <div class="d-flex flex-column gap-2 border-bottom border-info border-opacity-25 pb-2 mb-3">
-                    <div class="d-flex align-items-center justify-content-between">
-                      <h6 class="fw-bold text-info mb-0 small"><i class="bi bi-airplane-fill me-2"></i> FLIGHT SCHEDULE (24-HR FORMAT: HH : MM)</h6>
-                      <button type="button" class="btn btn-sm btn-outline-info py-1 px-3 fw-bold" style="font-size: 0.7rem;" id="btnAddFlightBtn" onclick="addFlightRow()"><i class="bi bi-plus-circle me-1"></i> ADD ROW</button>
-                    </div>
-                    
-                    <div class="flight-toggle-box">
-                      <div class="form-check form-switch m-0 p-0 d-flex align-items-center">
-                        <input class="form-check-input" type="checkbox" id="chkIncludeTicket" checked onchange="toggleFlightTicketSection()">
-                      </div>
-                      <label class="form-check-label fw-bold text-primary mb-0 small cursor-pointer" for="chkIncludeTicket">
-                        <i class="bi bi-ticket-perforated-fill me-1"></i> INCLUDE FLIGHT TICKET IN PACKAGE
-                      </label>
-                    </div>
-                  </div>
-                  <div>
-                    <div id="flightRowsContainer"></div>
-                    <div id="noTicketNoticeBox" class="p-3 bg-warning bg-opacity-10 border border-warning rounded-3 text-center" style="display:none;">
-                      <i class="bi bi-info-circle-fill text-warning fs-5 me-1"></i>
-                      <strong class="text-dark" style="font-size: 0.78rem;">THIS PACKAGE IS WITHOUT TICKET. AIR TICKET FARE WILL BE ADDED AT BOOKING TIME.</strong>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="section-card" style="background-color: #FEFCE8; border-color: #FEF08A;">
-                  <h6 class="fw-bold text-dark mb-3 small"><i class="bi bi-geo-alt-fill text-warning me-2"></i> ZIYARAT OPTIONS</h6>
-                  <div class="d-flex flex-wrap gap-3">
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="ziyaratMakkah" value="MAKKAH ZIYARAT">
-                      <label class="form-check-label fw-bold small" for="ziyaratMakkah">1. MAKKAH ZIYARAT</label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="ziyaratMadinah" value="MADINAH ZIYARAT">
-                      <label class="form-check-label fw-bold small" for="ziyaratMadinah">2. MADINAH ZIYARAT</label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="ziyaratBadar" value="BADAR ZIYARAT">
-                      <label class="form-check-label fw-bold small" for="ziyaratBadar">3. BADAR ZIYARAT</label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" id="ziyaratTaif" value="TAIF ZIYARAT">
-                      <label class="form-check-label fw-bold small" for="ziyaratTaif">4. TAIF ZIYARAT</label>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="section-card" style="background-color: #ECFDF5; border-color: #A7F3D0; display:none;" id="invoicePaymentSection">
-                  <h6 class="fw-bold text-success mb-3 small"><i class="bi bi-cash-stack me-2"></i> PAYMENT & INSTALLMENT LEDGER (INVOICE)</h6>
-                  <div class="row g-3">
-                    <div class="col-12">
-                      <label class="form-label small fw-bold">TOTAL AMOUNT (PKR)</label>
-                      <input type="number" class="form-control fw-bold" id="invTotalAmount" readonly value="0">
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label small fw-bold text-primary">INITIAL / NEW PAYMENT (PKR)</label>
-                      <input type="number" class="form-control fw-bold text-primary" id="receivedAmount" value="0" oninput="calcBalance()">
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label small fw-bold text-danger">BALANCE (PKR)</label>
-                      <input type="number" class="form-control fw-bold text-danger" id="balanceAmount" readonly value="0">
-                    </div>
-                  </div>
-                </div>
-
-                <div class="section-card">
-                  <h6 class="section-title"><i class="bi bi-bus-front-fill me-2 text-primary"></i> TRANSPORT SCHEDULE</h6>
-                  <div id="transportContainer">
-                    <div class="p-3 border rounded-3 bg-white mb-2">
-                      <label class="form-label micro-label fw-bold text-dark small">SECTOR 1</label>
-                      <select class="form-select mb-2" id="transSec1">
-                        <option value="">SELECT SECTOR</option>
-                        <option value="JEDDAH TO MAKKAH">JEDDAH TO MAKKAH</option>
-                        <option value="MAKKAH TO MADINAH">MAKKAH TO MADINAH</option>
-                        <option value="MADINAH TO MAKKAH">MADINAH TO MAKKAH</option>
-                        <option value="MADINAH TO JEDDAH">MADINAH TO JEDDAH</option>
-                        <option value="MAKKAH TO JEDDAH">MAKKAH TO JEDDAH</option>
-                      </select>
-                      <select class="form-select mb-2" id="transCategory1">
-                        <option value="">SELECT SERVICE TYPE</option>
-                        <option value="PRIVATE">PRIVATE</option>
-                        <option value="SHARING BY BUS">SHARING BY BUS</option>
-                        <option value="PRIVATE BUS">PRIVATE BUS</option>
-                      </select>
-                      <select class="form-select" id="transVehicle1">
-                        <option value="">SELECT VEHICLE</option>
-                      </select>
-                    </div>
-                    <div class="p-3 border rounded-3 bg-white mb-2">
-                      <label class="form-label micro-label fw-bold text-dark small">SECTOR 2</label>
-                      <select class="form-select mb-2" id="transSec2">
-                        <option value="">SELECT SECTOR</option>
-                        <option value="JEDDAH TO MAKKAH">JEDDAH TO MAKKAH</option>
-                        <option value="MAKKAH TO MADINAH">MAKKAH TO MADINAH</option>
-                        <option value="MADINAH TO MAKKAH">MADINAH TO MAKKAH</option>
-                        <option value="MADINAH TO JEDDAH">MADINAH TO JEDDAH</option>
-                        <option value="MAKKAH TO JEDDAH">MAKKAH TO JEDDAH</option>
-                      </select>
-                      <select class="form-select mb-2" id="transCategory2">
-                        <option value="">SELECT SERVICE TYPE</option>
-                        <option value="PRIVATE">PRIVATE</option>
-                        <option value="SHARING BY BUS">SHARING BY BUS</option>
-                        <option value="PRIVATE BUS">PRIVATE BUS</option>
-                      </select>
-                      <select class="form-select" id="transVehicle2">
-                        <option value="">SELECT VEHICLE</option>
-                      </select>
-                    </div>
-                    <div class="p-3 border rounded-3 bg-white mb-2">
-                      <label class="form-label micro-label fw-bold text-dark small">SECTOR 3</label>
-                      <select class="form-select mb-2" id="transSec3">
-                        <option value="">SELECT SECTOR</option>
-                        <option value="JEDDAH TO MAKKAH">JEDDAH TO MAKKAH</option>
-                        <option value="MAKKAH TO MADINAH">MAKKAH TO MADINAH</option>
-                        <option value="MADINAH TO MAKKAH">MADINAH TO MAKKAH</option>
-                        <option value="MADINAH TO JEDDAH">MADINAH TO JEDDAH</option>
-                        <option value="MAKKAH TO JEDDAH">MAKKAH TO JEDDAH</option>
-                      </select>
-                      <select class="form-select mb-2" id="transCategory3">
-                        <option value="">SELECT SERVICE TYPE</option>
-                        <option value="PRIVATE">PRIVATE</option>
-                        <option value="SHARING BY BUS">SHARING BY BUS</option>
-                        <option value="PRIVATE BUS">PRIVATE BUS</option>
-                      </select>
-                      <select class="form-select" id="transVehicle3">
-                        <option value="">SELECT VEHICLE</option>
-                      </select>
-                    </div>
-                    <div class="p-3 border rounded-3 bg-white mb-2">
-                      <label class="form-label micro-label fw-bold text-dark small">SECTOR 4</label>
-                      <select class="form-select mb-2" id="transSec4">
-                        <option value="">SELECT SECTOR</option>
-                        <option value="JEDDAH TO MAKKAH">JEDDAH TO MAKKAH</option>
-                        <option value="MAKKAH TO MADINAH">MAKKAH TO MADINAH</option>
-                        <option value="MADINAH TO MAKKAH">MADINAH TO MAKKAH</option>
-                        <option value="MADINAH TO JEDDAH">MADINAH TO JEDDAH</option>
-                        <option value="MAKKAH TO JEDDAH">MAKKAH TO JEDDAH</option>
-                      </select>
-                      <select class="form-select mb-2" id="transCategory4">
-                        <option value="">SELECT SERVICE TYPE</option>
-                        <option value="PRIVATE">PRIVATE</option>
-                        <option value="SHARING BY BUS">SHARING BY BUS</option>
-                        <option value="PRIVATE BUS">PRIVATE BUS</option>
-                      </select>
-                      <select class="form-select" id="transVehicle4">
-                        <option value="">SELECT VEHICLE</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="section-card">
-                  <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h6 class="section-title mb-0"><i class="bi bi-buildings-fill me-2 text-primary"></i> HOTEL ACCOMMODATIONS</h6>
-                    <button type="button" class="btn btn-sm btn-outline-warning py-1 px-3 rounded-pill" style="font-size: 0.7rem;" data-bs-toggle="modal" data-bs-target="#addHotelModal"><i class="bi bi-plus-circle me-1"></i> ADD HOTEL</button>
-                  </div>
-                  <div class="row g-3 mt-1">
-                    <div class="col-md-6">
-                      <div class="p-3 border rounded-3 bg-white">
-                        <label class="form-label small fw-bold">MAKKAH HOTEL</label>
-                        <select class="form-select mb-2" id="makkahHotelSelect">
-                          <option value="">SELECT MAKKAH HOTEL</option>
-                        </select>
-                        <div class="row g-2">
-                          <div class="col-6"><input type="text" class="form-control" id="makkahDist" placeholder="DISTANCE (E.G. 150 M)"></div>
-                          <div class="col-6"><input type="text" class="form-control" id="makkahNights" placeholder="NIGHTS (3 NIGHTS)"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="p-3 border rounded-3 bg-white">
-                        <label class="form-label small fw-bold">MADINAH HOTEL</label>
-                        <select class="form-select mb-2" id="madinahHotelSelect">
-                          <option value="">SELECT MADINAH HOTEL</option>
-                        </select>
-                        <div class="row g-2">
-                          <div class="col-6"><input type="text" class="form-control" id="madinahDist" placeholder="DISTANCE (E.G. 50 M)"></div>
-                          <div class="col-6"><input type="text" class="form-control" id="madinahNights" placeholder="NIGHTS (3 NIGHTS)"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="section-card">
-                  <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
-                    <h6 class="fw-bold text-dark mb-0 small"><i class="bi bi-file-text-fill me-2 text-primary"></i> TERMS & CONDITIONS</h6>
-                    <button type="button" class="btn btn-sm btn-outline-primary py-1 px-3 fw-bold rounded-pill" style="font-size: 0.7rem;" id="btnAddTermBtn" onclick="addTermsRow()"><i class="bi bi-plus-circle me-1"></i> ADD POINT</button>
-                  </div>
-                  <div id="termsContainer"></div>
-                </div>
-
-                <div class="d-flex gap-3">
-                  <button type="button" class="btn btn-primary flex-fill py-3 shadow" data-bs-toggle="modal" data-bs-target="#previewModal" onclick="generatePreview()"><i class="bi bi-eye-fill me-2"></i> PREVIEW DOCUMENT</button>
-                  <button type="button" class="btn btn-success flex-fill py-3 shadow" onclick="saveRecord()"><i class="bi bi-save-fill me-2"></i> SAVE RECORD</button>
-                </div>
-
-              </form>
+        <div class="card shadow-sm border-0">
+          <div class="card-header d-flex justify-content-between align-items-center py-3">
+            <span class="fw-bold"><i class="bi bi-database-fill me-2"></i> ENTERPRISE CRM DATABASE</span>
+            <input type="text" class="form-control form-control-sm bg-dark text-white border-0" id="searchKeyword" placeholder="SEARCH RECORD..." style="max-width: 250px;" onkeyup="renderCRM()">
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0" style="font-size: 0.8rem;">
+                <thead class="table-light"><tr><th class="ps-3">TYPE</th><th>DOC #</th><th>DATE</th><th>CLIENT</th><th>CONTACT</th><th>REVENUE</th><th>EXPENSES</th><th>NET PROFIT</th><th>STATUS</th><th class="text-end pe-3">ACTIONS</th></tr></thead>
+                <tbody id="crmTableBody"></tbody>
+              </table>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="row mt-4 no-print">
-        <div class="col-12">
-          <div class="card">
-            <div class="card-header bg-dark text-white d-flex flex-wrap align-items-center justify-content-between gap-2 py-3">
-              <span class="fs-6 fw-bold"><i class="bi bi-database-fill-gear me-2 text-primary"></i> DATABASE CRM & LEDGER</span>
-              <div class="d-flex gap-2 align-items-center flex-grow-1 flex-md-grow-0" style="max-width: 500px;">
-                <div class="input-group input-group-sm">
-                  <span class="input-group-text bg-secondary bg-opacity-20 border-0 text-white"><i class="bi bi-search"></i></span>
-                  <input type="text" class="form-control form-control-sm bg-secondary bg-opacity-10 text-white border-0" id="searchKeyword" placeholder="SEARCH RECORD..." onkeyup="searchRecords()">
-                </div>
-                <div class="btn-group btn-group-sm">
-                  <button class="btn btn-outline-light active py-1 px-2" style="font-size: 0.7rem;" id="btnFilterAll" onclick="filterCRM('All')">ALL</button>
-                  <button class="btn btn-outline-info py-1 px-2" style="font-size: 0.7rem;" id="btnFilterQuot" onclick="filterCRM('QUOTATION')">QUOT</button>
-                  <button class="btn btn-outline-success py-1 px-2" style="font-size: 0.7rem;" id="btnFilterInv" onclick="filterCRM('INVOICE')">INV</button>
+      <!-- VIEW: CREATE / EDIT DOC -->
+      <div id="view-form" class="container-fluid px-4 my-4 app-view" style="display:none;">
+        <div class="card shadow-lg border-0 mb-5">
+          <div class="card-header d-flex justify-content-between align-items-center py-3">
+            <span class="fw-bold"><i class="bi bi-file-earmark-plus-fill me-2"></i> CREATE QUOTATION / INVOICE WITH MULTI-CURRENCY</span>
+            <button class="btn btn-sm btn-outline-light rounded-pill" onclick="switchView('dashboard')">BACK</button>
+          </div>
+          <div class="card-body p-4 bg-light">
+            <form id="quotationForm">
+              <div class="section-card bg-white">
+                <div class="row g-3">
+                  <div class="col-12">
+                    <label class="form-label fw-bold small">DOCUMENT TYPE</label>
+                    <div class="btn-group w-100">
+                      <input type="radio" class="btn-check" name="docType" id="docTypeQuot" value="QUOTATION" checked onchange="autoGenDocNum()">
+                      <label class="btn btn-outline-danger fw-bold" for="docTypeQuot">QUOTATION</label>
+                      <input type="radio" class="btn-check" name="docType" id="docTypeInv" value="INVOICE" onchange="autoGenDocNum()">
+                      <label class="btn btn-outline-success fw-bold" for="docTypeInv">INVOICE</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6"><label class="form-label small fw-bold">DOC #</label><input type="text" class="form-control fw-bold text-primary" id="docNum" readonly></div>
+                  <div class="col-md-6"><label class="form-label small fw-bold">DATE</label><input type="date" class="form-control" id="quoteDate"></div>
                 </div>
               </div>
+
+              <!-- Currency Converter Bar -->
+              <div class="section-card bg-info bg-opacity-10 border-info">
+                <h6 class="fw-bold text-info mb-2 small"><i class="bi bi-currency-exchange me-1"></i> MULTI-CURRENCY CONVERTER</h6>
+                <div class="row g-2 align-items-end">
+                  <div class="col-md-4">
+                    <label class="form-label small fw-bold">CURRENCY</label>
+                    <select class="form-select form-select-sm" id="calcCurrency" onchange="convertCurrencyToPKR()">
+                      <option value="PKR">PAKISTANI RUPEE (PKR)</option>
+                      <option value="SAR">SAUDI RIYAL (SAR)</option>
+                      <option value="USD">US DOLLAR (USD)</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label small fw-bold">AMOUNT IN FOREIGN CURRENCY</label>
+                    <input type="number" class="form-control form-control-sm" id="calcForeignAmount" value="0" oninput="convertCurrencyToPKR()">
+                  </div>
+                  <div class="col-md-4">
+                    <button type="button" class="btn btn-info btn-sm w-100 text-white fw-bold py-2" onclick="applyForeignRateToRatePerHead()">APPLY AS RATE PER HEAD</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="section-card bg-white">
+                <h6 class="section-title">CLIENT & PACKAGE DETAILS</h6>
+                <div class="row g-3">
+                  <div class="col-md-6"><label class="form-label small fw-bold">CLIENT NAME *</label><input type="text" class="form-control" id="clientName" required></div>
+                  <div class="col-md-6"><label class="form-label small fw-bold">CONTACT NUMBER (WHATSAPP) *</label><input type="text" class="form-control" id="clientContact" required></div>
+                  <div class="col-md-6"><label class="form-label small fw-bold">PACKAGE TITLE</label><input type="text" class="form-control" id="pkgTitle" value="15 DAYS UMRAH PACKAGE"></div>
+                  <div class="col-md-6"><label class="form-label small fw-bold">LEAD STATUS</label>
+                    <select class="form-select" id="clientLeadStatus">
+                      <option value="HOT LEAD">HOT LEAD</option>
+                      <option value="WARM LEAD">WARM LEAD</option>
+                      <option value="COLD LEAD">COLD LEAD</option>
+                      <option value="BOOKED">BOOKED</option>
+                    </select>
+                  </div>
+                  <div class="col-4"><label class="form-label small fw-bold">ADULTS</label><input type="number" class="form-control" id="paxAdults" value="1" min="0" oninput="calcTotal()"></div>
+                  <div class="col-4"><label class="form-label small fw-bold">CHILDREN</label><input type="number" class="form-control" id="paxChildren" value="0" min="0" oninput="calcTotal()"></div>
+                  <div class="col-4"><label class="form-label small fw-bold">INFANTS</label><input type="number" class="form-control" id="paxInfants" value="0" min="0" oninput="calcTotal()"></div>
+                  <div class="col-md-6"><label class="form-label small fw-bold">RATE PER HEAD (PKR)</label><input type="number" class="form-control" id="ratePerHead" value="0" oninput="calcTotal()"></div>
+                  <div class="col-md-6"><label class="form-label small fw-bold text-success">TOTAL REVENUE (PKR)</label><input type="number" class="form-control fw-bold text-success" id="totalAmount" readonly value="0"></div>
+                </div>
+              </div>
+
+              <!-- VENDOR EXPENSES -->
+              <div class="section-card" style="background: #FEF2F2; border-color: #FECACA;">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <h6 class="fw-bold text-danger mb-0 small">VENDOR EXPENSES BREAKDOWN</h6>
+                  <button type="button" class="btn btn-sm btn-danger py-1 px-3" onclick="addVendorExpenseRow()">ADD VENDOR</button>
+                </div>
+                <div id="vendorExpenseRowsContainer"></div>
+              </div>
+
+              <!-- PASSENGER PASSPORT VAULT DETAILS -->
+              <div class="section-card" style="background: #EEF2FF; border-color: #C7D2FE;">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <h6 class="fw-bold text-primary mb-0 small">PASSENGER PASSPORTS & EXPIRY TRACKER</h6>
+                  <button type="button" class="btn btn-sm btn-primary py-1 px-3" onclick="addFormPassengerRow()">ADD PASSENGER</button>
+                </div>
+                <div id="formPassengersContainer"></div>
+              </div>
+
+              <div class="d-flex gap-3">
+                <button type="button" class="btn btn-secondary flex-fill py-3" onclick="switchView('dashboard')">CANCEL</button>
+                <button type="button" class="btn btn-success flex-fill py-3" onclick="saveRecord()">SAVE & GENERATE PDF</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW: KANBAN LEADS BOARD -->
+      <div id="view-kanban" class="container-fluid px-4 my-4 app-view" style="display:none;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h5 class="fw-extrabold m-0"><i class="bi bi-kanban-fill text-warning me-2"></i> INTERACTIVE KANBAN LEADS PIPELINE</h5>
+          <button class="btn btn-sm btn-dark" onclick="switchView('dashboard')">BACK</button>
+        </div>
+        <div class="row g-3">
+          <div class="col-md-3">
+            <div class="kanban-col border-top border-4 border-danger">
+              <h6 class="fw-bold text-danger mb-3">🔥 HOT LEADS</h6>
+              <div id="kanbanHot" class="kanban-list"></div>
             </div>
-            <div class="card-body p-0">
-              <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0" style="font-size: 0.8rem;">
-                  <thead class="table-light">
-                    <tr>
-                      <th class="ps-3">TYPE</th>
-                      <th>DOC #</th>
-                      <th id="thCreatedBy" class="text-indigo" style="display:none;">CREATED BY</th>
-                      <th>DATE</th>
-                      <th>CLIENT</th>
-                      <th>CONTACT</th>
-                      <th>TOTAL</th>
-                      <th>RECEIVED</th>
-                      <th>BALANCE</th>
-                      <th>STATUS</th>
-                      <th class="text-end pe-3">ACTIONS</th>
-                    </tr>
-                  </thead>
-                  <tbody id="crmTableBody">
-                    <tr>
-                      <td colspan="11" class="text-center text-muted py-4">NO CRM RECORDS FOUND.</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+          </div>
+          <div class="col-md-3">
+            <div class="kanban-col border-top border-4 border-warning">
+              <h6 class="fw-bold text-warning mb-3">⚡ WARM LEADS</h6>
+              <div id="kanbanWarm" class="kanban-list"></div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="kanban-col border-top border-4 border-secondary">
+              <h6 class="fw-bold text-secondary mb-3">🧊 COLD LEADS</h6>
+              <div id="kanbanCold" class="kanban-list"></div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="kanban-col border-top border-4 border-success">
+              <h6 class="fw-bold text-success mb-3">✅ BOOKED / CONFIRMED</h6>
+              <div id="kanbanBooked" class="kanban-list"></div>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- VIEW: DOCUMENT VAULT & EXPIRY TRACKER -->
+      <div id="view-vault" class="container-fluid px-4 my-4 app-view" style="display:none;">
+        <div class="card shadow-sm border-0 mb-4">
+          <div class="card-header bg-dark text-white py-3">
+            <span class="fw-bold"><i class="bi bi-shield-lock-fill me-2"></i> PASSPORT & VISA EXPIRY VAULT</span>
+          </div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0" style="font-size: 0.82rem;">
+                <thead class="table-light"><tr><th>PASSENGER NAME</th><th>PASSPORT #</th><th>EXPIRY DATE</th><th>STATUS</th><th>DOC / REF #</th></tr></thead>
+                <tbody id="vaultTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW: P&L STATEMENT -->
+      <div id="view-pl-report" class="container-fluid px-4 my-4 app-view" style="display:none;">
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-success text-white py-3 d-flex justify-content-between align-items-center">
+            <span class="fw-bold"><i class="bi bi-file-earmark-bar-graph-fill me-2"></i> COMPREHENSIVE P&L STATEMENT (PROFIT & LOSS)</span>
+            <button class="btn btn-sm btn-light text-success fw-bold" onclick="window.print()">PRINT P&L</button>
+          </div>
+          <div class="card-body p-4">
+            <div class="row g-3 mb-4">
+              <div class="col-md-4"><div class="p-3 bg-light border rounded-3"><div class="text-muted small fw-bold">TOTAL GROSS REVENUE</div><h4 class="fw-bold text-primary mt-1" id="plTotalRevenue">PKR 0</h4></div></div>
+              <div class="col-md-4"><div class="p-3 bg-light border rounded-3"><div class="text-muted small fw-bold">TOTAL VENDOR EXPENSES</div><h4 class="fw-bold text-danger mt-1" id="plTotalExpenses">PKR 0</h4></div></div>
+              <div class="col-md-4"><div class="p-3 bg-light border rounded-3"><div class="text-muted small fw-bold">NET OPERATING PROFIT</div><h4 class="fw-bold text-success mt-1" id="plNetProfit">PKR 0</h4></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW: AUDIT TRAIL LOGS -->
+      <div id="view-audit-logs" class="container-fluid px-4 my-4 app-view" style="display:none;">
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-dark text-white py-3"><span class="fw-bold"><i class="bi bi-journal-text me-2"></i> SYSTEM AUDIT TRAIL LOGS</span></div>
+          <div class="card-body p-0">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0" style="font-size: 0.8rem;">
+                <thead class="table-light"><tr><th>TIMESTAMP</th><th>USER</th><th>ACTION & DETAILS</th></tr></thead>
+                <tbody id="auditTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW: DAILY COLLECTION -->
+      <div id="view-daily-report" class="container-fluid px-4 my-4 app-view" style="display:none;">
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-info text-white py-3"><span class="fw-bold"><i class="bi bi-calendar-check-fill me-2"></i> DAILY COLLECTION REPORT</span></div>
+          <div class="card-body p-4">
+            <input type="date" class="form-control form-control-sm mb-3" id="reportDateFilter" onchange="renderDailyCollectionReport()" style="max-width: 200px;">
+            <div class="table-responsive border rounded-3">
+              <table class="table table-hover align-middle mb-0" style="font-size: 0.82rem;">
+                <thead class="table-dark"><tr><th>DOC #</th><th>CLIENT</th><th>AMOUNT RECEIVED</th><th>TIME</th></tr></thead>
+                <tbody id="dailyCollectionTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <div class="modal fade" id="pendingQuotationsModal" tabindex="-1">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
+  <!-- CURRENCY RATES MODAL -->
+  <div class="modal fade" id="currencyModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg rounded-4">
-        <div class="modal-header bg-warning text-dark py-3">
-          <h5 class="modal-title fw-extrabold fs-6"><i class="bi bi-telephone-outbound-fill me-2"></i> PENDING QUOTATIONS CALLING LEDGER (ADMIN VIEW)</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <div class="modal-header bg-primary text-white py-3"><h5 class="modal-title fs-6 fw-bold">EXCHANGE RATES SETUP</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body p-4">
+          <div class="mb-3"><label class="form-label small fw-bold">1 SAUDI RIYAL (SAR) = PKR</label><input type="number" class="form-control" id="rateSAR" value="74"></div>
+          <div class="mb-3"><label class="form-label small fw-bold">1 US DOLLAR (USD) = PKR</label><input type="number" class="form-control" id="rateUSD" value="280"></div>
         </div>
-        <div class="modal-body p-3">
-          <div class="table-responsive rounded-3 border">
-            <table class="table table-bordered table-hover align-middle mb-0" style="font-size: 0.82rem;">
-              <thead class="table-dark text-center">
-                <tr>
-                  <th>QUOT #</th>
-                  <th>CLIENT NAME</th>
-                  <th>CONTACT NUMBER</th>
-                  <th>PACKAGE TITLE</th>
-                  <th>PAX DETAILS</th>
-                  <th>TOTAL AMOUNT</th>
-                  <th>DATE</th>
-                  <th>CREATED BY</th>
-                  <th>CALL ACTION</th>
-                </tr>
-              </thead>
-              <tbody id="pendingQuotTableBody">
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <div class="modal-footer py-2">
-          <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">CLOSE</button>
-        </div>
+        <div class="modal-footer py-2"><button type="button" class="btn btn-primary btn-sm px-4" data-bs-dismiss="modal">SAVE RATES</button></div>
       </div>
     </div>
   </div>
 
+  <!-- USER MANAGEMENT MODAL -->
   <div class="modal fade" id="userMgmtModal" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content border-0 shadow-lg rounded-4">
-        <div class="modal-header bg-dark text-white py-3">
-          <h5 class="modal-title fw-bold fs-6"><i class="bi bi-people-fill me-2 text-info"></i> USER & PASSWORD MANAGEMENT</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body p-4">
-          <div class="p-3 border rounded-3 bg-light mb-4">
-            <h6 class="fw-bold text-primary mb-3 small"><i class="bi bi-person-plus-fill me-1"></i> ADD NEW SYSTEM USER</h6>
-            <div class="row g-2">
-              <div class="col-md-4">
-                <input type="text" class="form-control" id="newUsername" placeholder="ENTER USERNAME">
-              </div>
-              <div class="col-md-4">
-                <div class="input-group">
-                  <input type="password" class="form-control border-end-0" id="newUserPassword" placeholder="ENTER PASSWORD">
-                  <button class="btn btn-outline-secondary pwd-toggle-btn border-start-0" type="button" onclick="togglePasswordVisibility('newUserPassword', 'newUserEyeIcon')">
-                    <i class="bi bi-eye-slash-fill" id="newUserEyeIcon"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <select class="form-select" id="newUserRole">
-                  <option value="USER">REGULAR USER</option>
-                  <option value="ADMIN">ADMINISTRATOR</option>
-                </select>
-              </div>
-              <div class="col-12 text-end mt-3">
-                <button type="button" class="btn btn-success fw-bold px-4" onclick="addNewUser()"><i class="bi bi-plus-circle me-1"></i> CREATE USER</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="p-3 border border-danger border-opacity-25 rounded-3 bg-danger bg-opacity-10 mb-4 text-center">
-            <button type="button" class="btn btn-danger fw-bold py-2 px-4" onclick="resetUserDatabase()"><i class="bi bi-arrow-counterclockwise me-1"></i> RESET ALL USERS TO DEFAULT (ADMIN / 123)</button>
-          </div>
-
-          <h6 class="fw-bold text-dark mb-2 small"><i class="bi bi-list-task me-1"></i> EXISTING SYSTEM USERS</h6>
-          <div class="table-responsive rounded-3 border">
-            <table class="table table-hover align-middle mb-0" style="font-size: 0.82rem;">
-              <thead class="table-dark">
-                <tr>
-                  <th>USERNAME</th>
-                  <th>ROLE</th>
-                  <th>PASSWORD</th>
-                  <th class="text-center">ACTIONS</th>
-                </tr>
-              </thead>
-              <tbody id="userMgmtTableBody">
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="ledgerModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg rounded-4">
-        <div class="modal-header bg-success text-white py-3">
-          <h5 class="modal-title fw-bold fs-6"><i class="bi bi-wallet2 me-2"></i> INSTALLMENT LEDGER PAYMENT</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
+        <div class="modal-header bg-dark text-white py-3"><h5 class="modal-title fs-6 fw-bold">USER MANAGEMENT</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
         <div class="modal-body p-4">
-          <input type="hidden" id="ledgerRecordId">
-          <div class="mb-3">
-            <label class="form-label small fw-bold">DOCUMENT #</label>
-            <input type="text" class="form-control fw-bold text-primary" id="ledgerDocNum" readonly>
-          </div>
-          <div class="mb-3">
-            <label class="form-label small fw-bold">CLIENT NAME</label>
-            <input type="text" class="form-control fw-bold" id="ledgerClientName" readonly>
-          </div>
-          <div class="row g-2 mb-3">
-            <div class="col-4">
-              <label class="form-label small fw-bold">TOTAL (PKR)</label>
-              <input type="text" class="form-control fw-bold" id="ledgerTotal" readonly>
-            </div>
-            <div class="col-4">
-              <label class="form-label small fw-bold text-success">RECEIVED (PKR)</label>
-              <input type="text" class="form-control fw-bold text-success" id="ledgerReceived" readonly>
-            </div>
-            <div class="col-4">
-              <label class="form-label small fw-bold text-danger">BALANCE (PKR)</label>
-              <input type="text" class="form-control fw-bold text-danger" id="ledgerBalance" readonly>
-            </div>
-          </div>
-          <div class="p-3 border rounded-3 bg-light mb-2">
-            <label class="form-label small fw-bold text-success">ADD NEW INSTALLMENT PAYMENT (PKR) *</label>
-            <input type="number" class="form-control fw-bold text-success fs-5" id="newInstallmentAmount" placeholder="ENTER AMOUNT">
-          </div>
-        </div>
-        <div class="modal-footer py-2">
-          <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">CLOSE</button>
-          <button type="button" class="btn btn-success btn-sm fw-bold px-3" id="btnSaveInstallment" onclick="saveInstallmentPayment()"><i class="bi bi-plus-circle me-1"></i> ADD PAYMENT</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="addHotelModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-0 shadow-lg rounded-4">
-        <div class="modal-header bg-warning text-dark py-3">
-          <h5 class="modal-title fw-bold fs-6"><i class="bi bi-plus-circle me-2"></i> ADD HOTEL NAME</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body p-4">
-          <div class="mb-3">
-            <label class="form-label fw-bold small">SELECT CITY *</label>
-            <div class="btn-group w-100" role="group">
-              <input type="radio" class="btn-check" name="hotelCitySelect" id="cityMakkah" value="Makkah" checked>
-              <label class="btn btn-outline-primary py-2 fw-bold" for="cityMakkah">MAKKAH</label>
-              <input type="radio" class="btn-check" name="hotelCitySelect" id="cityMadinah" value="Madinah">
-              <label class="btn btn-outline-success py-2 fw-bold" for="cityMadinah">MADINAH</label>
-            </div>
-          </div>
-          <div class="mb-3">
-            <label class="form-label small fw-bold">HOTEL NAME *</label>
-            <input type="text" class="form-control" id="newHotelNameModal" placeholder="E.G. SWISSOTEL MAKKAH 5 STAR">
-          </div>
-        </div>
-        <div class="modal-footer py-2">
-          <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">CLOSE</button>
-          <button type="button" class="btn btn-primary btn-sm px-4" onclick="saveNewHotelModal()">SAVE HOTEL</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="previewModal" tabindex="-1">
-    <div class="modal-dialog modal-xl modal-fullscreen-sm-down">
-      <div class="modal-content border-0 shadow-lg">
-        <div class="modal-header bg-dark text-white no-print py-2 px-3">
-          <h5 class="modal-title fs-6"><i class="bi bi-file-earmark-pdf me-2 text-primary"></i> DOCUMENT PREVIEW</h5>
-          <div class="d-flex gap-2">
-            <button type="button" class="btn btn-warning btn-sm py-1 px-3 fw-bold rounded-pill" style="font-size: 0.75rem;" onclick="printPDFDocument()">
-              <i class="bi bi-printer-fill me-1"></i> PRINT / SAVE PDF
-            </button>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-          </div>
-        </div>
-        <div class="modal-body bg-secondary bg-opacity-20 p-3" style="max-height: 88vh; overflow-y: auto;">
-          <div id="modalPreviewContainer"></div>
+          <div class="table-responsive border rounded-3"><table class="table mb-0" style="font-size:0.8rem;"><thead class="table-dark"><tr><th>USERNAME</th><th>ROLE</th></tr></thead><tbody id="userMgmtTableBody"></tbody></table></div>
         </div>
       </div>
     </div>
@@ -1000,1223 +402,286 @@
 
   <div id="printArea"></div>
 
-  <div class="modal fade" id="profileModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content border-0 shadow-lg rounded-4">
-        <div class="modal-header bg-primary text-white py-3">
-          <h5 class="modal-title fs-6 fw-bold"><i class="bi bi-building me-2"></i> COMPANY PROFILE SETUP</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-        </div>
-        <div class="modal-body p-4">
-          <div class="mb-3">
-            <label class="form-label small fw-bold">COMPANY NAME</label>
-            <input type="text" class="form-control" id="cfgCompName" value="SKY WALK TOUR & TRAVELS">
-          </div>
-          <div class="mb-3">
-            <label class="form-label small fw-bold">OFFICE ADDRESS</label>
-            <input type="text" class="form-control" id="cfgCompAddr" value="OFFICE LG - 56, LOWER GROUND FLOOR, AASHIYANA CENTER, MAIN BOULEVARD, GULBERG, LAHORE">
-          </div>
-          <div class="row g-2 mb-3">
-            <div class="col-6">
-              <label class="form-label small fw-bold">PHONE 1</label>
-              <input type="text" class="form-control" id="cfgCompPhone1" value="00923124414126">
-            </div>
-            <div class="col-6">
-              <label class="form-label small fw-bold">PHONE 2</label>
-              <input type="text" class="form-control" id="cfgCompPhone2" value="00923214377747">
-            </div>
-          </div>
-          <div class="mb-3">
-            <label class="form-label small fw-bold">EMAIL</label>
-            <input type="text" class="form-control" id="cfgCompEmail" value="SKYWALK00786@GMAIL.COM">
-          </div>
-          <div class="mb-2 p-3 border rounded-3 bg-light">
-            <label class="form-label small fw-bold text-primary"><i class="bi bi-image me-1"></i> LOGO FILE UPLOAD / URL</label>
-            <input type="file" class="form-control mb-2" id="cfgLogoFile" accept="image/*" onchange="previewUploadedImage(this)">
-            <input type="text" class="form-control" id="cfgLogoUrl" value="https://i.ibb.co/L50nLrq/skywalk-logo.jpg">
-          </div>
-        </div>
-        <div class="modal-footer py-2">
-          <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">CLOSE</button>
-          <button type="button" class="btn btn-primary btn-sm px-4" onclick="saveProfile()">SAVE PROFILE</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <datalist id="airlinePresets">
-    <option value="SAUDI ARABIAN AIRLINES (SAUDIA)"></option>
-    <option value="PIA (PAKISTAN INTERNATIONAL AIRLINES)"></option>
-    <option value="FLYNAS"></option>
-    <option value="FLYADEAL"></option>
-    <option value="FLYJINNAH"></option>
-    <option value="AIRBLUE"></option>
-    <option value="AIRSIAL"></option>
-    <option value="SERENE AIR"></option>
-    <option value="EMIRATES"></option>
-    <option value="QATAR AIRWAYS"></option>
-    <option value="ETIHAD AIRWAYS"></option>
-    <option value="OMAN AIR"></option>
-    <option value="GULF AIR"></option>
-    <option value="KUWAIT AIRWAYS"></option>
-    <option value="TURKISH AIRLINES"></option>
-    <option value="FLYDUBAI"></option>
-    <option value="AIR ARABIA"></option>
-    <option value="JAZEERA AIRWAYS"></option>
-    <option value="SALAMAIR"></option>
-  </datalist>
-
-  <datalist id="routePresets">
-    <option value="LAHORE TO JEDDAH (LHE - JED)"></option>
-    <option value="JEDDAH TO LAHORE (JED - LHE)"></option>
-    <option value="LAHORE TO MADINAH (LHE - MED)"></option>
-    <option value="MADINAH TO LAHORE (MED - LHE)"></option>
-    <option value="LAHORE - JEDDAH - LAHORE (LHE - JED - LHE)"></option>
-    <option value="LAHORE - MADINAH - LAHORE (LHE - MED - LHE)"></option>
-    <option value="ISLAMABAD - JEDDAH - ISLAMABAD (ISB - JED - ISB)"></option>
-    <option value="KARACHI - JEDDAH - KARACHI (KHI - JED - KHI)"></option>
-  </datalist>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // Real-time Capitalization for all Text Inputs
-    document.addEventListener('input', function (e) {
-      if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) {
-        if (e.target.type !== 'password' && e.target.type !== 'file' && e.target.type !== 'date' && e.target.type !== 'number') {
-          const start = e.target.selectionStart;
-          const end = e.target.selectionEnd;
-          e.target.value = e.target.value.toUpperCase();
-          if (start !== null && end !== null) {
-            e.target.setSelectionRange(start, end);
-          }
-        }
-      }
-    });
-
-    const defaultUsersList = [
-      { id: 1, username: 'ADMIN', password: '123', role: 'ADMIN' },
-      { id: 2, username: 'STAFF', password: '123', role: 'USER' }
-    ];
-
-    let systemUsers = defaultUsersList;
-    let currentUser = null;
+    let systemUsers = [{ username: 'ADMIN', password: '123', role: 'ADMIN' }, { username: 'STAFF', password: '123', role: 'USER' }];
+    let vendorsList = [{ id: 1, name: 'AL-HARAMAIN TRAVELS' }, { id: 2, name: 'SAUDI HOTEL GROUP' }];
     let crmRecords = [];
+    let auditLogs = [];
+    let currentUser = null;
+    let formPassengerCount = 0;
+    let vendorExpenseRowCount = 0;
 
-    function loadStorageData() {
-      try {
-        const uStore = localStorage.getItem('skywalk_users');
-        if(uStore) {
-          const parsedU = JSON.parse(uStore);
-          if(Array.isArray(parsedU) && parsedU.length > 0) systemUsers = parsedU;
-        } else {
-          localStorage.setItem('skywalk_users', JSON.stringify(defaultUsersList));
-        }
-        const cStore = localStorage.getItem('skywalk_crm_records');
-        if(cStore) {
-          const parsedC = JSON.parse(cStore);
-          if(Array.isArray(parsedC)) crmRecords = parsedC;
-        }
-      } catch(e) {}
+    function logAudit(action) {
+      auditLogs.unshift({ timestamp: new Date().toLocaleString(), user: currentUser ? currentUser.username : 'SYSTEM', action: action });
+      localStorage.setItem('skywalk_audit', JSON.stringify(auditLogs));
     }
-    loadStorageData();
 
-    function saveCRMToStorage() {
-      localStorage.setItem('skywalk_crm_records', JSON.stringify(crmRecords));
+    function switchView(viewName) {
+      document.querySelectorAll('.app-view').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+      document.getElementById(`view-${viewName}`).style.display = 'block';
+      document.getElementById(`nav-${viewName}`).classList.add('active');
+      window.scrollTo(0, 0);
+
+      if(viewName === 'dashboard') renderCRM();
+      else if(viewName === 'kanban') renderKanbanBoard();
+      else if(viewName === 'vault') renderDocumentVault();
+      else if(viewName === 'pl-report') renderPLStatement();
+      else if(viewName === 'audit-logs') renderAuditLogs();
+      else if(viewName === 'daily-report') { document.getElementById('reportDateFilter').valueAsDate = new Date(); renderDailyCollectionReport(); }
     }
 
     function handleLogin(e) {
       if(e) e.preventDefault();
-      
-      const uInp = document.getElementById('loginUsername');
-      const pInp = document.getElementById('loginPassword');
-      
-      const inputUser = uInp ? uInp.value.toString().trim().toUpperCase() : '';
-      const inputPass = pInp ? pInp.value.toString().trim() : '';
-      const errBox = document.getElementById('loginErrorMsg');
-
-      // Refresh system users from storage to ensure we have latest password updates
-      loadStorageData();
-
-      let foundUser = systemUsers.find(u => u.username.toString().trim().toUpperCase() === inputUser && u.password.toString().trim() === inputPass);
-
-      if (foundUser) {
-        currentUser = foundUser;
-        if(errBox) errBox.classList.add('d-none');
-        
-        const loginScr = document.getElementById('loginScreen');
-        const mainScr = document.getElementById('mainAppScreen');
-        
-        if(loginScr) loginScr.style.setProperty('display', 'none', 'important');
-        if(mainScr) mainScr.style.setProperty('display', 'block', 'important');
-
-        document.getElementById('currentLoggedInUserDisplay').innerHTML = `<i class="bi bi-person-fill me-1"></i> ${currentUser.username} (${currentUser.role})`;
-        
-        applyRolePermissions();
-        renderCRM();
+      const u = document.getElementById('loginUsername').value.trim().toUpperCase();
+      const p = document.getElementById('loginPassword').value.trim();
+      let found = systemUsers.find(x => x.username === u && x.password === p);
+      if(found) {
+        currentUser = found;
+        document.getElementById('loginScreen').style.setProperty('display', 'none', 'important');
+        document.getElementById('mainAppScreen').style.setProperty('display', 'block', 'important');
+        document.getElementById('currentLoggedInUserDisplay').innerText = `${found.username} (${found.role})`;
+        logAudit(`User logged in: ${found.username}`);
+        switchView('dashboard');
       } else {
-        if(errBox) {
-          errBox.innerText = 'INVALID USERNAME OR PASSWORD!';
-          errBox.classList.remove('d-none');
-        } else {
-          alert('INVALID USERNAME OR PASSWORD!');
-        }
-      }
-      return false;
-    }
-
-    function applyRolePermissions() {
-      const isAdmin = currentUser && currentUser.role === 'ADMIN';
-
-      const btnUserMgmt = document.getElementById('btnUserManager');
-      const btnProfile = document.getElementById('btnProfileSetup');
-      const btnAddTerm = document.getElementById('btnAddTermBtn');
-      const btnResetForm = document.getElementById('btnResetFormMain');
-      const thCreatedBy = document.getElementById('thCreatedBy');
-      const btnPending = document.getElementById('btnPendingQuotationsAdmin');
-
-      if (btnUserMgmt) btnUserMgmt.style.display = isAdmin ? 'inline-block' : 'none';
-      if (btnProfile) btnProfile.style.display = isAdmin ? 'inline-block' : 'none';
-      if (btnAddTerm) btnAddTerm.style.display = isAdmin ? 'inline-block' : 'none';
-      if (btnResetForm) btnResetForm.style.display = isAdmin ? 'inline-block' : 'none';
-      if (btnPending) btnPending.style.display = isAdmin ? 'inline-block' : 'none';
-      
-      // Admin sees "CREATED BY" column header, Regular User does not
-      if (thCreatedBy) thCreatedBy.style.display = isAdmin ? 'table-cell' : 'none';
-
-      // Re-render terms rows so delete buttons hide for regular users
-      reindexTerms();
-    }
-
-    function togglePasswordVisibility(inputId, iconId) {
-      const input = document.getElementById(inputId);
-      const icon = document.getElementById(iconId);
-      if (input.type === 'password') {
-        input.type = 'text';
-        icon.classList.remove('bi-eye-slash-fill');
-        icon.classList.add('bi-eye-fill');
-      } else {
-        input.type = 'password';
-        icon.classList.remove('bi-eye-fill');
-        icon.classList.add('bi-eye-slash-fill');
+        document.getElementById('loginErrorMsg').innerText = 'INVALID USERNAME OR PASSWORD!';
+        document.getElementById('loginErrorMsg').classList.remove('d-none');
       }
     }
 
-    function handleLogout() {
-      currentUser = null;
-      document.getElementById('mainAppScreen').style.setProperty('display', 'none', 'important');
-      document.getElementById('loginScreen').style.setProperty('display', 'flex', 'important');
-      document.getElementById('loginUsername').value = '';
-      document.getElementById('loginPassword').value = '';
+    function handleLogout() { location.reload(); }
+
+    function convertCurrencyToPKR() {
+      const cur = document.getElementById('calcCurrency').value;
+      const amt = parseFloat(document.getElementById('calcForeignAmount').value) || 0;
+      let rate = 1;
+      if(cur === 'SAR') rate = parseFloat(document.getElementById('rateSAR').value) || 74;
+      if(cur === 'USD') rate = parseFloat(document.getElementById('rateUSD').value) || 280;
+      return amt * rate;
     }
 
-    function saveUsersToStorage() {
-      localStorage.setItem('skywalk_users', JSON.stringify(systemUsers));
-    }
-
-    function resetUserDatabase() {
-      if(currentUser && currentUser.role !== 'ADMIN') {
-        alert("ACCESS DENIED: ONLY ADMIN CAN RESET USERS!");
-        return;
-      }
-      if (confirm("ARE YOU SURE YOU WANT TO RESET ALL SYSTEM USERS TO DEFAULTS (ADMIN / 123)?")) {
-        systemUsers = [
-          { id: 1, username: 'ADMIN', password: '123', role: 'ADMIN' },
-          { id: 2, username: 'STAFF', password: '123', role: 'USER' }
-        ];
-        saveUsersToStorage();
-        renderUsersTable();
-        alert("ALL USERS HAVE BEEN RESET TO DEFAULTS!");
-      }
-    }
-
-    function renderUsersTable() {
-      try {
-        const stored = localStorage.getItem('skywalk_users');
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) systemUsers = parsed;
-        }
-      } catch(e){}
-
-      const tbody = document.getElementById('userMgmtTableBody');
-      tbody.innerHTML = systemUsers.map(u => `
-        <tr>
-          <td class="fw-bold">${u.username}</td>
-          <td><span class="badge ${u.role === 'ADMIN' ? 'bg-primary' : 'bg-secondary'}">${u.role}</span></td>
-          <td>
-            <input type="text" class="form-control form-control-sm py-0" value="${u.password}" id="pwd_input_${u.id}">
-          </td>
-          <td class="text-center">
-            <button class="btn btn-sm btn-outline-primary py-0 px-2 me-1" onclick="updateUserPassword(${u.id})"><i class="bi bi-check-lg"></i> UPDATE</button>
-            ${u.username === 'ADMIN' ? '' : `<button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="deleteUser(${u.id})"><i class="bi bi-trash"></i> DELETE</button>`}
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    function addNewUser() {
-      if(currentUser && currentUser.role !== 'ADMIN') {
-        alert("ACCESS DENIED!");
-        return;
-      }
-      const uname = document.getElementById('newUsername').value.trim().toUpperCase();
-      const pwd = document.getElementById('newUserPassword').value.trim();
-      const role = document.getElementById('newUserRole').value;
-
-      if (!uname || !pwd) {
-        alert("PLEASE ENTER BOTH USERNAME AND PASSWORD!");
-        return;
-      }
-
-      if (systemUsers.some(u => u.username === uname)) {
-        alert("USERNAME ALREADY EXISTS!");
-        return;
-      }
-
-      const newUser = { id: Date.now(), username: uname, password: pwd, role: role };
-      systemUsers.push(newUser);
-      saveUsersToStorage();
-      renderUsersTable();
-      document.getElementById('newUsername').value = '';
-      document.getElementById('newUserPassword').value = '';
-      alert(`USER ${uname} CREATED SUCCESSFULLY!`);
-    }
-
-    function updateUserPassword(id) {
-      if(currentUser && currentUser.role !== 'ADMIN') {
-        alert("ACCESS DENIED!");
-        return;
-      }
-      const newPwd = document.getElementById(`pwd_input_${id}`).value.trim();
-      if (!newPwd) {
-        alert("PASSWORD CANNOT BE EMPTY!");
-        return;
-      }
-      const user = systemUsers.find(u => u.id === id);
-      if (user) {
-        user.password = newPwd;
-        saveUsersToStorage();
-        alert(`PASSWORD UPDATED FOR ${user.username}!`);
-      }
-    }
-
-    function deleteUser(id) {
-      if(currentUser && currentUser.role !== 'ADMIN') {
-        alert("ACCESS DENIED!");
-        return;
-      }
-      if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS USER?")) {
-        systemUsers = systemUsers.filter(u => u.id !== id);
-        saveUsersToStorage();
-        renderUsersTable();
-      }
-    }
-
-    let makkahHotels = [
-      "MAIDAN AL BAIT 2 (OLD ARAEK) – SUTTLE SERVICE",
-      "MAIDAN AL BAIT 2 (EXECUTIVE ROOM) – SUTTLE SERVICE",
-      "MIAAD AL MAJD – 750 METER HJARA ROAD",
-      "MAIDAN AL BAIT 1 (OLD SAMI SINDHI) – 600 METER",
-      "SAIF AL MAJD – 600 METER",
-      "FAJAR AL BADIH 5 – 550 METER IBRAHIM KHALIL ROAD",
-      "YASMIN AL MAJD – 500 METER IBRAHIM KHALIL ROAD",
-      "KISWAH TOWERS MAKKAH – SHUTTLE SERVICE",
-      "MAKKAH HOTEL & TOWERS (OLD HILTON TOWERS)",
-      "PARK INN BY RADISSON MAKKAH AL NASEEM – SHUTTLE SERVICE",
-      "LE MERIDIEN TOWERS MAKKAH – SHUTTLE SERVICE",
-      "VOCO MAKKAH (AN IHG HOTEL) – SHUTTLE SERVICE",
-      "EMAAR GRAND HOTEL – SHUTTLE SERVICE",
-      "HILTON CONVENTION MAKKAH 5 STAR",
-      "PULLMAN ZAMZAM MAKKAH 5 STAR",
-      "ANJUM HOTEL MAKKAH 5 STAR",
-      "SWISSOTEL MAKKAH 5 STAR",
-      "MAKKAH CLOCK ROYAL TOWER (FAIRMONT) 5 STAR",
-      "RAFFLES MAKKAH PALACE 5 STAR",
-      "CONRAD MAKKAH 5 STAR"
-    ];
-
-    let madinahHotels = [
-      "MAIDAN AL BAIT MADINA – 800 METER BILAL MASJID SIDE",
-      "RAHATULUBUR OLD ROSE DIAMOND – 600 METER AWALI SIDE",
-      "QAMAR TAIBA – 500 METER NEAR BILAL MASJID",
-      "ARGWAN MADINA – 350 METER MARKAZIA",
-      "MARJAN INTERNATIONAL – 150 METER MARKAZIA",
-      "TAIBA FRONT HOTEL MADINAH – 50 METER MARKAZIA",
-      "AL AQEEQ MADINAH HOTEL – 100 METER MARKAZIA",
-      "BADR AL MASAEED – 300 METER MARKAZIA",
-      "ARTAL INTERNATIONAL HOTEL – 250 METER MARKAZIA",
-      "RUVE AL MADINAH HOTEL – 200 METER MARKAZIA",
-      "GOLDEN TULIP SHAKIREEN 4 STAR",
-      "OBEROI MADINAH 5 STAR",
-      "DAR AL TAQWA MADINAH 5 STAR",
-      "ANWAR AL MADINAH MOVENPICK 5 STAR",
-      "PULLMAN ZAMZAM MADINAH 5 STAR",
-      "MADINAH HILTON 5 STAR"
-    ];
-
-    let vehicleList = ["TAXI CAR (CAMRY/SONATA)", "STARIA (7-8 SEATER)", "HIACE (10-12 SEATER)", "GMC YUKON (VIP SUV)", "COASTER (22 SEATER)", "VIP SAPTCO BUS"];
-
-    let uploadedLogoBase64 = "";
-    let quotCounter = 1001;
-    let invCounter = 5001;
-    let flightRowCount = 0;
-    let termsRowCount = 0;
-
-    document.getElementById('quoteDate').valueAsDate = new Date();
-
-    function toggleFlightTicketSection() {
-      const isChecked = document.getElementById('chkIncludeTicket').checked;
-      const rowsContainer = document.getElementById('flightRowsContainer');
-      const noticeBox = document.getElementById('noTicketNoticeBox');
-      const btnAdd = document.getElementById('btnAddFlightBtn');
-
-      if (isChecked) {
-        rowsContainer.style.display = 'block';
-        noticeBox.style.display = 'none';
-        btnAdd.style.display = 'inline-block';
-      } else {
-        rowsContainer.style.display = 'none';
-        noticeBox.style.display = 'block';
-        btnAdd.style.display = 'none';
-      }
-    }
-
-    // Build Hour Dropdown Options (00 to 23)
-    function buildHourOptions(selectedHour) {
-      let html = '<option value="">HH</option>';
-      for (let h = 0; h < 24; h++) {
-        const hh = h.toString().padStart(2, '0');
-        const sel = (selectedHour === hh) ? 'selected' : '';
-        html += `<option value="${hh}" ${sel}>${hh}</option>`;
-      }
-      return html;
-    }
-
-    // Build Minute Dropdown Options (00 to 59 - All exact minutes allowed)
-    function buildMinuteOptions(selectedMin) {
-      let html = '<option value="">MM</option>';
-      for (let m = 0; m < 60; m++) {
-        const mm = m.toString().padStart(2, '0');
-        const sel = (selectedMin === mm) ? 'selected' : '';
-        html += `<option value="${mm}" ${sel}>${mm}</option>`;
-      }
-      return html;
-    }
-
-    function formatFlightTime24(hhVal, mmVal) {
-      if (!hhVal || !mmVal) return '-';
-      return `${hhVal}:${mmVal} HRS`;
-    }
-
-    function addFlightRow(airline = '', flightType = 'DIRECT FLIGHT', route = '', depDate = '', initialTimeStr = '14:30') {
-      flightRowCount++;
-      const container = document.getElementById('flightRowsContainer');
-      const rowDiv = document.createElement('div');
-      rowDiv.className = 'p-3 border rounded-3 bg-white mb-2 shadow-sm flight-row-item';
-      rowDiv.id = `flightRow_${flightRowCount}`;
-
-      let initHH = '14';
-      let initMM = '30';
-      if(initialTimeStr && initialTimeStr.includes(':')) {
-        const parts = initialTimeStr.split(':');
-        initHH = parts[0].padStart(2, '0');
-        initMM = parts[1].padStart(2, '0');
-      }
-
-      const hourOptionsHtml = buildHourOptions(initHH);
-      const minuteOptionsHtml = buildMinuteOptions(initMM);
-
-      rowDiv.innerHTML = `
-        <div class="row g-2 align-items-center">
-          <div class="col-md-12">
-            <label class="form-label text-muted mb-0" style="font-size:0.75rem;">AIRLINE NAME</label>
-            <input type="text" class="form-control form-control-sm f-airline" list="airlinePresets" placeholder="AIRLINE" value="${airline}">
-          </div>
-          <div class="col-6 col-md-3">
-            <label class="form-label text-muted mb-0" style="font-size:0.75rem;">TYPE</label>
-            <select class="form-select form-select-sm f-type">
-              <option value="DIRECT FLIGHT" ${flightType === 'DIRECT FLIGHT' ? 'selected' : ''}>DIRECT</option>
-              <option value="VIA / CONNECTING" ${flightType === 'VIA / CONNECTING' ? 'selected' : ''}>CONNECTING</option>
-            </select>
-          </div>
-          <div class="col-6 col-md-3">
-            <label class="form-label text-muted mb-0" style="font-size:0.75rem;">ROUTE</label>
-            <input type="text" class="form-control form-control-sm f-route" list="routePresets" placeholder="LHE-JED" value="${route}">
-          </div>
-          <div class="col-6 col-md-3">
-            <label class="form-label text-muted mb-0" style="font-size:0.75rem;">DATE</label>
-            <input type="date" class="form-control form-control-sm f-dep" value="${depDate}">
-          </div>
-          <div class="col-5 col-md-2">
-            <label class="form-label text-danger fw-bold mb-0" style="font-size:0.72rem;"><i class="bi bi-clock-history me-1"></i> 24-HR TIME (HH:MM)</label>
-            <div class="d-flex gap-1 align-items-center">
-              <select class="form-select form-select-sm f-time-hh fw-bold text-primary px-1 text-center">
-                ${hourOptionsHtml}
-              </select>
-              <span class="fw-bold text-dark">:</span>
-              <select class="form-select form-select-sm f-time-mm fw-bold text-primary px-1 text-center">
-                ${minuteOptionsHtml}
-              </select>
-            </div>
-          </div>
-          <div class="col-1 text-end">
-            <button type="button" class="btn btn-sm btn-outline-danger py-1 px-2 mt-3" onclick="removeFlightRow(${flightRowCount})"><i class="bi bi-trash"></i></button>
-          </div>
-        </div>
-      `;
-      container.appendChild(rowDiv);
-    }
-
-    function removeFlightRow(id) {
-      const elem = document.getElementById(`flightRow_${id}`);
-      if(elem) elem.remove();
-    }
-
-    function addTermsRow(termsText = '') {
-      if(currentUser && currentUser.role !== 'ADMIN') {
-        alert("ACCESS DENIED: ONLY ADMIN CAN MODIFY TERMS & CONDITIONS!");
-        return;
-      }
-      termsRowCount++;
-      const container = document.getElementById('termsContainer');
-      const rowDiv = document.createElement('div');
-      rowDiv.className = 'terms-item-row';
-      rowDiv.id = `termsRow_${termsRowCount}`;
-
-      const isAdmin = currentUser && currentUser.role === 'ADMIN';
-
-      rowDiv.innerHTML = `
-        <span class="fw-bold text-primary" style="font-size:0.75rem;">${termsRowCount}.</span>
-        <input type="text" class="form-control form-control-sm term-input-val" placeholder="ENTER TERM..." value="${termsText}" ${!isAdmin ? 'readonly' : ''}>
-        ${isAdmin ? `<button type="button" class="btn btn-sm btn-outline-danger py-1 px-2 btn-delete-term" onclick="removeTermsRow(${termsRowCount})"><i class="bi bi-trash"></i></button>` : ''}
-      `;
-      container.appendChild(rowDiv);
-    }
-
-    function removeTermsRow(id) {
-      if(currentUser && currentUser.role !== 'ADMIN') {
-        alert("ACCESS DENIED!");
-        return;
-      }
-      const elem = document.getElementById(`termsRow_${id}`);
-      if(elem) elem.remove();
-      reindexTerms();
-    }
-
-    function reindexTerms() {
-      const rows = document.querySelectorAll('.terms-item-row');
-      const isAdmin = currentUser && currentUser.role === 'ADMIN';
-      termsRowCount = 0;
-
-      rows.forEach((row, idx) => {
-        termsRowCount = idx + 1;
-        row.id = `termsRow_${termsRowCount}`;
-        row.querySelector('span').innerText = `${termsRowCount}.`;
-        
-        const input = row.querySelector('.term-input-val');
-        if(input) {
-          if(!isAdmin) input.setAttribute('readonly', 'readonly');
-          else input.removeAttribute('readonly');
-        }
-
-        let delBtn = row.querySelector('.btn-delete-term');
-        if (!isAdmin && delBtn) {
-          delBtn.remove();
-        } else if (isAdmin && !delBtn) {
-          const newBtn = document.createElement('button');
-          newBtn.type = 'button';
-          newBtn.className = 'btn btn-sm btn-outline-danger py-1 px-2 btn-delete-term';
-          newBtn.setAttribute('onclick', `removeTermsRow(${termsRowCount})`);
-          newBtn.innerHTML = '<i class="bi bi-trash"></i>';
-          row.appendChild(newBtn);
-        } else if (delBtn) {
-          delBtn.setAttribute('onclick', `removeTermsRow(${termsRowCount})`);
-        }
-      });
-    }
-
-    addTermsRow('100% ADVANCE PAYMENT: FULL PAYMENT (100%) IS REQUIRED IN ADVANCE AT THE TIME OF BOOKING CONFIRMATION. NO BOOKING WILL BE CONFIRMED WITHOUT FULL PAYMENT.');
-    addTermsRow('BOOKING CONFIRMATION: ALL BOOKINGS ARE SUBJECT TO AVAILABILITY AND CONFIRMATION AFTER RECEIPT OF FULL PAYMENT.');
-    addTermsRow('PASSPORT & DOCUMENTS: PASSENGERS MUST PROVIDE VALID PASSPORTS AND ALL REQUIRED DOCUMENTS WITHIN THE GIVEN TIME.');
-    addTermsRow('VISA APPROVAL: UMRAH VISA APPROVAL IS SUBJECT TO SAUDI GOVERNMENT RULES AND REGULATIONS. THE COMPANY WILL NOT BE RESPONSIBLE FOR VISA REJECTION OR DELAYS CAUSED BY AUTHORITIES.');
-    addTermsRow('AIRLINE POLICY: AIR TICKETS ARE SUBJECT TO AIRLINE RULES AND REGULATIONS. ANY CANCELLATION, RESCHEDULING, OR DATE CHANGE CHARGES WILL BE BORNE BY THE PASSENGER.');
-    addTermsRow('HOTEL ACCOMMODATION: HOTEL BOOKINGS ARE SUBJECT TO AVAILABILITY. ANY CHANGE IN HOTEL, IF REQUIRED, WILL BE SUBJECT TO AVAILABILITY AND SUITABLE ALTERNATIVE ARRANGEMENTS.');
-    addTermsRow('CANCELLATION POLICY: CANCELLATION CHARGES WILL APPLY ACCORDING TO THE POLICIES OF AIRLINES, HOTELS, VISA SERVICES, AND OTHER SERVICE PROVIDERS.');
-    addTermsRow('REFUND POLICY: REFUNDS, IF APPLICABLE, WILL BE PROCESSED AFTER DEDUCTION OF ACTUAL EXPENSES AND APPLICABLE CANCELLATION CHARGES.');
-    addTermsRow('ROOM SHARING: ROOM SHARING AND ACCOMMODATION ARRANGEMENTS WILL BE PROVIDED ACCORDING TO THE SELECTED UMRAH PACKAGE.');
-    addTermsRow('TRAVEL DATES: ANY CHANGES IN TRAVEL DATES OR PACKAGE SERVICES MAY RESULT IN ADDITIONAL CHARGES.');
-    addTermsRow('ADDITIONAL EXPENSES: ANY EXTRA EXPENSES DUE TO PERSONAL REQUESTS, DELAYS, FLIGHT CHANGES, OR UNFORESEEN CIRCUMSTANCES WILL BE PAYABLE BY THE PASSENGER.');
-    addTermsRow('UNFORESEEN CIRCUMSTANCES: THE COMPANY WILL NOT BE RESPONSIBLE FOR DELAYS, CANCELLATIONS, OR CHANGES CAUSED BY AIRLINES, HOTELS, GOVERNMENT AUTHORITIES, OR CIRCUMSTANCES BEYOND ITS CONTROL.');
-    addTermsRow('ACCEPTANCE OF TERMS: CONFIRMATION OF BOOKING AND PAYMENT SHALL BE CONSIDERED ACCEPTANCE OF ALL THE ABOVE-MENTIONED TERMS AND CONDITIONS.');
-
-    addFlightRow('SAUDI ARABIAN AIRLINES (SAUDIA)', 'DIRECT FLIGHT', 'LAHORE TO JEDDAH (LHE - JED)', '', '13:05');
-    addFlightRow('SAUDI ARABIAN AIRLINES (SAUDIA)', 'DIRECT FLIGHT', 'JEDDAH TO LAHORE (JED - LHE)', '', '21:15');
-
-    function autoGenDocNum() {
-      const isQuot = document.getElementById('docTypeQuot').checked;
-      if(isQuot) {
-        document.getElementById('docNum').value = 'SAQ-' + quotCounter;
-        document.getElementById('lblDocNum').innerText = 'QUOTATION #';
-      } else {
-        document.getElementById('docNum').value = 'SAI-' + invCounter;
-        document.getElementById('lblDocNum').innerText = 'INVOICE #';
-      }
-    }
-
-    function toggleDocType() {
-      autoGenDocNum();
-      const isInv = document.getElementById('docTypeInv').checked;
-      document.getElementById('invoicePaymentSection').style.display = isInv ? 'block' : 'none';
+    function applyForeignRateToRatePerHead() {
+      const pkrVal = convertCurrencyToPKR();
+      document.getElementById('ratePerHead').value = pkrVal;
       calcTotal();
-    }
-
-    function populateDropdowns() {
-      const mSelect = document.getElementById('makkahHotelSelect');
-      mSelect.innerHTML = '<option value="">SELECT MAKKAH HOTEL</option>' + makkahHotels.map(h => `<option value="${h}">${h}</option>`).join('');
-
-      const madSelect = document.getElementById('madinahHotelSelect');
-      madSelect.innerHTML = '<option value="">SELECT MADINAH HOTEL</option>' + madinahHotels.map(h => `<option value="${h}">${h}</option>`).join('');
-
-      for(let i=1; i<=4; i++) {
-        const vSelect = document.getElementById(`transVehicle${i}`);
-        vSelect.innerHTML = '<option value="">SELECT VEHICLE</option>' + vehicleList.map(v => `<option value="${v}">${v}</option>`).join('');
-      }
-    }
-
-    function saveNewHotelModal() {
-      const isMakkah = document.getElementById('cityMakkah').checked;
-      const name = document.getElementById('newHotelNameModal').value.trim().toUpperCase();
-      if(!name) {
-        alert("PLEASE ENTER HOTEL NAME!");
-        return;
-      }
-      if(isMakkah) makkahHotels.push(name);
-      else madinahHotels.push(name);
-      
-      populateDropdowns();
-      document.getElementById('newHotelNameModal').value = '';
-      
-      const modal = bootstrap.Modal.getInstance(document.getElementById('addHotelModal'));
-      modal.hide();
-      alert(`HOTEL SUCCESSFULLY ADDED TO ${isMakkah ? 'MAKKAH' : 'MADINAH'} LIST!`);
+      alert(`CONVERTED & APPLIED: PKR ${pkrVal.toLocaleString()}`);
     }
 
     function calcTotal() {
       const adults = parseInt(document.getElementById('paxAdults').value) || 0;
-      const rate = parseFloat(document.getElementById('ratePerHead').value) || 0;
-      const infants = parseInt(document.getElementById('paxInfants').value) || 0;
-      const infantRate = parseFloat(document.getElementById('infantRatePerHead').value) || 0;
-
-      const total = (adults * rate) + (infants * infantRate);
-      document.getElementById('totalAmount').value = total;
-      document.getElementById('invTotalAmount').value = total;
-      calcBalance();
-    }
-
-    function calcBalance() {
-      const total = parseFloat(document.getElementById('totalAmount').value) || 0;
-      const rec = parseFloat(document.getElementById('receivedAmount').value) || 0;
-      const bal = total - rec;
-      document.getElementById('balanceAmount').value = bal;
-    }
-
-    function buildCleanDocumentHTML() {
-      const isQuot = document.getElementById('docTypeQuot').checked;
-      const docTypeStr = isQuot ? 'QUOTATION' : 'INVOICE';
-      const docNumVal = document.getElementById('docNum').value;
-
-      const compName = (document.getElementById('cfgCompName').value || 'SKY WALK TOUR & TRAVELS').toUpperCase();
-      const compAddr = (document.getElementById('cfgCompAddr').value || '').toUpperCase();
-      const p1 = document.getElementById('cfgCompPhone1').value || '';
-      const p2 = document.getElementById('cfgCompPhone2').value || '';
-      const email = (document.getElementById('cfgCompEmail').value || '').toUpperCase();
-      const logoSrc = uploadedLogoBase64 || document.getElementById('cfgLogoUrl').value || 'https://i.ibb.co/L50nLrq/skywalk-logo.jpg';
-
-      const clientName = (document.getElementById('clientName').value || '-').toUpperCase();
-      const clientContact = document.getElementById('clientContact').value || '-';
-      const quoteDate = document.getElementById('quoteDate').value || '-';
-      const pkgTitle = (document.getElementById('pkgTitle').value || 'UMRAH PACKAGE').toUpperCase();
-
-      const adults = parseInt(document.getElementById('paxAdults').value) || 0;
       const children = parseInt(document.getElementById('paxChildren').value) || 0;
-      const infants = parseInt(document.getElementById('paxInfants').value) || 0;
-      const travelersStr = `${adults} ADULTS + ${children} CHILDREN + ${infants} INFANTS`;
-      const occ = (document.getElementById('occupancy').value || '-').toUpperCase();
-
       const rate = parseFloat(document.getElementById('ratePerHead').value) || 0;
-      const infantRate = parseFloat(document.getElementById('infantRatePerHead').value) || 0;
-      const total = (adults * rate) + (infants * infantRate);
-
-      const isTicketIncluded = document.getElementById('chkIncludeTicket').checked;
-      let flightSectionContentHtml = '';
-
-      if (isTicketIncluded) {
-        const flightRows = document.querySelectorAll('.flight-row-item');
-        let flightHeaderHtml = `<th>AIRLINE NAME</th><th>FLIGHT TYPE</th><th>SECTOR / ROUTE</th><th>FLIGHT DATE</th><th>FLIGHT TIME (24-HR)</th>`;
-        let flightBodyHtml = '';
-
-        flightRows.forEach(r => {
-          const airline = (r.querySelector('.f-airline').value || '-').toUpperCase();
-          const fType = (r.querySelector('.f-type').value || '-').toUpperCase();
-          const route = (r.querySelector('.f-route').value || '-').toUpperCase();
-          const dep = r.querySelector('.f-dep').value || '-';
-          const hh = r.querySelector('.f-time-hh').value || '';
-          const mm = r.querySelector('.f-time-mm').value || '';
-          const formatted24Time = formatFlightTime24(hh, mm);
-          flightBodyHtml += `<tr><td class="fw-bold text-primary">${airline}</td><td>${fType}</td><td>${route}</td><td class="fw-bold text-success">${dep}</td><td class="fw-bold text-info">${formatted24Time}</td></tr>`;
-        });
-        if(!flightBodyHtml) flightBodyHtml = `<tr><td colspan="5" class="text-muted">NO FLIGHT SCHEDULE ADDED</td></tr>`;
-
-        flightSectionContentHtml = `
-          <table class="pdf-table mb-2">
-            <thead><tr>${flightHeaderHtml}</tr></thead>
-            <tbody class="text-center">${flightBodyHtml}</tbody>
-          </table>
-        `;
-      } else {
-        flightSectionContentHtml = `
-          <div class="p-3 mb-2 rounded text-center border" style="background-color: #FEF3C7 !important; border-color: #F59E0B !important;">
-            <strong style="color: #92400E !important; font-size: 11px;">
-              <i class="bi bi-info-circle-fill me-2"></i>THIS PACKAGE IS WITHOUT TICKET. AIR TICKET FARE WILL BE ADDED AT THE TIME OF BOOKING ACCORDING TO PREVAILING AIRLINE FARES.
-            </strong>
-          </div>
-        `;
-      }
-
-      const ziyaratList = [];
-      if(document.getElementById('ziyaratMakkah').checked) ziyaratList.push("MAKKAH ZIYARAT");
-      if(document.getElementById('ziyaratMadinah').checked) ziyaratList.push("MADINAH ZIYARAT");
-      if(document.getElementById('ziyaratBadar').checked) ziyaratList.push("BADAR ZIYARAT");
-      if(document.getElementById('ziyaratTaif').checked) ziyaratList.push("TAIF ZIYARAT");
-
-      let ziyaratHtmlSection = '';
-      if(ziyaratList.length > 0) {
-        ziyaratHtmlSection = `
-          <div class="section-banner" style="background: #005B96 !important; color: #ffffff !important;"><i class="bi bi-geo-alt-fill me-2"></i> INCLUDED ZIYARAT TOURS</div>
-          <table class="pdf-table mb-2">
-            <thead>
-              <tr>
-                <th style="background-color: #E6F0FA !important; color: #0A3960 !important;">ZIYARAT TOUR NAME</th>
-                <th style="background-color: #E6F0FA !important; color: #0A3960 !important;">STATUS</th>
-              </tr>
-            </thead>
-            <tbody class="text-center">
-              ${ziyaratList.map(z => `<tr><td class="fw-bold">${z}</td><td class="text-success fw-bold"><i class="bi bi-check-circle-fill me-1"></i> INCLUDED IN PACKAGE</td></tr>`).join('')}
-            </tbody>
-          </table>
-        `;
-      }
-
-      const makkahH = document.getElementById('makkahHotelSelect').value.toUpperCase();
-      const madinahH = document.getElementById('madinahHotelSelect').value.toUpperCase();
-      let hotelHtml = '';
-      if(makkahH) hotelHtml += `<tr><td class="fw-bold">MAKKAH</td><td>${makkahH}</td><td>${(document.getElementById('makkahDist').value || '-').toUpperCase()}</td><td>${(document.getElementById('makkahNights').value || '-').toUpperCase()}</td></tr>`;
-      if(madinahH) hotelHtml += `<tr><td class="fw-bold">MADINAH</td><td>${madinahH}</td><td>${(document.getElementById('madinahDist').value || '-').toUpperCase()}</td><td>${(document.getElementById('madinahNights').value || '-').toUpperCase()}</td></tr>`;
-      if(!hotelHtml) hotelHtml = `<tr><td colspan="4" class="text-muted">NO HOTEL SELECTED</td></tr>`;
-
-      let transHtml = '';
-      for(let i=1; i<=4; i++) {
-        const sec = document.getElementById(`transSec${i}`).value.toUpperCase();
-        const cat = document.getElementById(`transCategory${i}`).value.toUpperCase();
-        const veh = document.getElementById(`transVehicle${i}`).value.toUpperCase();
-        if(sec || cat || veh) transHtml += `<tr><td>${sec || '-'}</td><td>${cat || '-'}</td><td>${veh || '-'}</td></tr>`;
-      }
-      if(!transHtml) transHtml = `<tr><td colspan="3" class="text-muted">NO TRANSPORT SCHEDULE SELECTED</td></tr>`;
-
-      let pricingHtml = `
-        <tr>
-          <td class="fw-bold">${occ ? occ + ' OCCUPANCY (ADULTS)' : 'ADULT PACKAGE'}</td>
-          <td>PKR ${rate.toLocaleString()}</td>
-          <td>${adults}</td>
-          <td class="fw-bold text-success">PKR ${(adults * rate).toLocaleString()}</td>
-        </tr>
-      `;
-      if(infants > 0) {
-        pricingHtml += `
-          <tr>
-            <td class="fw-bold">INFANT CHARGES</td>
-            <td>PKR ${infantRate.toLocaleString()}</td>
-            <td>${infants}</td>
-            <td class="fw-bold text-success">PKR ${(infants * infantRate).toLocaleString()}</td>
-          </tr>
-          <tr class="table-light">
-            <th colspan="3" class="text-end">GRAND TOTAL PACKAGE COST:</th>
-            <th class="text-success fs-6">PKR ${total.toLocaleString()}</th>
-          </tr>
-        `;
-      }
-
-      let accountsTableHtml = '';
-      if(!isQuot) {
-        const rec = parseFloat(document.getElementById('receivedAmount').value) || 0;
-        const bal = total - rec;
-        accountsTableHtml = `
-          <div class="section-banner-green"><i class="bi bi-receipt-cutoff me-2"></i> PAYMENT RECEIPT & ACCOUNT SUMMARY</div>
-          <table class="pdf-table mb-2">
-            <thead>
-              <tr>
-                <th style="background-color: #E8F5E9 !important; color: #1B5E20 !important;">TOTAL PACKAGE AMOUNT</th>
-                <th style="background-color: #E3F2FD !important; color: #0D47A1 !important;">INITIAL RECEIVED</th>
-                <th style="background-color: #FFEBEE !important; color: #B71C1C !important;">BALANCE OUTSTANDING</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="text-center">
-                <td class="fw-bold">PKR ${total.toLocaleString()}</td>
-                <td class="fw-bold text-primary">PKR ${rec.toLocaleString()}</td>
-                <td class="fw-bold text-danger">PKR ${bal.toLocaleString()}</td>
-              </tr>
-            </tbody>
-          </table>
-        `;
-      }
-
-      const termInputs = document.querySelectorAll('.term-input-val');
-      let termsListHtml = '';
-      termInputs.forEach((inp, idx) => {
-        const val = inp.value.trim().toUpperCase();
-        if(val) {
-          termsListHtml += `<div><strong>${idx + 1}.</strong> ${val}</div>`;
-        }
-      });
-      if(!termsListHtml) termsListHtml = '<div>NO TERMS & CONDITIONS ADDED.</div>';
-
-      return `
-        <!-- PAGE 1 -->
-        <div class="pdf-page">
-          <img src="${logoSrc}" class="watermark" alt="WATERMARK">
-          <div class="pdf-content">
-            
-            <div class="pdf-header-container d-flex justify-content-between align-items-center">
-              <div>
-                <div class="company-title">${compName}</div>
-                <div class="small text-muted" style="font-size: 10px; font-weight: 600;">${compAddr}</div>
-                <div class="small text-muted" style="font-size: 10px; font-weight: 600;">${p1} | ${p2} | ${email}</div>
-              </div>
-              <div class="text-end">
-                <img src="${logoSrc}" alt="LOGO" style="max-height: 160px; max-width: 250px; object-fit: contain;">
-              </div>
-            </div>
-
-            <div class="doc-badge-center-wrapper">
-              <span class="doc-badge ${isQuot ? 'doc-badge-quotation' : 'doc-badge-invoice'}">${docTypeStr}</span>
-            </div>
-
-            <div class="info-box mb-2">
-              <div class="row g-2 text-center">
-                <div class="col-3 border-end">
-                  <div class="text-uppercase text-muted small fw-bold" style="font-size: 9px;">${isQuot ? 'QUOTATION #' : 'INVOICE #'}</div>
-                  <div class="fw-bold text-primary" style="font-size: 12px;">${docNumVal}</div>
-                </div>
-                <div class="col-3 border-end">
-                  <div class="text-uppercase text-muted small fw-bold" style="font-size: 9px;">DATE</div>
-                  <div class="fw-bold text-dark" style="font-size: 12px;">${quoteDate}</div>
-                </div>
-                <div class="col-3 border-end">
-                  <div class="text-uppercase text-muted small fw-bold" style="font-size: 9px;">CLIENT NAME</div>
-                  <div class="fw-bold text-dark" style="font-size: 12px;">${clientName}</div>
-                </div>
-                <div class="col-3">
-                  <div class="text-uppercase text-muted small fw-bold" style="font-size: 9px;">CONTACT</div>
-                  <div class="fw-bold text-dark" style="font-size: 12px;">${clientContact}</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="section-banner"><i class="bi bi-airplane-engines me-2"></i> PACKAGE SUMMARY & DETAILS</div>
-            <table class="pdf-table mb-2">
-              <thead>
-                <tr>
-                  <th>PACKAGE TITLE</th>
-                  <th>TRAVELERS</th>
-                  <th>OCCUPANCY</th>
-                  <th>TOTAL COST</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="text-center">
-                  <td class="fw-bold text-primary">${pkgTitle}</td>
-                  <td>${travelersStr}</td>
-                  <td>${occ}</td>
-                  <td class="fw-bold text-success">PKR ${total.toLocaleString()}</td>
-                </tr>
-              </tbody>
-            </table>
-
-            <div class="section-banner"><i class="bi bi-airplane-fill me-2"></i> FLIGHT & AIRLINE DETAILS</div>
-            ${flightSectionContentHtml}
-
-            <div class="section-banner"><i class="bi bi-buildings me-2"></i> HOTEL ACCOMMODATION & STAY SCHEDULE</div>
-            <table class="pdf-table mb-2">
-              <thead>
-                <tr>
-                  <th style="width: 20%;">CITY</th>
-                  <th style="width: 45%;">HOTEL NAME</th>
-                  <th style="width: 18%;">DISTANCE</th>
-                  <th style="width: 17%;">DURATION</th>
-                </tr>
-              </thead>
-              <tbody class="text-center">${hotelHtml}</tbody>
-            </table>
-
-            <div class="section-banner"><i class="bi bi-bus-front me-2"></i> TRANSPORT SCHEDULE & ROUTE</div>
-            <table class="pdf-table mb-2">
-              <thead>
-                <tr>
-                  <th style="width: 40%;">SECTOR / ROUTE</th>
-                  <th style="width: 30%;">SERVICE TYPE</th>
-                  <th style="width: 30%;">VEHICLE / TRANSPORT</th>
-                </tr>
-              </thead>
-              <tbody class="text-center">${transHtml}</tbody>
-            </table>
-
-            ${ziyaratHtmlSection}
-          </div>
-
-          <div class="pdf-footer d-flex justify-content-between">
-            <span>${docTypeStr} | ${compName}</span>
-            <span>PAGE 1 OF 2</span>
-          </div>
-        </div>
-
-        <!-- PAGE 2 -->
-        <div class="pdf-page">
-          <img src="${logoSrc}" class="watermark" alt="WATERMARK">
-          <div class="pdf-content">
-            <div class="pdf-header-container d-flex justify-content-between align-items-center">
-              <div class="company-title">PACKAGE PRICING & INCLUSIONS</div>
-              <span class="badge bg-primary fs-6">#${docNumVal}</span>
-            </div>
-
-            <div class="section-banner"><i class="bi bi-calculator me-2"></i> PRICING BREAKDOWN</div>
-            <table class="pdf-table mb-2">
-              <thead>
-                <tr>
-                  <th>CATEGORY / DESCRIPTION</th>
-                  <th>RATE PER HEAD (PKR)</th>
-                  <th>PAX COUNT</th>
-                  <th>TOTAL PRICE (PKR)</th>
-                </tr>
-              </thead>
-              <tbody class="text-center">${pricingHtml}</tbody>
-            </table>
-
-            ${accountsTableHtml}
-
-            <div class="row g-2 mb-2">
-              <div class="col-6">
-                <div class="p-2 border rounded bg-light h-100">
-                  <h6 class="fw-bold text-success mb-1" style="font-size: 11px;"><i class="bi bi-check-circle-fill me-1"></i> INCLUDED SERVICES</h6>
-                  <ul class="small mb-0 ps-3" style="font-size: 10px;">
-                    <li>UMRAH VISA PROCESSING</li>
-                    <li>MANDATORY TRAVEL INSURANCE</li>
-                    <li>COMPLETE TRANSPORT AS PER ITINERARY</li>
-                    <li>MAKKAH & MADINAH HOTEL ACCOMMODATION</li>
-                    ${isTicketIncluded ? '<li>AIR TICKET INCLUDED</li>' : ''}
-                  </ul>
-                </div>
-              </div>
-              <div class="col-6">
-                <div class="p-2 border rounded bg-light h-100">
-                  <h6 class="fw-bold text-danger mb-1" style="font-size: 11px;"><i class="bi bi-x-circle-fill me-1"></i> EXCLUDED / NOT INCLUDED</h6>
-                  <ul class="small mb-0 ps-3" style="font-size: 10px;">
-                    <li>PERSONAL EXPENSES & SHOPPING</li>
-                    <li>HOTEL LAUNDRY & EXTRA ROOM SERVICES</li>
-                    ${!isTicketIncluded ? '<li class="fw-bold text-danger">AIR TICKET (WITHOUT TICKET PACKAGE)</li>' : ''}
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div class="section-banner"><i class="bi bi-file-earmark-text me-2"></i> TERMS & CONDITIONS</div>
-            <div class="p-2 border rounded bg-light">
-              <div class="small text-dark mb-0" style="font-size: 9px; line-height: 1.4;">${termsListHtml}</div>
-            </div>
-          </div>
-
-          <div class="pdf-footer d-flex justify-content-between">
-            <span>${docTypeStr} | ${compName}</span>
-            <span>PAGE 2 OF 2</span>
-          </div>
-        </div>
-      `;
+      document.getElementById('totalAmount').value = (adults + children) * rate;
     }
 
-    function generatePreview() {
-      const htmlContent = buildCleanDocumentHTML();
-      document.getElementById('modalPreviewContainer').innerHTML = htmlContent;
-      document.getElementById('printArea').innerHTML = htmlContent;
+    function autoGenDocNum() {
+      const isQuot = document.getElementById('docTypeQuot').checked;
+      document.getElementById('docNum').value = (isQuot ? 'SAQ-' : 'SAI-') + (Math.floor(Math.random() * 9000) + 1000);
     }
 
-    function printPDFDocument() {
-      const htmlContent = buildCleanDocumentHTML();
-      document.getElementById('printArea').innerHTML = htmlContent;
-      window.print();
+    function addVendorExpenseRow() {
+      vendorExpenseRowCount++;
+      const div = document.createElement('div');
+      div.className = 'row g-2 mb-2 vendor-expense-row';
+      div.id = `veRow_${vendorExpenseRowCount}`;
+      div.innerHTML = `
+        <div class="col-md-7"><select class="form-select form-select-sm ve-vendor">${vendorsList.map(v => `<option value="${v.name}">${v.name}</option>`).join('')}</select></div>
+        <div class="col-md-4"><input type="number" class="form-control form-control-sm ve-cost" placeholder="COST PKR" value="0"></div>
+        <div class="col-md-1"><button type="button" class="btn btn-sm btn-outline-danger" onclick="document.getElementById('veRow_${vendorExpenseRowCount}').remove()"><i class="bi bi-trash"></i></button></div>
+      `;
+      document.getElementById('vendorExpenseRowsContainer').appendChild(div);
+    }
+
+    function addFormPassengerRow(p = { name: '', passport: '', expiry: '' }) {
+      formPassengerCount++;
+      const div = document.createElement('div');
+      div.className = 'row g-2 mb-2 form-pax-item';
+      div.id = `fpRow_${formPassengerCount}`;
+      div.innerHTML = `
+        <div class="col-md-4"><input type="text" class="form-control form-control-sm fp-name" placeholder="FULL NAME" value="${p.name}"></div>
+        <div class="col-md-4"><input type="text" class="form-control form-control-sm fp-passport" placeholder="PASSPORT NO" value="${p.passport}"></div>
+        <div class="col-md-3"><input type="date" class="form-control form-control-sm fp-expiry" value="${p.expiry}"></div>
+        <div class="col-md-1"><button type="button" class="btn btn-sm btn-outline-danger" onclick="document.getElementById('fpRow_${formPassengerCount}').remove()"><i class="bi bi-trash"></i></button></div>
+      `;
+      document.getElementById('formPassengersContainer').appendChild(div);
     }
 
     function saveRecord() {
-      const name = document.getElementById('clientName').value;
-      if(!name) {
-        alert("PLEASE ENTER CLIENT NAME!");
-        return;
-      }
-      const isQuot = document.getElementById('docTypeQuot').checked;
-      const type = isQuot ? 'QUOTATION' : 'INVOICE';
-      const docNum = document.getElementById('docNum').value;
+      const name = document.getElementById('clientName').value.trim();
+      if(!name) { alert("ENTER CLIENT NAME!"); return; }
+
+      let totalExp = 0;
+      const vendorExpenses = [];
+      document.querySelectorAll('.vendor-expense-row').forEach(r => {
+        const v = r.querySelector('.ve-vendor').value;
+        const c = parseFloat(r.querySelector('.ve-cost').value) || 0;
+        vendorExpenses.push({ vendorName: v, cost: c });
+        totalExp += c;
+      });
+
+      const passengers = [];
+      let expiringSoonCount = 0;
+      document.querySelectorAll('.form-pax-item').forEach(r => {
+        const pName = r.querySelector('.fp-name').value.trim().toUpperCase() || '-';
+        const pPass = r.querySelector('.fp-passport').value.trim().toUpperCase() || '-';
+        const pExp = r.querySelector('.fp-expiry').value || '-';
+        
+        if(pExp !== '-') {
+          const expDate = new Date(pExp);
+          const today = new Date();
+          const diffDays = Math.ceil((expDate - today) / (1000 * 60 * 60 * 24));
+          if(diffDays <= 60 && diffDays >= 0) expiringSoonCount++;
+        }
+        passengers.push({ name: pName, passport: pPass, expiry: pExp });
+      });
+
       const total = parseFloat(document.getElementById('totalAmount').value) || 0;
-      const received = isQuot ? 0 : (parseFloat(document.getElementById('receivedAmount').value) || 0);
-      const balance = total - received;
-
-      const adults = parseInt(document.getElementById('paxAdults').value) || 0;
-      const children = parseInt(document.getElementById('paxChildren').value) || 0;
-      const infants = parseInt(document.getElementById('paxInfants').value) || 0;
-      const paxSummary = `${adults}A + ${children}C + ${infants}I`;
-      const pkgTitle = (document.getElementById('pkgTitle').value || 'UMRAH PACKAGE').toUpperCase();
-
       const record = {
         id: Date.now(),
-        type: type,
-        docNum: docNum,
-        date: document.getElementById('quoteDate').value,
-        name: name,
+        type: document.getElementById('docTypeQuot').checked ? 'QUOTATION' : 'INVOICE',
+        docNum: document.getElementById('docNum').value,
+        date: document.getElementById('quoteDate').value || new Date().toISOString().split('T')[0],
+        name: name.toUpperCase(),
         contact: document.getElementById('clientContact').value || '-',
-        refName: document.getElementById('referenceName').value || 'DIRECT CLIENT',
-        pkgTitle: pkgTitle,
-        paxSummary: paxSummary,
+        pkgTitle: document.getElementById('pkgTitle').value.toUpperCase(),
         total: total,
-        received: received,
-        balance: balance,
-        status: isQuot ? 'QUOTATION' : (balance <= 0 ? 'COMPLETED' : 'PENDING'),
-        createdBy: currentUser ? currentUser.username : 'SYSTEM'
+        totalExpenses: totalExp,
+        netProfit: total - totalExp,
+        leadStatus: document.getElementById('clientLeadStatus').value,
+        status: 'PENDING',
+        vendorExpenses: vendorExpenses,
+        passengers: passengers,
+        paymentsHistory: [{ date: new Date().toISOString().split('T')[0], time: '12:00', amount: 0, note: 'RECORD CREATED' }]
       };
 
       crmRecords.push(record);
-      saveCRMToStorage();
-      if(isQuot) quotCounter++; else invCounter++;
-      autoGenDocNum();
-      renderCRM();
-      alert(`${type} (${docNum}) SUCCESSFULLY SAVED TO DATABASE!`);
-    }
+      localStorage.setItem('skywalk_crm', JSON.stringify(crmRecords));
+      logAudit(`Created ${record.type} #${record.docNum} for ${record.name}`);
 
-    function convertQuotationToInvoice(id) {
-      const record = crmRecords.find(r => r.id === id);
-      if (!record) return;
-
-      if (confirm(`ARE YOU SURE YOU WANT TO CONVERT QUOTATION (${record.docNum}) TO INVOICE?`)) {
-        record.type = 'INVOICE';
-        record.docNum = 'SAI-' + invCounter++;
-        record.status = record.balance <= 0 ? 'COMPLETED' : 'PENDING';
-        saveCRMToStorage();
-        renderCRM();
-        if (currentUser && currentUser.role === 'ADMIN') {
-          renderPendingQuotationsTable();
-        }
-        alert(`SUCCESSFULLY CONVERTED TO INVOICE (${record.docNum})!`);
-      }
-    }
-
-    function openPendingQuotationsModal() {
-      if (currentUser && currentUser.role !== 'ADMIN') {
-        alert("ACCESS DENIED: ONLY ADMIN CAN VIEW PENDING QUOTATIONS LEDGER!");
-        return;
-      }
-      renderPendingQuotationsTable();
-      const modal = new bootstrap.Modal(document.getElementById('pendingQuotationsModal'));
-      modal.show();
-    }
-
-    function renderPendingQuotationsTable() {
-      const tbody = document.getElementById('pendingQuotTableBody');
-      const pendingQuots = crmRecords.filter(r => r.type === 'QUOTATION');
-
-      if (pendingQuots.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted py-4">NO PENDING QUOTATIONS FOUND.</td></tr>';
-        return;
+      if(expiringSoonCount > 0) {
+        document.getElementById('expiryAlertBanner').classList.remove('d-none');
+        document.getElementById('expiryAlertText').innerText = `${expiringSoonCount} passenger passport(s) expiring within 60 days! Check Document Vault.`;
       }
 
-      tbody.innerHTML = pendingQuots.map(r => `
-        <tr>
-          <td class="fw-bold text-primary">${r.docNum}</td>
-          <td class="fw-bold">${r.name}</td>
-          <td class="fw-bold text-dark"><i class="bi bi-telephone-fill me-1 text-success"></i> ${r.contact}</td>
-          <td>${r.pkgTitle || 'UMRAH PACKAGE'}</td>
-          <td class="text-center">${r.paxSummary || '-'}</td>
-          <td class="fw-bold text-success">PKR ${r.total.toLocaleString()}</td>
-          <td>${r.date}</td>
-          <td><span class="badge-creator">${r.createdBy || 'SYSTEM'}</span></td>
-          <td class="text-center">
-            <a href="tel:${r.contact}" class="btn btn-sm btn-success py-1 px-2 me-1" title="Call Now"><i class="bi bi-telephone-outbound-fill"></i> CALL</a>
-            <button class="btn btn-sm btn-outline-primary py-1 px-2" onclick="convertQuotationToInvoice(${r.id})" title="Convert to Invoice"><i class="bi bi-arrow-repeat"></i> CONVERT TO INV</button>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    let currentFilter = 'All';
-
-    function filterCRM(filterType) {
-      currentFilter = filterType;
-      document.getElementById('btnFilterAll').classList.toggle('active', filterType === 'All');
-      document.getElementById('btnFilterQuot').classList.toggle('active', filterType === 'QUOTATION');
-      document.getElementById('btnFilterInv').classList.toggle('active', filterType === 'INVOICE');
-      renderCRM();
-    }
-
-    function searchRecords() {
-      renderCRM();
+      switchView('dashboard');
+      alert(`${record.type} SAVED SUCCESSFULLY!`);
     }
 
     function renderCRM() {
-      const tbody = document.getElementById('crmTableBody');
       const keyword = document.getElementById('searchKeyword').value.trim().toLowerCase();
+      let totRev = 0, totExp = 0, activeLeads = 0;
+      const tbody = document.getElementById('crmTableBody');
 
       const filtered = crmRecords.filter(r => {
-        const matchesFilter = (currentFilter === 'All') || (r.type === currentFilter);
-        const matchesSearch = !keyword || r.docNum.toLowerCase().includes(keyword) || r.name.toLowerCase().includes(keyword) || r.contact.toLowerCase().includes(keyword) || (r.createdBy && r.createdBy.toLowerCase().includes(keyword));
-        return matchesFilter && matchesSearch;
+        if(r.type === 'INVOICE') totRev += r.total;
+        totExp += r.totalExpenses;
+        if(r.leadStatus !== 'BOOKED') activeLeads++;
+        return !keyword || r.docNum.toLowerCase().includes(keyword) || r.name.toLowerCase().includes(keyword);
       });
 
-      const isAdmin = currentUser && currentUser.role === 'ADMIN';
+      document.getElementById('kpiTotalRevenue').innerText = `PKR ${totRev.toLocaleString()}`;
+      document.getElementById('kpiTotalExpenses').innerText = `PKR ${totExp.toLocaleString()}`;
+      document.getElementById('kpiNetProfit').innerText = `PKR ${(totRev - totExp).toLocaleString()}`;
+      document.getElementById('kpiActiveLeads').innerText = activeLeads;
 
-      if(filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="${isAdmin ? 11 : 10}" class="text-center text-muted py-4">NO CRM RECORDS FOUND.</td></tr>`;
-        return;
-      }
+      if(filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted py-4">NO RECORDS FOUND.</td></tr>'; return; }
 
       tbody.innerHTML = filtered.map(r => `
         <tr>
-          <td class="ps-3"><span class="badge ${r.type === 'QUOTATION' ? 'bg-danger' : 'bg-success'} rounded-pill" style="font-size:0.65rem;">${r.type}</span></td>
+          <td class="ps-3"><span class="badge ${r.type === 'QUOTATION' ? 'bg-danger' : 'bg-success'}">${r.type}</span></td>
           <td class="fw-bold text-primary">${r.docNum}</td>
-          ${isAdmin ? `<td><span class="badge-creator"><i class="bi bi-person-fill me-1"></i>${r.createdBy || 'SYSTEM'}</span></td>` : ''}
           <td>${r.date}</td>
           <td class="fw-bold">${r.name}</td>
           <td>${r.contact}</td>
           <td class="fw-bold">PKR ${r.total.toLocaleString()}</td>
-          <td class="text-primary fw-bold cursor-pointer" onclick="openLedgerModal(${r.id})" title="Click to View/Add Installment">PKR ${r.received.toLocaleString()} <i class="bi bi-pencil-square small"></i></td>
-          <td class="text-danger fw-bold">PKR ${r.balance.toLocaleString()}</td>
-          <td><span class="badge ${r.status === 'COMPLETED' ? 'bg-success' : (r.status === 'QUOTATION' ? 'bg-secondary' : 'bg-warning text-dark')} rounded-pill" style="font-size:0.65rem;">${r.status}</span></td>
-          <td class="text-end pe-3">
-            ${r.type === 'QUOTATION' ? `<button class="btn btn-sm btn-outline-primary py-1 px-2 me-1 rounded-3" onclick="convertQuotationToInvoice(${r.id})" title="Convert Quotation to Invoice"><i class="bi bi-arrow-repeat"></i> CONVERT TO INV</button>` : `<button class="btn btn-sm btn-outline-success py-1 px-2 me-1 rounded-3" onclick="openLedgerModal(${r.id})" title="Add Payment / View Ledger"><i class="bi bi-wallet2"></i> PAY</button>`}
-            ${isAdmin ? `<button class="btn btn-sm btn-outline-danger py-1 px-2 rounded-3" onclick="deleteCRM(${r.id})" title="Delete Record"><i class="bi bi-trash"></i></button>` : ''}
-          </td>
+          <td class="text-danger fw-bold">PKR ${r.totalExpenses.toLocaleString()}</td>
+          <td class="text-success fw-bold">PKR ${r.netProfit.toLocaleString()}</td>
+          <td><span class="badge bg-warning text-dark">${r.leadStatus}</span></td>
+          <td class="text-end pe-3"><button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="deleteCRM(${r.id})"><i class="bi bi-trash"></i></button></td>
         </tr>
       `).join('');
     }
 
-    function openLedgerModal(id) {
-      const record = crmRecords.find(r => r.id === id);
-      if(!record) return;
-
-      document.getElementById('ledgerRecordId').value = record.id;
-      document.getElementById('ledgerDocNum').value = record.docNum;
-      document.getElementById('ledgerClientName').value = record.name;
-      document.getElementById('ledgerTotal').value = record.total.toLocaleString();
-      document.getElementById('ledgerReceived').value = record.received.toLocaleString();
-      document.getElementById('ledgerBalance').value = record.balance.toLocaleString();
-      document.getElementById('newInstallmentAmount').value = '';
-
-      const modal = new bootstrap.Modal(document.getElementById('ledgerModal'));
-      modal.show();
+    function renderKanbanBoard() {
+      ['Hot', 'Warm', 'Cold', 'Booked'].forEach(s => document.getElementById(`kanban${s}`).innerHTML = '');
+      crmRecords.forEach(r => {
+        const colKey = r.leadStatus === 'HOT LEAD' ? 'Hot' : (r.leadStatus === 'WARM LEAD' ? 'Warm' : (r.leadStatus === 'COLD LEAD' ? 'Cold' : 'Booked'));
+        const box = document.createElement('div');
+        box.className = 'kanban-card';
+        box.innerHTML = `<div class="fw-bold text-primary">${r.docNum}</div><div class="fw-bold text-dark">${r.name}</div><div class="small text-muted">${r.pkgTitle}</div><div class="fw-bold text-success mt-1">PKR ${r.total.toLocaleString()}</div>`;
+        document.getElementById(`kanban${colKey}`).appendChild(box);
+      });
     }
 
-    function saveInstallmentPayment() {
-      const id = parseInt(document.getElementById('ledgerRecordId').value);
-      const addAmount = parseFloat(document.getElementById('newInstallmentAmount').value) || 0;
-
-      if(addAmount <= 0) {
-        alert("PLEASE ENTER A VALID INSTALLMENT AMOUNT!");
-        return;
-      }
-
-      const record = crmRecords.find(r => r.id === id);
-      if(record) {
-        record.received += addAmount;
-        record.balance = record.total - record.received;
-        if(record.balance <= 0) {
-          record.balance = 0;
-          record.status = 'COMPLETED';
-        } else {
-          record.status = 'PENDING';
+    function renderDocumentVault() {
+      const tbody = document.getElementById('vaultTableBody');
+      let rows = '';
+      crmRecords.forEach(r => {
+        if(r.passengers) {
+          r.passengers.forEach(p => {
+            let statusBadge = '<span class="badge bg-success">ACTIVE</span>';
+            if(p.expiry !== '-') {
+              const diff = Math.ceil((new Date(p.expiry) - new Date()) / (1000 * 60 * 60 * 24));
+              if(diff < 0) statusBadge = '<span class="badge bg-danger">EXPIRED</span>';
+              else if(diff <= 60) statusBadge = '<span class="badge bg-warning text-dark">EXPIRING SOON</span>';
+            }
+            rows += `<tr><td class="fw-bold">${p.name}</td><td class="fw-bold text-primary">${p.passport}</td><td>${p.expiry}</td><td>${statusBadge}</td><td>${r.docNum}</td></tr>`;
+          });
         }
+      });
+      tbody.innerHTML = rows || '<tr><td colspan="5" class="text-center text-muted py-4">NO PASSPORTS IN VAULT.</td></tr>';
+    }
 
-        saveCRMToStorage();
-        renderCRM();
+    function renderPLStatement() {
+      let rev = 0, exp = 0;
+      crmRecords.forEach(r => { if(r.type === 'INVOICE') rev += r.total; exp += r.totalExpenses; });
+      document.getElementById('plTotalRevenue').innerText = `PKR ${rev.toLocaleString()}`;
+      document.getElementById('plTotalExpenses').innerText = `PKR ${exp.toLocaleString()}`;
+      document.getElementById('plNetProfit').innerText = `PKR ${(rev - exp).toLocaleString()}`;
+    }
 
-        const modal = bootstrap.Modal.getInstance(document.getElementById('ledgerModal'));
-        modal.hide();
-        alert(`SUCCESSFULLY ADDED PKR ${addAmount.toLocaleString()} TO LEDGER!`);
-      }
+    function renderAuditLogs() {
+      const tbody = document.getElementById('auditTableBody');
+      tbody.innerHTML = auditLogs.map(l => `<tr><td>${l.timestamp}</td><td class="fw-bold text-primary">${l.user}</td><td>${l.action}</td></tr>`).join('') || '<tr><td colspan="3" class="text-center text-muted py-4">NO LOGS FOUND.</td></tr>';
+    }
+
+    function renderDailyCollectionReport() {
+      const d = document.getElementById('reportDateFilter').value;
+      const tbody = document.getElementById('dailyCollectionTableBody');
+      let rows = '';
+      crmRecords.forEach(r => {
+        if(r.paymentsHistory) {
+          r.paymentsHistory.forEach(p => {
+            if(p.date === d && p.amount > 0) {
+              rows += `<tr><td class="fw-bold text-primary">${r.docNum}</td><td class="fw-bold">${r.name}</td><td class="fw-bold text-success">PKR ${p.amount.toLocaleString()}</td><td>${p.time}</td></tr>`;
+            }
+          });
+        }
+      });
+      tbody.innerHTML = rows || '<tr><td colspan="4" class="text-center text-muted py-4">NO COLLECTIONS ON THIS DATE.</td></tr>';
     }
 
     function deleteCRM(id) {
-      if(currentUser && currentUser.role !== 'ADMIN') {
-        alert("ACCESS DENIED: ONLY ADMIN CAN DELETE RECORDS!");
-        return;
-      }
-      if (confirm("ARE YOU SURE YOU WANT TO DELETE THIS RECORD?")) {
+      if(confirm("DELETE RECORD?")) {
         crmRecords = crmRecords.filter(r => r.id !== id);
-        saveCRMToStorage();
+        localStorage.setItem('skywalk_crm', JSON.stringify(crmRecords));
+        logAudit(`Deleted CRM record ID ${id}`);
         renderCRM();
       }
     }
 
-    function previewUploadedImage(input) {
-      if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) { uploadedLogoBase64 = e.target.result; }
-        reader.readAsDataURL(input.files[0]);
-      }
+    function renderUsersTable() {
+      document.getElementById('userMgmtTableBody').innerHTML = systemUsers.map(u => `<tr><td class="fw-bold">${u.username}</td><td><span class="badge bg-primary">${u.role}</span></td></tr>`).join('');
     }
 
-    function saveProfile() {
-      if(currentUser && currentUser.role !== 'ADMIN') {
-        alert("ACCESS DENIED!");
-        return;
-      }
-      const modal = bootstrap.Modal.getInstance(document.getElementById('profileModal'));
-      modal.hide();
-      alert("COMPANY PROFILE SAVED!");
-    }
-
-    function resetForm() {
-      if(currentUser && currentUser.role !== 'ADMIN') {
-        alert("ACCESS DENIED!");
-        return;
-      }
-      document.getElementById('quotationForm').reset();
-      document.getElementById('quoteDate').valueAsDate = new Date();
-      document.getElementById('flightRowsContainer').innerHTML = '';
-      document.getElementById('termsContainer').innerHTML = '';
-      document.getElementById('ziyaratMakkah').checked = false;
-      document.getElementById('ziyaratMadinah').checked = false;
-      document.getElementById('ziyaratBadar').checked = false;
-      document.getElementById('ziyaratTaif').checked = false;
-
-      document.getElementById('chkIncludeTicket').checked = true;
-      toggleFlightTicketSection();
-
-      addTermsRow('100% ADVANCE PAYMENT: FULL PAYMENT (100%) IS REQUIRED IN ADVANCE AT THE TIME OF BOOKING CONFIRMATION. NO BOOKING WILL BE CONFIRMED WITHOUT FULL PAYMENT.');
-      addTermsRow('BOOKING CONFIRMATION: ALL BOOKINGS ARE SUBJECT TO AVAILABILITY AND CONFIRMATION AFTER RECEIPT OF FULL PAYMENT.');
-      addTermsRow('PASSPORT & DOCUMENTS: PASSENGERS MUST PROVIDE VALID PASSPORTS AND ALL REQUIRED DOCUMENTS WITHIN THE GIVEN TIME.');
-      addTermsRow('VISA APPROVAL: UMRAH VISA APPROVAL IS SUBJECT TO SAUDI GOVERNMENT RULES AND REGULATIONS. THE COMPANY WILL NOT BE RESPONSIBLE FOR VISA REJECTION OR DELAYS CAUSED BY AUTHORITIES.');
-      addTermsRow('AIRLINE POLICY: AIR TICKETS ARE SUBJECT TO AIRLINE RULES AND REGULATIONS. ANY CANCELLATION, RESCHEDULING, OR DATE CHANGE CHARGES WILL BE BORNE BY THE PASSENGER.');
-      addTermsRow('HOTEL ACCOMMODATION: HOTEL BOOKINGS ARE SUBJECT TO AVAILABILITY. ANY CHANGE IN HOTEL, IF REQUIRED, WILL BE SUBJECT TO AVAILABILITY AND SUITABLE ALTERNATIVE ARRANGEMENTS.');
-      addTermsRow('CANCELLATION POLICY: CANCELLATION CHARGES WILL APPLY ACCORDING TO THE POLICIES OF AIRLINES, HOTELS, VISA SERVICES, AND OTHER SERVICE PROVIDERS.');
-      addTermsRow('REFUND POLICY: REFUNDS, IF APPLICABLE, WILL BE PROCESSED AFTER DEDUCTION OF ACTUAL EXPENSES AND APPLICABLE CANCELLATION CHARGES.');
-      addTermsRow('ROOM SHARING: ROOM SHARING AND ACCOMMODATION ARRANGEMENTS WILL BE PROVIDED ACCORDING TO THE SELECTED UMRAH PACKAGE.');
-      addTermsRow('TRAVEL DATES: ANY CHANGES IN TRAVEL DATES OR PACKAGE SERVICES MAY RESULT IN ADDITIONAL CHARGES.');
-      addTermsRow('ADDITIONAL EXPENSES: ANY EXTRA EXPENSES DUE TO PERSONAL REQUESTS, DELAYS, FLIGHT CHANGES, OR UNFORESEEN CIRCUMSTANCES WILL BE PAYABLE BY THE PASSENGER.');
-      addTermsRow('UNFORESEEN CIRCUMSTANCES: THE COMPANY WILL NOT BE RESPONSIBLE FOR DELAYS, CANCELLATIONS, OR CHANGES CAUSED BY AIRLINES, HOTELS, GOVERNMENT AUTHORITIES, OR CIRCUMSTANCES BEYOND ITS CONTROL.');
-      addTermsRow('ACCEPTANCE OF TERMS: CONFIRMATION OF BOOKING AND PAYMENT SHALL BE CONSIDERED ACCEPTANCE OF ALL THE ABOVE-MENTIONED TERMS AND CONDITIONS.');
-
-      addFlightRow('SAUDI ARABIAN AIRLINES (SAUDIA)', 'DIRECT FLIGHT', 'LAHORE TO JEDDAH (LHE - JED)', '', '13:05');
-      addFlightRow('SAUDI ARABIAN AIRLINES (SAUDIA)', 'DIRECT FLIGHT', 'JEDDAH TO LAHORE (JED - LHE)', '', '21:15');
-      toggleDocType();
-    }
-
+    // Load Initial Data
+    if(localStorage.getItem('skywalk_crm')) crmRecords = JSON.parse(localStorage.getItem('skywalk_crm'));
+    if(localStorage.getItem('skywalk_audit')) auditLogs = JSON.parse(localStorage.getItem('skywalk_audit'));
+    document.getElementById('quoteDate').valueAsDate = new Date();
     autoGenDocNum();
-    populateDropdowns();
+    addVendorExpenseRow();
+    addFormPassengerRow();
   </script>
 </body>
 </html>
