@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>SkyWalk Tour & Travels - Enterprise SaaS CRM & Vendor Ledger v6.0</title>
+  <title>SkyWalk Tour & Travels - Enterprise SaaS CRM & Vendor Ledger v6.1</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -21,7 +21,7 @@
     body {
       background: #F1F5F9;
       font-family: 'Plus Jakarta Sans', sans-serif;
-      text-transform: uppercase !important;
+      /* text-transform uppercase removed to allow normal case */
       min-height: 100vh;
       color: #1E293B;
       overflow-x: hidden;
@@ -71,7 +71,6 @@
     .kpi-profit  { background: linear-gradient(135deg, #059669, #065F46); }
     .kpi-leads   { background: linear-gradient(135deg, #D97706, #B45309); }
 
-    /* Kanban Board Styles */
     .kanban-col { background: #F8FAFC; border-radius: 16px; border: 1px solid #E2E8F0; min-height: 500px; padding: 1rem; }
     .kanban-card { background: #FFFFFF; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.04); border-left: 4px solid #2563EB; cursor: pointer; transition: transform 0.2s; }
     .kanban-card:hover { transform: translateY(-3px); }
@@ -82,11 +81,6 @@
       #printArea, #printArea * { visibility: visible !important; display: block !important; position: absolute; left: 0; top: 0; width: 210mm; }
       .no-print { display: none !important; }
     }
-    .pdf-page { width: 210mm; height: 297mm; padding: 10mm; margin: 0 auto; background: white; box-sizing: border-box; position: relative; }
-    .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.05; width: 60%; pointer-events: none; }
-    .pdf-table { width: 100%; border-collapse: collapse; font-size: 10px; margin-bottom: 10px; }
-    .pdf-table th { background: #0A3960 !important; color: white !important; padding: 5px; border: 1px solid #CBD5E1; }
-    .pdf-table td { padding: 5px; border: 1px solid #CBD5E1; }
   </style>
 </head>
 <body>
@@ -97,7 +91,7 @@
       <div class="text-center mb-4">
         <div class="rounded-3 d-inline-flex align-items-center justify-content-center mb-2" style="width:75px; height:75px; background:var(--accent-blue); color:white; font-size:2rem;"><i class="bi bi-airplane-fill"></i></div>
         <h3 class="fw-extrabold mb-1">SKY WALK CRM</h3>
-        <p class="text-primary fw-bold mb-0" style="font-size: 0.75rem;">ENTERPRISE V6.0 SUITE</p>
+        <p class="text-primary fw-bold mb-0" style="font-size: 0.75rem;">ENTERPRISE V6.1 SUITE</p>
       </div>
       <div class="alert alert-danger d-none py-2 px-3 small rounded-3" id="loginErrorMsg"></div>
       <form id="loginForm" onsubmit="handleLogin(event)">
@@ -113,7 +107,7 @@
     <div class="sidebar no-print">
       <div class="sidebar-brand">
         <span class="bg-primary p-2 rounded-3 text-white"><i class="bi bi-airplane-engines-fill"></i></span>
-        <span>SKY WALK V6.0</span>
+        <span>SKY WALK V6.1</span>
       </div>
       <div class="sidebar-menu">
         <div class="menu-label">CORE MODULES</div>
@@ -163,7 +157,7 @@
         <div class="card shadow-sm border-0">
           <div class="card-header d-flex justify-content-between align-items-center py-3">
             <span class="fw-bold"><i class="bi bi-database-fill me-2"></i> ENTERPRISE CRM DATABASE</span>
-            <input type="text" class="form-control form-control-sm bg-dark text-white border-0" id="searchKeyword" placeholder="SEARCH RECORD..." style="max-width: 250px;" onkeyup="renderCRM()">
+            <input type="text" class="form-control form-control-sm bg-dark text-white border-0" id="searchKeyword" placeholder="Search record..." style="max-width: 250px;" onkeyup="renderCRM()">
           </div>
           <div class="card-body p-0">
             <div class="table-responsive">
@@ -228,7 +222,7 @@
                 <div class="row g-3">
                   <div class="col-md-6"><label class="form-label small fw-bold">CLIENT NAME *</label><input type="text" class="form-control" id="clientName" required></div>
                   <div class="col-md-6"><label class="form-label small fw-bold">CONTACT NUMBER (WHATSAPP) *</label><input type="text" class="form-control" id="clientContact" required></div>
-                  <div class="col-md-6"><label class="form-label small fw-bold">PACKAGE TITLE</label><input type="text" class="form-control" id="pkgTitle" value="15 DAYS UMRAH PACKAGE"></div>
+                  <div class="col-md-6"><label class="form-label small fw-bold">PACKAGE TITLE</label><input type="text" class="form-control" id="pkgTitle" value="15 Days Umrah Package"></div>
                   <div class="col-md-6"><label class="form-label small fw-bold">LEAD STATUS</label>
                     <select class="form-select" id="clientLeadStatus">
                       <option value="HOT LEAD">HOT LEAD</option>
@@ -405,7 +399,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     let systemUsers = [{ username: 'ADMIN', password: '123', role: 'ADMIN' }, { username: 'STAFF', password: '123', role: 'USER' }];
-    let vendorsList = [{ id: 1, name: 'AL-HARAMAIN TRAVELS' }, { id: 2, name: 'SAUDI HOTEL GROUP' }];
+    let vendorsList = [{ id: 1, name: 'Al-Haramain Travels' }, { id: 2, name: 'Saudi Hotel Group' }];
     let crmRecords = [];
     let auditLogs = [];
     let currentUser = null;
@@ -487,7 +481,7 @@
       div.id = `veRow_${vendorExpenseRowCount}`;
       div.innerHTML = `
         <div class="col-md-7"><select class="form-select form-select-sm ve-vendor">${vendorsList.map(v => `<option value="${v.name}">${v.name}</option>`).join('')}</select></div>
-        <div class="col-md-4"><input type="number" class="form-control form-control-sm ve-cost" placeholder="COST PKR" value="0"></div>
+        <div class="col-md-4"><input type="number" class="form-control form-control-sm ve-cost" placeholder="Cost PKR" value="0"></div>
         <div class="col-md-1"><button type="button" class="btn btn-sm btn-outline-danger" onclick="document.getElementById('veRow_${vendorExpenseRowCount}').remove()"><i class="bi bi-trash"></i></button></div>
       `;
       document.getElementById('vendorExpenseRowsContainer').appendChild(div);
@@ -499,8 +493,8 @@
       div.className = 'row g-2 mb-2 form-pax-item';
       div.id = `fpRow_${formPassengerCount}`;
       div.innerHTML = `
-        <div class="col-md-4"><input type="text" class="form-control form-control-sm fp-name" placeholder="FULL NAME" value="${p.name}"></div>
-        <div class="col-md-4"><input type="text" class="form-control form-control-sm fp-passport" placeholder="PASSPORT NO" value="${p.passport}"></div>
+        <div class="col-md-4"><input type="text" class="form-control form-control-sm fp-name" placeholder="Full Name" value="${p.name}"></div>
+        <div class="col-md-4"><input type="text" class="form-control form-control-sm fp-passport" placeholder="Passport No" value="${p.passport}"></div>
         <div class="col-md-3"><input type="date" class="form-control form-control-sm fp-expiry" value="${p.expiry}"></div>
         <div class="col-md-1"><button type="button" class="btn btn-sm btn-outline-danger" onclick="document.getElementById('fpRow_${formPassengerCount}').remove()"><i class="bi bi-trash"></i></button></div>
       `;
@@ -509,7 +503,7 @@
 
     function saveRecord() {
       const name = document.getElementById('clientName').value.trim();
-      if(!name) { alert("ENTER CLIENT NAME!"); return; }
+      if(!name) { alert("Please enter client name!"); return; }
 
       let totalExp = 0;
       const vendorExpenses = [];
@@ -523,8 +517,8 @@
       const passengers = [];
       let expiringSoonCount = 0;
       document.querySelectorAll('.form-pax-item').forEach(r => {
-        const pName = r.querySelector('.fp-name').value.trim().toUpperCase() || '-';
-        const pPass = r.querySelector('.fp-passport').value.trim().toUpperCase() || '-';
+        const pName = r.querySelector('.fp-name').value.trim() || '-';
+        const pPass = r.querySelector('.fp-passport').value.trim() || '-';
         const pExp = r.querySelector('.fp-expiry').value || '-';
         
         if(pExp !== '-') {
@@ -542,9 +536,9 @@
         type: document.getElementById('docTypeQuot').checked ? 'QUOTATION' : 'INVOICE',
         docNum: document.getElementById('docNum').value,
         date: document.getElementById('quoteDate').value || new Date().toISOString().split('T')[0],
-        name: name.toUpperCase(),
+        name: name,
         contact: document.getElementById('clientContact').value || '-',
-        pkgTitle: document.getElementById('pkgTitle').value.toUpperCase(),
+        pkgTitle: document.getElementById('pkgTitle').value,
         total: total,
         totalExpenses: totalExp,
         netProfit: total - totalExp,
@@ -552,7 +546,7 @@
         status: 'PENDING',
         vendorExpenses: vendorExpenses,
         passengers: passengers,
-        paymentsHistory: [{ date: new Date().toISOString().split('T')[0], time: '12:00', amount: 0, note: 'RECORD CREATED' }]
+        paymentsHistory: [{ date: new Date().toISOString().split('T')[0], time: '12:00', amount: 0, note: 'Record Created' }]
       };
 
       crmRecords.push(record);
@@ -565,7 +559,7 @@
       }
 
       switchView('dashboard');
-      alert(`${record.type} SAVED SUCCESSFULLY!`);
+      alert(`${record.type} saved successfully!`);
     }
 
     function renderCRM() {
@@ -585,7 +579,7 @@
       document.getElementById('kpiNetProfit').innerText = `PKR ${(totRev - totExp).toLocaleString()}`;
       document.getElementById('kpiActiveLeads').innerText = activeLeads;
 
-      if(filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted py-4">NO RECORDS FOUND.</td></tr>'; return; }
+      if(filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted py-4">No records found.</td></tr>'; return; }
 
       tbody.innerHTML = filtered.map(r => `
         <tr>
@@ -630,7 +624,7 @@
           });
         }
       });
-      tbody.innerHTML = rows || '<tr><td colspan="5" class="text-center text-muted py-4">NO PASSPORTS IN VAULT.</td></tr>';
+      tbody.innerHTML = rows || '<tr><td colspan="5" class="text-center text-muted py-4">No passports in vault.</td></tr>';
     }
 
     function renderPLStatement() {
@@ -643,7 +637,7 @@
 
     function renderAuditLogs() {
       const tbody = document.getElementById('auditTableBody');
-      tbody.innerHTML = auditLogs.map(l => `<tr><td>${l.timestamp}</td><td class="fw-bold text-primary">${l.user}</td><td>${l.action}</td></tr>`).join('') || '<tr><td colspan="3" class="text-center text-muted py-4">NO LOGS FOUND.</td></tr>';
+      tbody.innerHTML = auditLogs.map(l => `<tr><td>${l.timestamp}</td><td class="fw-bold text-primary">${l.user}</td><td>${l.action}</td></tr>`).join('') || '<tr><td colspan="3" class="text-center text-muted py-4">No logs found.</td></tr>';
     }
 
     function renderDailyCollectionReport() {
@@ -659,11 +653,11 @@
           });
         }
       });
-      tbody.innerHTML = rows || '<tr><td colspan="4" class="text-center text-muted py-4">NO COLLECTIONS ON THIS DATE.</td></tr>';
+      tbody.innerHTML = rows || '<tr><td colspan="4" class="text-center text-muted py-4">No collections on this date.</td></tr>';
     }
 
     function deleteCRM(id) {
-      if(confirm("DELETE RECORD?")) {
+      if(confirm("Are you sure you want to delete this record?")) {
         crmRecords = crmRecords.filter(r => r.id !== id);
         localStorage.setItem('skywalk_crm', JSON.stringify(crmRecords));
         logAudit(`Deleted CRM record ID ${id}`);
