@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>SkyWalk Tour & Travels - Enterprise SaaS CRM v6.4</title>
+  <title>SkyWalk Tour & Travels - Enterprise SaaS CRM v6.5 Final</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -96,7 +96,7 @@
       <div class="text-center mb-4">
         <div class="rounded-3 d-inline-flex align-items-center justify-content-center mb-2" style="width:75px; height:75px; background:var(--accent-blue); color:white; font-size:2rem;"><i class="bi bi-airplane-fill"></i></div>
         <h3 class="fw-extrabold mb-1">SKY WALK CRM</h3>
-        <p class="text-primary fw-bold mb-0" style="font-size: 0.75rem;">ENTERPRISE V6.4 SUITE</p>
+        <p class="text-primary fw-bold mb-0" style="font-size: 0.75rem;">ENTERPRISE V6.5 FINAL SUITE</p>
       </div>
       <div class="alert alert-danger d-none py-2 px-3 small rounded-3" id="loginErrorMsg"></div>
       <form id="loginForm" onsubmit="handleLogin(event)">
@@ -112,7 +112,7 @@
     <div class="sidebar no-print">
       <div class="sidebar-brand">
         <span class="bg-primary p-2 rounded-3 text-white"><i class="bi bi-airplane-engines-fill"></i></span>
-        <span>SKY WALK V6.4</span>
+        <span>SKY WALK V6.5</span>
       </div>
       <div class="sidebar-menu">
         <div class="menu-label">CORE MODULES</div>
@@ -124,10 +124,11 @@
         <a class="sidebar-item" onclick="switchView('pl-report')" id="nav-pl-report"><i class="bi bi-file-earmark-bar-graph-fill fs-5"></i><span>P&L STATEMENT</span></a>
         <a class="sidebar-item" onclick="switchView('daily-report')" id="nav-daily-report"><i class="bi bi-calendar-check-fill fs-5"></i><span>DAILY COLLECTION</span></a>
         
-        <div class="menu-label mt-3">ADMINISTRATION</div>
+        <div class="menu-label mt-3">ADMINISTRATION & SETTINGS</div>
         <a class="sidebar-item" onclick="switchView('audit-logs')" id="nav-audit-logs"><i class="bi bi-journal-text fs-5"></i><span>AUDIT TRAIL LOGS</span></a>
         <a class="sidebar-item" data-bs-toggle="modal" data-bs-target="#currencyModal"><i class="bi bi-currency-exchange fs-5"></i><span>CURRENCY RATES</span></a>
         <a class="sidebar-item" data-bs-toggle="modal" data-bs-target="#userMgmtModal" onclick="renderUsersTable()"><i class="bi bi-people-fill fs-5"></i><span>USER MANAGEMENT</span></a>
+        <a class="sidebar-item" data-bs-toggle="modal" data-bs-target="#changePasswordModal"><i class="bi bi-key-fill fs-5"></i><span>CHANGE PASSWORD</span></a>
       </div>
       <div class="sidebar-footer">
         <button class="btn btn-danger btn-sm w-100 fw-bold py-2" onclick="handleLogout()"><i class="bi bi-power me-1"></i> LOGOUT</button>
@@ -217,7 +218,7 @@
                     <input type="number" class="form-control form-control-sm" id="calcForeignAmount" value="0" oninput="convertCurrencyToPKR()">
                   </div>
                   <div class="col-md-4">
-                    <button type="button" class="btn btn-info btn-sm w-100 text-white fw-bold py-2" onclick="applyForeignRateToRatePerHead()">APPLY AS RATE PER HEAD</button>
+                    <button type="button" class="btn btn-info btn-sm w-100 text-white fw-bold py-2" onclick="applyForeignRateToRatePerHead()">APPLY AS ADULT RATE</button>
                   </div>
                 </div>
               </div>
@@ -432,9 +433,7 @@
           <h5 class="modal-title fs-6 fw-bold">DOCUMENT PREVIEW & OFFICIAL PRINT</h5>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
         </div>
-        <div class="modal-body p-5 bg-white" id="printModalBody">
-          <!-- Dynamic A4 Invoice/Quotation Content -->
-        </div>
+        <div class="modal-body p-5 bg-white" id="printModalBody"></div>
         <div class="modal-footer py-2 no-print">
           <button type="button" class="btn btn-secondary btn-sm px-4" data-bs-dismiss="modal">CLOSE</button>
           <button type="button" class="btn btn-success btn-sm px-4" onclick="window.print()">PRINT / SAVE PDF</button>
@@ -522,13 +521,56 @@
     </div>
   </div>
 
-  <!-- USER MANAGEMENT MODAL -->
+  <!-- USER MANAGEMENT MODAL (ADMIN ONLY CAN ADD USERS) -->
   <div class="modal fade" id="userMgmtModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header bg-dark text-white py-3">
+          <h5 class="modal-title fs-6 fw-bold">USER MANAGEMENT & NEW USER REGISTRATION</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div id="adminUserCreationSection" class="p-3 border rounded-3 bg-light mb-3 d-none">
+            <h6 class="fw-bold text-primary mb-2 small">CREATE NEW SYSTEM USER</h6>
+            <div class="row g-2">
+              <div class="col-md-4"><label class="form-label small fw-bold">USERNAME</label><input type="text" class="form-control form-control-sm" id="newRegUsername" placeholder="USERNAME"></div>
+              <div class="col-md-4"><label class="form-label small fw-bold">PASSWORD</label><input type="password" class="form-control form-control-sm" id="newRegPassword" placeholder="PASSWORD"></div>
+              <div class="col-md-4">
+                <label class="form-label small fw-bold">ROLE</label>
+                <select class="form-select form-select-sm" id="newRegRole">
+                  <option value="USER">STANDARD USER</option>
+                  <option value="ADMIN">ADMINISTRATOR</option>
+                </select>
+              </div>
+              <div class="col-12 mt-2"><button type="button" class="btn btn-primary btn-sm fw-bold px-4" onclick="addNewSystemUser()">REGISTER USER</button></div>
+            </div>
+          </div>
+
+          <div class="table-responsive border rounded-3">
+            <table class="table mb-0 align-middle" style="font-size:0.8rem;">
+              <thead class="table-dark"><tr><th>USERNAME</th><th>ROLE</th><th class="text-end">ACTION</th></tr></thead>
+              <tbody id="userMgmtTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHANGE PASSWORD MODAL (ACCESSIBLE BY ANY LOGGED-IN USER) -->
+  <div class="modal fade" id="changePasswordModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg rounded-4">
-        <div class="modal-header bg-dark text-white py-3"><h5 class="modal-title fs-6 fw-bold">USER MANAGEMENT</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+        <div class="modal-header bg-primary text-white py-3">
+          <h5 class="modal-title fs-6 fw-bold">CHANGE YOUR PASSWORD</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
         <div class="modal-body p-4">
-          <div class="table-responsive border rounded-3"><table class="table mb-0" style="font-size:0.8rem;"><thead class="table-dark"><tr><th>USERNAME</th><th>ROLE</th></tr></thead><tbody id="userMgmtTableBody"></tbody></table></div>
+          <div class="alert alert-danger d-none py-2 px-3 small rounded-3" id="cpErrorMsg"></div>
+          <div class="mb-3"><label class="form-label small fw-bold">CURRENT PASSWORD</label><input type="password" class="form-control" id="cpOldPass"></div>
+          <div class="mb-3"><label class="form-label small fw-bold">NEW PASSWORD</label><input type="password" class="form-control" id="cpNewPass"></div>
+          <div class="mb-3"><label class="form-label small fw-bold">CONFIRM NEW PASSWORD</label><input type="password" class="form-control" id="cpConfirmPass"></div>
+          <button type="button" class="btn btn-primary btn-sm w-100 fw-bold py-2" onclick="submitPasswordChange()">UPDATE PASSWORD</button>
         </div>
       </div>
     </div>
@@ -536,10 +578,16 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    let systemUsers = [{ username: 'ADMIN', password: '123', role: 'ADMIN' }, { username: 'STAFF', password: '123', role: 'USER' }];
-    let vendorsList = [{ id: 1, name: 'AL-HARAMAIN TRAVELS', contact: '03001234567', paymentsHistory: [] }, { id: 2, name: 'SAUDI HOTEL GROUP', contact: '03219876543', paymentsHistory: [] }];
-    let crmRecords = [];
-    let auditLogs = [];
+    let systemUsers = JSON.parse(localStorage.getItem('skywalk_users')) || [
+      { username: 'ADMIN', password: '123', role: 'ADMIN' },
+      { username: 'STAFF', password: '123', role: 'USER' }
+    ];
+    let vendorsList = JSON.parse(localStorage.getItem('skywalk_vendors')) || [
+      { id: 1, name: 'AL-HARAMAIN TRAVELS', contact: '03001234567', paymentsHistory: [] },
+      { id: 2, name: 'SAUDI HOTEL GROUP', contact: '03219876543', paymentsHistory: [] }
+    ];
+    let crmRecords = JSON.parse(localStorage.getItem('skywalk_crm')) || [];
+    let auditLogs = JSON.parse(localStorage.getItem('skywalk_audit')) || [];
     let currentUser = null;
     let formPassengerCount = 0;
     let vendorExpenseRowCount = 0;
@@ -765,7 +813,7 @@
 
     function collectFormData() {
       const name = document.getElementById('clientName').value.trim().toUpperCase();
-      if(!name) { alert("PLEASE ENTER CLIENT NIAME!"); return null; }
+      if(!name) { alert("PLEASE ENTER CLIENT NAME!"); return null; }
 
       let totalExp = 0;
       const vendorExpenses = [];
@@ -1020,13 +1068,96 @@
     }
 
     function renderUsersTable() {
-      document.getElementById('userMgmtTableBody').innerHTML = systemUsers.map(u => `<tr><td class="fw-bold">${u.username}</td><td><span class="badge bg-primary">${u.role}</span></td></tr>`).join('');
+      const tbody = document.getElementById('userMgmtTableBody');
+      const isAdmin = currentUser && currentUser.role === 'ADMIN';
+      
+      if(isAdmin) {
+        document.getElementById('adminUserCreationSection').classList.remove('d-none');
+      } else {
+        document.getElementById('adminUserCreationSection').classList.add('d-none');
+      }
+
+      tbody.innerHTML = systemUsers.map(u => `
+        <tr>
+          <td class="fw-bold">${u.username}</td>
+          <td><span class="badge bg-primary">${u.role}</span></td>
+          <td class="text-end">
+            ${isAdmin && u.username !== 'ADMIN' ? `<button class="btn btn-sm btn-outline-danger py-0 px-2" onclick="deleteSystemUser('${u.username}')"><i class="bi bi-trash"></i></button>` : '<span class="text-muted small">-</span>'}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function addNewSystemUser() {
+      if(!currentUser || currentUser.role !== 'ADMIN') { alert("ACCESS DENIED! ONLY ADMIN CAN ADD USERS."); return; }
+      const uname = document.getElementById('newRegUsername').value.trim().toUpperCase();
+      const upass = document.getElementById('newRegPassword').value.trim();
+      const urole = document.getElementById('newRegRole').value;
+
+      if(!uname || !upass) { alert("PLEASE ENTER USERNAME AND PASSWORD!"); return; }
+      if(systemUsers.some(u => u.username === uname)) { alert("USERNAME ALREADY EXISTS!"); return; }
+
+      systemUsers.push({ username: uname, password: upass, role: urole });
+      localStorage.setItem('skywalk_users', JSON.stringify(systemUsers));
+      logAudit(`CREATED NEW USER: ${uname} (${urole})`);
+      document.getElementById('newRegUsername').value = '';
+      document.getElementById('newRegPassword').value = '';
+      renderUsersTable();
+      alert("USER REGISTERED SUCCESSFULLY!");
+    }
+
+    function deleteSystemUser(uname) {
+      if(!currentUser || currentUser.role !== 'ADMIN') { alert("ACCESS DENIED!"); return; }
+      if(confirm(`ARE YOU SURE YOU WANT TO DELETE USER: ${uname}?`)) {
+        systemUsers = systemUsers.filter(u => u.username !== uname);
+        localStorage.setItem('skywalk_users', JSON.stringify(systemUsers));
+        logAudit(`DELETED USER: ${uname}`);
+        renderUsersTable();
+      }
+    }
+
+    function submitPasswordChange() {
+      const oldP = document.getElementById('cpOldPass').value.trim();
+      const newP = document.getElementById('cpNewPass').value.trim();
+      const confP = document.getElementById('cpConfirmPass').value.trim();
+      const errBox = document.getElementById('cpErrorMsg');
+
+      errBox.classList.add('d-none');
+
+      if(!oldP || !newP || !confP) {
+        errBox.innerText = "PLEASE FILL ALL PASSWORD FIELDS!";
+        errBox.classList.remove('d-none');
+        return;
+      }
+
+      if(currentUser.password !== oldP) {
+        errBox.innerText = "CURRENT PASSWORD IS incorrect!";
+        errBox.classList.remove('d-none');
+        return;
+      }
+
+      if(newP !== confP) {
+        errBox.innerText = "NEW PASSWORDS DO NOT MATCH!";
+        errBox.classList.remove('d-none');
+        return;
+      }
+
+      // Update current user password
+      currentUser.password = newP;
+      const targetUser = systemUsers.find(u => u.username === currentUser.username);
+      if(targetUser) targetUser.password = newP;
+
+      localStorage.setItem('skywalk_users', JSON.stringify(systemUsers));
+      logAudit(`PASSWORD CHANGED FOR USER: ${currentUser.username}`);
+      
+      document.getElementById('cpOldPass').value = '';
+      document.getElementById('cpNewPass').value = '';
+      document.getElementById('cpConfirmPass').value = '';
+      bootstrap.Modal.getInstance(document.getElementById('changePasswordModal')).hide();
+      alert("PASSWORD UPDATED SUCCESSFULLY!");
     }
 
     // Load Initial Data
-    if(localStorage.getItem('skywalk_crm')) crmRecords = JSON.parse(localStorage.getItem('skywalk_crm'));
-    if(localStorage.getItem('skywalk_vendors')) vendorsList = JSON.parse(localStorage.getItem('skywalk_vendors'));
-    if(localStorage.getItem('skywalk_audit')) auditLogs = JSON.parse(localStorage.getItem('skywalk_audit'));
     document.getElementById('quoteDate').valueAsDate = new Date();
     autoGenDocNum();
     addVendorExpenseRow();
