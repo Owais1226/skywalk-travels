@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>SkyWalk Tour & Travels - Enterprise SaaS CRM & Vendor Ledger v6.1</title>
+  <title>SkyWalk Tour & Travels - Enterprise SaaS CRM v6.4</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -21,10 +21,14 @@
     body {
       background: #F1F5F9;
       font-family: 'Plus Jakarta Sans', sans-serif;
-      /* text-transform uppercase removed to allow normal case */
+      text-transform: uppercase !important;
       min-height: 100vh;
       color: #1E293B;
       overflow-x: hidden;
+    }
+
+    input, select, textarea {
+      text-transform: uppercase !important;
     }
 
     .sidebar {
@@ -78,7 +82,8 @@
     #printArea { display: none !important; }
     @media print {
       body * { visibility: hidden !important; }
-      #printArea, #printArea * { visibility: visible !important; display: block !important; position: absolute; left: 0; top: 0; width: 210mm; }
+      #printModalBody, #printModalBody * { visibility: visible !important; }
+      #printModalBody { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0; }
       .no-print { display: none !important; }
     }
   </style>
@@ -91,7 +96,7 @@
       <div class="text-center mb-4">
         <div class="rounded-3 d-inline-flex align-items-center justify-content-center mb-2" style="width:75px; height:75px; background:var(--accent-blue); color:white; font-size:2rem;"><i class="bi bi-airplane-fill"></i></div>
         <h3 class="fw-extrabold mb-1">SKY WALK CRM</h3>
-        <p class="text-primary fw-bold mb-0" style="font-size: 0.75rem;">ENTERPRISE V6.1 SUITE</p>
+        <p class="text-primary fw-bold mb-0" style="font-size: 0.75rem;">ENTERPRISE V6.4 SUITE</p>
       </div>
       <div class="alert alert-danger d-none py-2 px-3 small rounded-3" id="loginErrorMsg"></div>
       <form id="loginForm" onsubmit="handleLogin(event)">
@@ -107,7 +112,7 @@
     <div class="sidebar no-print">
       <div class="sidebar-brand">
         <span class="bg-primary p-2 rounded-3 text-white"><i class="bi bi-airplane-engines-fill"></i></span>
-        <span>SKY WALK V6.1</span>
+        <span>SKY WALK V6.4</span>
       </div>
       <div class="sidebar-menu">
         <div class="menu-label">CORE MODULES</div>
@@ -157,7 +162,7 @@
         <div class="card shadow-sm border-0">
           <div class="card-header d-flex justify-content-between align-items-center py-3">
             <span class="fw-bold"><i class="bi bi-database-fill me-2"></i> ENTERPRISE CRM DATABASE</span>
-            <input type="text" class="form-control form-control-sm bg-dark text-white border-0" id="searchKeyword" placeholder="Search record..." style="max-width: 250px;" onkeyup="renderCRM()">
+            <input type="text" class="form-control form-control-sm bg-dark text-white border-0" id="searchKeyword" placeholder="SEARCH RECORD..." style="max-width: 250px;" onkeyup="renderCRM()">
           </div>
           <div class="card-body p-0">
             <div class="table-responsive">
@@ -222,7 +227,7 @@
                 <div class="row g-3">
                   <div class="col-md-6"><label class="form-label small fw-bold">CLIENT NAME *</label><input type="text" class="form-control" id="clientName" required></div>
                   <div class="col-md-6"><label class="form-label small fw-bold">CONTACT NUMBER (WHATSAPP) *</label><input type="text" class="form-control" id="clientContact" required></div>
-                  <div class="col-md-6"><label class="form-label small fw-bold">PACKAGE TITLE</label><input type="text" class="form-control" id="pkgTitle" value="15 Days Umrah Package"></div>
+                  <div class="col-md-6"><label class="form-label small fw-bold">PACKAGE TITLE</label><input type="text" class="form-control" id="pkgTitle" value="21 DAYS UMRAH PACKAGE"></div>
                   <div class="col-md-6"><label class="form-label small fw-bold">LEAD STATUS</label>
                     <select class="form-select" id="clientLeadStatus">
                       <option value="HOT LEAD">HOT LEAD</option>
@@ -231,18 +236,22 @@
                       <option value="BOOKED">BOOKED</option>
                     </select>
                   </div>
-                  <div class="col-4"><label class="form-label small fw-bold">ADULTS</label><input type="number" class="form-control" id="paxAdults" value="1" min="0" oninput="calcTotal()"></div>
-                  <div class="col-4"><label class="form-label small fw-bold">CHILDREN</label><input type="number" class="form-control" id="paxChildren" value="0" min="0" oninput="calcTotal()"></div>
-                  <div class="col-4"><label class="form-label small fw-bold">INFANTS</label><input type="number" class="form-control" id="paxInfants" value="0" min="0" oninput="calcTotal()"></div>
-                  <div class="col-md-6"><label class="form-label small fw-bold">RATE PER HEAD (PKR)</label><input type="number" class="form-control" id="ratePerHead" value="0" oninput="calcTotal()"></div>
-                  <div class="col-md-6"><label class="form-label small fw-bold text-success">TOTAL REVENUE (PKR)</label><input type="number" class="form-control fw-bold text-success" id="totalAmount" readonly value="0"></div>
+                  <div class="col-md-4"><label class="form-label small fw-bold">ADULTS COUNT</label><input type="number" class="form-control" id="paxAdults" value="1" min="0" oninput="calcTotal()"></div>
+                  <div class="col-md-4"><label class="form-label small fw-bold">CHILDREN COUNT</label><input type="number" class="form-control" id="paxChildren" value="0" min="0" oninput="calcTotal()"></div>
+                  <div class="col-md-4"><label class="form-label small fw-bold">INFANTS COUNT</label><input type="number" class="form-control" id="paxInfants" value="0" min="0" oninput="calcTotal()"></div>
+                  
+                  <div class="col-md-4"><label class="form-label small fw-bold">ADULT RATE (PKR)</label><input type="number" class="form-control" id="rateAdult" value="0" oninput="calcTotal()"></div>
+                  <div class="col-md-4"><label class="form-label small fw-bold">CHILD RATE (PKR)</label><input type="number" class="form-control" id="rateChild" value="0" oninput="calcTotal()"></div>
+                  <div class="col-md-4"><label class="form-label small fw-bold">INFANT RATE (PKR)</label><input type="number" class="form-control" id="rateInfant" value="0" oninput="calcTotal()"></div>
+
+                  <div class="col-12"><label class="form-label small fw-bold text-success">TOTAL REVENUE (PKR)</label><input type="number" class="form-control fw-bold text-success fs-5" id="totalAmount" readonly value="0"></div>
                 </div>
               </div>
 
-              <!-- VENDOR EXPENSES -->
+              <!-- VENDOR EXPENSES (MULTIPLE VENDORS SUPPORTED) -->
               <div class="section-card" style="background: #FEF2F2; border-color: #FECACA;">
                 <div class="d-flex justify-content-between align-items-center mb-2">
-                  <h6 class="fw-bold text-danger mb-0 small">VENDOR EXPENSES BREAKDOWN</h6>
+                  <h6 class="fw-bold text-danger mb-0 small">VENDOR EXPENSES BREAKDOWN (MULTIPLE VENDORS ALLOWED)</h6>
                   <button type="button" class="btn btn-sm btn-danger py-1 px-3" onclick="addVendorExpenseRow()">ADD VENDOR</button>
                 </div>
                 <div id="vendorExpenseRowsContainer"></div>
@@ -257,9 +266,26 @@
                 <div id="formPassengersContainer"></div>
               </div>
 
+              <!-- TERMS & CONDITIONS -->
+              <div class="section-card bg-white border">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h6 class="fw-bold text-dark mb-0"><i class="bi bi-file-text-fill text-primary me-2"></i> TERMS & CONDITIONS</h6>
+                  <button type="button" class="btn btn-sm btn-outline-dark fw-bold py-1 px-3 rounded-pill" onclick="toggleTermsBox()">
+                    <i class="bi bi-eye-slash-fill me-1" id="toggleTermsIcon"></i> <span id="toggleTermsText">HIDE TERMS</span>
+                  </button>
+                </div>
+                <div id="termsContentBox">
+                  <textarea class="form-control" id="termsAndConditionsText" rows="5" style="font-size: 1rem; font-weight: 600; line-height: 1.6;">1. ALL BOOKINGS ARE SUBJECT TO AVAILABILITY AND AIRLINE/HOTEL CONFIRMATION.
+2. VISA FEES AND SERVICE CHARGES ARE NON-REFUNDABLE ONCE SUBMITTED.
+3. 50% ADVANCE PAYMENT IS REQUIRED AT THE TIME OF BOOKING, AND BALANCE BEFORE DEPARTURE.
+4. SKY WALK TOUR & TRAVELS WILL NOT BE RESPONSIBLE FOR ANY FLIGHT DELAYS OR VISA REJECTIONS BY EMBASSY.</textarea>
+                </div>
+              </div>
+
               <div class="d-flex gap-3">
                 <button type="button" class="btn btn-secondary flex-fill py-3" onclick="switchView('dashboard')">CANCEL</button>
-                <button type="button" class="btn btn-success flex-fill py-3" onclick="saveRecord()">SAVE & GENERATE PDF</button>
+                <button type="button" class="btn btn-primary flex-fill py-3" onclick="previewRecordModal()">PREVIEW & PRINT PDF</button>
+                <button type="button" class="btn btn-success flex-fill py-3" onclick="saveRecord()">SAVE RECORD</button>
               </div>
             </form>
           </div>
@@ -295,6 +321,36 @@
             <div class="kanban-col border-top border-4 border-success">
               <h6 class="fw-bold text-success mb-3">✅ BOOKED / CONFIRMED</h6>
               <div id="kanbanBooked" class="kanban-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW: VENDOR LEDGER -->
+      <div id="view-vendors" class="container-fluid px-4 my-4 app-view" style="display:none;">
+        <div class="card shadow-lg border-0 mb-5">
+          <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center py-3">
+            <span class="fw-bold"><i class="bi bi-truck me-2"></i> VENDOR DIRECTORY & PAYMENT LEDGER</span>
+            <div class="d-flex gap-2">
+              <button class="btn btn-sm btn-light text-dark fw-bold py-1 px-3 rounded-pill" data-bs-toggle="modal" data-bs-target="#addVendorModal">ADD NEW VENDOR</button>
+              <button class="btn btn-sm btn-dark py-1 px-3 rounded-pill" onclick="switchView('dashboard')">BACK</button>
+            </div>
+          </div>
+          <div class="card-body p-4 bg-light">
+            <div class="table-responsive rounded-3 border bg-white">
+              <table class="table table-bordered table-hover align-middle mb-0" style="font-size: 0.82rem;">
+                <thead class="table-dark text-center">
+                  <tr>
+                    <th>VENDOR NAME</th>
+                    <th>CONTACT #</th>
+                    <th>TOTAL PAYABLE</th>
+                    <th>TOTAL PAID</th>
+                    <th>BALANCE DUE</th>
+                    <th>ACTIONS & LEDGER</th>
+                  </tr>
+                </thead>
+                <tbody id="vendorTableBody"></tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -368,6 +424,90 @@
     </div>
   </div>
 
+  <!-- PREVIEW & PRINT MODAL -->
+  <div class="modal fade" id="previewModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header bg-primary text-white py-3 no-print">
+          <h5 class="modal-title fs-6 fw-bold">DOCUMENT PREVIEW & OFFICIAL PRINT</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-5 bg-white" id="printModalBody">
+          <!-- Dynamic A4 Invoice/Quotation Content -->
+        </div>
+        <div class="modal-footer py-2 no-print">
+          <button type="button" class="btn btn-secondary btn-sm px-4" data-bs-dismiss="modal">CLOSE</button>
+          <button type="button" class="btn btn-success btn-sm px-4" onclick="window.print()">PRINT / SAVE PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD VENDOR MODAL -->
+  <div class="modal fade" id="addVendorModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header bg-secondary text-white py-3"><h5 class="modal-title fs-6 fw-bold">ADD NEW VENDOR</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body p-4">
+          <div class="mb-3"><label class="form-label small fw-bold">VENDOR NAME *</label><input type="text" class="form-control" id="modalVendorName" placeholder="E.G. AL-HARAMAIN TRAVELS"></div>
+          <div class="mb-3"><label class="form-label small fw-bold">CONTACT NUMBER</label><input type="text" class="form-control" id="modalVendorContact" placeholder="03001234567"></div>
+        </div>
+        <div class="modal-footer py-2"><button type="button" class="btn btn-secondary btn-sm px-4" onclick="saveNewVendor()">SAVE VENDOR</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VENDOR PAYMENT LEDGER MODAL -->
+  <div class="modal fade" id="vendorLedgerModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header bg-secondary text-white py-3"><h5 class="modal-title fs-6 fw-bold">VENDOR PAYMENT & TRANSACTION LEDGER</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body p-4">
+          <input type="hidden" id="vLedgerVendorId">
+          <div class="row g-2 mb-3">
+            <div class="col-md-6"><label class="form-label small fw-bold">VENDOR NAME</label><input type="text" class="form-control fw-bold text-primary" id="vLedgerName" readonly></div>
+            <div class="col-md-6"><label class="form-label small fw-bold">CONTACT</label><input type="text" class="form-control fw-bold" id="vLedgerContact" readonly></div>
+          </div>
+          <div class="row g-2 mb-3">
+            <div class="col-4"><label class="form-label small fw-bold">TOTAL PAYABLE</label><input type="text" class="form-control fw-bold" id="vLedgerTotalPayable" readonly></div>
+            <div class="col-4"><label class="form-label small fw-bold text-success">TOTAL PAID</label><input type="text" class="form-control fw-bold text-success" id="vLedgerTotalPaid" readonly></div>
+            <div class="col-4"><label class="form-label small fw-bold text-danger">BALANCE DUE</label><input type="text" class="form-control fw-bold text-danger" id="vLedgerBalanceDue" readonly></div>
+          </div>
+
+          <div class="p-3 border rounded-3 bg-light mb-3">
+            <h6 class="fw-bold text-success mb-2 small">PAY TO VENDOR (SELECT PAYMENT CATEGORY)</h6>
+            <div class="row g-2">
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">PAYMENT FOR (CATEGORY) *</label>
+                <select class="form-select form-select-sm fw-bold text-primary" id="vPayCategory">
+                  <option value="COMPLETE PACKAGE">COMPLETE PACKAGE</option>
+                  <option value="HOTEL">HOTEL ACCOMMODATION</option>
+                  <option value="VISA">VISA SERVICE</option>
+                  <option value="TRANSPORT">TRANSPORT SERVICE</option>
+                  <option value="VISA + TRANSPORT">VISA + TRANSPORT</option>
+                  <option value="AIR TICKET">AIR TICKET</option>
+                  <option value="MISC">MISCELLANEOUS</option>
+                </select>
+              </div>
+              <div class="col-md-6"><label class="form-label small fw-bold">AMOUNT (PKR) *</label><input type="number" class="form-control form-control-sm fw-bold text-success" id="vPayAmount" placeholder="ENTER AMOUNT"></div>
+              <div class="col-md-4"><label class="form-label small fw-bold">DATE</label><input type="date" class="form-control form-control-sm fw-bold" id="vPayDate"></div>
+              <div class="col-md-4"><label class="form-label small fw-bold">TIME</label><input type="time" class="form-control form-control-sm fw-bold text-primary" id="vPayTime"></div>
+              <div class="col-md-4 d-flex align-items-end"><button type="button" class="btn btn-success btn-sm w-100 fw-bold py-2" onclick="saveVendorPayment()">PAY VENDOR</button></div>
+              <div class="col-12 mt-2"><label class="form-label small fw-bold">NOTE / REMARK</label><input type="text" class="form-control form-control-sm" id="vPayNote" placeholder="E.G. BANK TRANSFER / CASH"></div>
+            </div>
+          </div>
+
+          <div class="table-responsive rounded-3 border">
+            <table class="table table-hover align-middle mb-0" style="font-size: 0.8rem;">
+              <thead class="table-dark"><tr><th>SR #</th><th>DATE & TIME</th><th>PAYMENT FOR</th><th>NOTE</th><th class="text-end">AMOUNT PAID</th></tr></thead>
+              <tbody id="vLedgerHistoryTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- CURRENCY RATES MODAL -->
   <div class="modal fade" id="currencyModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -394,12 +534,10 @@
     </div>
   </div>
 
-  <div id="printArea"></div>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     let systemUsers = [{ username: 'ADMIN', password: '123', role: 'ADMIN' }, { username: 'STAFF', password: '123', role: 'USER' }];
-    let vendorsList = [{ id: 1, name: 'Al-Haramain Travels' }, { id: 2, name: 'Saudi Hotel Group' }];
+    let vendorsList = [{ id: 1, name: 'AL-HARAMAIN TRAVELS', contact: '03001234567', paymentsHistory: [] }, { id: 2, name: 'SAUDI HOTEL GROUP', contact: '03219876543', paymentsHistory: [] }];
     let crmRecords = [];
     let auditLogs = [];
     let currentUser = null;
@@ -407,7 +545,7 @@
     let vendorExpenseRowCount = 0;
 
     function logAudit(action) {
-      auditLogs.unshift({ timestamp: new Date().toLocaleString(), user: currentUser ? currentUser.username : 'SYSTEM', action: action });
+      auditLogs.unshift({ timestamp: new Date().toLocaleString(), user: currentUser ? currentUser.username : 'SYSTEM', action: action.toUpperCase() });
       localStorage.setItem('skywalk_audit', JSON.stringify(auditLogs));
     }
 
@@ -420,6 +558,7 @@
 
       if(viewName === 'dashboard') renderCRM();
       else if(viewName === 'kanban') renderKanbanBoard();
+      else if(viewName === 'vendors') renderVendorDirectoryTable();
       else if(viewName === 'vault') renderDocumentVault();
       else if(viewName === 'pl-report') renderPLStatement();
       else if(viewName === 'audit-logs') renderAuditLogs();
@@ -436,7 +575,7 @@
         document.getElementById('loginScreen').style.setProperty('display', 'none', 'important');
         document.getElementById('mainAppScreen').style.setProperty('display', 'block', 'important');
         document.getElementById('currentLoggedInUserDisplay').innerText = `${found.username} (${found.role})`;
-        logAudit(`User logged in: ${found.username}`);
+        logAudit(`USER LOGGED IN: ${found.username}`);
         switchView('dashboard');
       } else {
         document.getElementById('loginErrorMsg').innerText = 'INVALID USERNAME OR PASSWORD!';
@@ -445,6 +584,21 @@
     }
 
     function handleLogout() { location.reload(); }
+
+    function toggleTermsBox() {
+      const box = document.getElementById('termsContentBox');
+      const text = document.getElementById('toggleTermsText');
+      const icon = document.getElementById('toggleTermsIcon');
+      if(box.style.display === 'none') {
+        box.style.display = 'block';
+        text.innerText = 'HIDE TERMS';
+        icon.className = 'bi bi-eye-slash-fill me-1';
+      } else {
+        box.style.display = 'none';
+        text.innerText = 'SHOW TERMS';
+        icon.className = 'bi bi-eye-fill me-1';
+      }
+    }
 
     function convertCurrencyToPKR() {
       const cur = document.getElementById('calcCurrency').value;
@@ -457,16 +611,22 @@
 
     function applyForeignRateToRatePerHead() {
       const pkrVal = convertCurrencyToPKR();
-      document.getElementById('ratePerHead').value = pkrVal;
+      document.getElementById('rateAdult').value = pkrVal;
       calcTotal();
-      alert(`CONVERTED & APPLIED: PKR ${pkrVal.toLocaleString()}`);
+      alert(`CONVERTED & APPLIED TO ADULT RATE: PKR ${pkrVal.toLocaleString()}`);
     }
 
     function calcTotal() {
       const adults = parseInt(document.getElementById('paxAdults').value) || 0;
       const children = parseInt(document.getElementById('paxChildren').value) || 0;
-      const rate = parseFloat(document.getElementById('ratePerHead').value) || 0;
-      document.getElementById('totalAmount').value = (adults + children) * rate;
+      const infants = parseInt(document.getElementById('paxInfants').value) || 0;
+
+      const rateAdult = parseFloat(document.getElementById('rateAdult').value) || 0;
+      const rateChild = parseFloat(document.getElementById('rateChild').value) || 0;
+      const rateInfant = parseFloat(document.getElementById('rateInfant').value) || 0;
+
+      const totalRev = (adults * rateAdult) + (children * rateChild) + (infants * rateInfant);
+      document.getElementById('totalAmount').value = totalRev;
     }
 
     function autoGenDocNum() {
@@ -481,10 +641,112 @@
       div.id = `veRow_${vendorExpenseRowCount}`;
       div.innerHTML = `
         <div class="col-md-7"><select class="form-select form-select-sm ve-vendor">${vendorsList.map(v => `<option value="${v.name}">${v.name}</option>`).join('')}</select></div>
-        <div class="col-md-4"><input type="number" class="form-control form-control-sm ve-cost" placeholder="Cost PKR" value="0"></div>
+        <div class="col-md-4"><input type="number" class="form-control form-control-sm ve-cost" placeholder="COST PKR" value="0"></div>
         <div class="col-md-1"><button type="button" class="btn btn-sm btn-outline-danger" onclick="document.getElementById('veRow_${vendorExpenseRowCount}').remove()"><i class="bi bi-trash"></i></button></div>
       `;
       document.getElementById('vendorExpenseRowsContainer').appendChild(div);
+    }
+
+    function saveNewVendor() {
+      const name = document.getElementById('modalVendorName').value.trim().toUpperCase();
+      const contact = document.getElementById('modalVendorContact').value.trim();
+      if(!name) { alert("PLEASE ENTER VENDOR NAME!"); return; }
+      vendorsList.push({ id: Date.now(), name: name, contact: contact || '-', paymentsHistory: [] });
+      localStorage.setItem('skywalk_vendors', JSON.stringify(vendorsList));
+      document.getElementById('modalVendorName').value = '';
+      document.getElementById('modalVendorContact').value = '';
+      bootstrap.Modal.getInstance(document.getElementById('addVendorModal')).hide();
+      renderVendorDirectoryTable();
+      logAudit(`ADDED NEW VENDOR: ${name}`);
+      alert("VENDOR ADDED SUCCESSFULLY!");
+    }
+
+    function deleteVendor(vId) {
+      if(!currentUser || currentUser.role !== 'ADMIN') { alert("ACCESS DENIED! ONLY ADMINISTRATORS CAN DELETE VENDORS."); return; }
+      const v = vendorsList.find(x => x.id === vId);
+      if(v && confirm(`ARE YOU SURE YOU WANT TO DELETE VENDOR: ${v.name}?`)) {
+        vendorsList = vendorsList.filter(x => x.id !== vId);
+        localStorage.setItem('skywalk_vendors', JSON.stringify(vendorsList));
+        renderVendorDirectoryTable();
+        logAudit(`DELETED VENDOR: ${v.name}`);
+      }
+    }
+
+    function renderVendorDirectoryTable() {
+      const tbody = document.getElementById('vendorTableBody');
+      const isAdmin = currentUser && currentUser.role === 'ADMIN';
+      if(vendorsList.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4">NO VENDORS SAVED YET.</td></tr>'; return; }
+
+      tbody.innerHTML = vendorsList.map(v => {
+        let totalPayable = 0, totalPaid = 0;
+        crmRecords.forEach(r => {
+          if(r.vendorExpenses) r.vendorExpenses.forEach(ve => { if(ve.vendorName === v.name) totalPayable += (ve.cost || 0); });
+        });
+        if(v.paymentsHistory) v.paymentsHistory.forEach(ph => totalPaid += (ph.amount || 0));
+        const balanceDue = totalPayable - totalPaid;
+
+        return `
+          <tr>
+            <td class="fw-bold text-primary">${v.name}</td>
+            <td>${v.contact}</td>
+            <td class="fw-bold">PKR ${totalPayable.toLocaleString()}</td>
+            <td class="fw-bold text-success">PKR ${totalPaid.toLocaleString()}</td>
+            <td class="fw-bold text-danger">PKR ${balanceDue.toLocaleString()}</td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-outline-secondary py-1 px-2 fw-bold me-1" onclick="openVendorLedgerModal(${v.id})">LEDGER & PAY</button>
+              ${isAdmin ? `<button class="btn btn-sm btn-outline-danger py-1 px-2" onclick="deleteVendor(${v.id})"><i class="bi bi-trash"></i></button>` : ''}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function openVendorLedgerModal(vId) {
+      const vendor = vendorsList.find(v => v.id === vId);
+      if(!vendor) return;
+      document.getElementById('vLedgerVendorId').value = vendor.id;
+      document.getElementById('vLedgerName').value = vendor.name;
+      document.getElementById('vLedgerContact').value = vendor.contact;
+      document.getElementById('vPayDate').valueAsDate = new Date();
+      document.getElementById('vPayTime').value = new Date().toTimeString().substring(0, 5);
+
+      let totalPayable = 0, totalPaid = 0;
+      crmRecords.forEach(r => { if(r.vendorExpenses) r.vendorExpenses.forEach(ve => { if(ve.vendorName === vendor.name) totalPayable += (ve.cost || 0); }); });
+      if(!vendor.paymentsHistory) vendor.paymentsHistory = [];
+      vendor.paymentsHistory.forEach(ph => totalPaid += (ph.amount || 0));
+
+      document.getElementById('vLedgerTotalPayable').value = totalPayable.toLocaleString();
+      document.getElementById('vLedgerTotalPaid').value = totalPaid.toLocaleString();
+      document.getElementById('vLedgerBalanceDue').value = (totalPayable - totalPaid).toLocaleString();
+
+      document.getElementById('vLedgerHistoryTableBody').innerHTML = vendor.paymentsHistory.map((p, i) => `
+        <tr><td class="text-center fw-bold">${i+1}</td><td>${p.date} (${p.time})</td><td><span class="badge bg-primary">${p.category}</span></td><td>${p.note}</td><td class="text-end fw-bold text-success">PKR ${p.amount.toLocaleString()}</td></tr>
+      `).join('') || '<tr><td colspan="5" class="text-center text-muted py-3">NO PAYMENTS RECORDED YET.</td></tr>';
+
+      new bootstrap.Modal(document.getElementById('vendorLedgerModal')).show();
+    }
+
+    function saveVendorPayment() {
+      const vId = parseInt(document.getElementById('vLedgerVendorId').value);
+      const vendor = vendorsList.find(v => v.id === vId);
+      if(!vendor) return;
+
+      const cat = document.getElementById('vPayCategory').value;
+      const amt = parseFloat(document.getElementById('vPayAmount').value) || 0;
+      const date = document.getElementById('vPayDate').value || new Date().toISOString().split('T')[0];
+      const time = document.getElementById('vPayTime').value || '12:00';
+      const note = document.getElementById('vPayNote').value.trim().toUpperCase() || 'VENDOR PAYMENT';
+
+      if(amt <= 0) { alert("PLEASE ENTER A VALID PAYMENT AMOUNT!"); return; }
+
+      vendor.paymentsHistory.push({ date: date, time: time, category: cat, amount: amt, note: note });
+      localStorage.setItem('skywalk_vendors', JSON.stringify(vendorsList));
+      logAudit(`PAID PKR ${amt.toLocaleString()} (${cat}) TO VENDOR ${vendor.name}`);
+      document.getElementById('vPayAmount').value = '';
+      document.getElementById('vPayNote').value = '';
+      openVendorLedgerModal(vendor.id);
+      renderVendorDirectoryTable();
+      alert(`PAYMENT OF PKR ${amt.toLocaleString()} (${cat}) RECORDED!`);
     }
 
     function addFormPassengerRow(p = { name: '', passport: '', expiry: '' }) {
@@ -493,17 +755,17 @@
       div.className = 'row g-2 mb-2 form-pax-item';
       div.id = `fpRow_${formPassengerCount}`;
       div.innerHTML = `
-        <div class="col-md-4"><input type="text" class="form-control form-control-sm fp-name" placeholder="Full Name" value="${p.name}"></div>
-        <div class="col-md-4"><input type="text" class="form-control form-control-sm fp-passport" placeholder="Passport No" value="${p.passport}"></div>
+        <div class="col-md-4"><input type="text" class="form-control form-control-sm fp-name" placeholder="FULL NAME" value="${p.name}"></div>
+        <div class="col-md-4"><input type="text" class="form-control form-control-sm fp-passport" placeholder="PASSPORT NO" value="${p.passport}"></div>
         <div class="col-md-3"><input type="date" class="form-control form-control-sm fp-expiry" value="${p.expiry}"></div>
         <div class="col-md-1"><button type="button" class="btn btn-sm btn-outline-danger" onclick="document.getElementById('fpRow_${formPassengerCount}').remove()"><i class="bi bi-trash"></i></button></div>
       `;
       document.getElementById('formPassengersContainer').appendChild(div);
     }
 
-    function saveRecord() {
-      const name = document.getElementById('clientName').value.trim();
-      if(!name) { alert("Please enter client name!"); return; }
+    function collectFormData() {
+      const name = document.getElementById('clientName').value.trim().toUpperCase();
+      if(!name) { alert("PLEASE ENTER CLIENT NIAME!"); return null; }
 
       let totalExp = 0;
       const vendorExpenses = [];
@@ -517,8 +779,8 @@
       const passengers = [];
       let expiringSoonCount = 0;
       document.querySelectorAll('.form-pax-item').forEach(r => {
-        const pName = r.querySelector('.fp-name').value.trim() || '-';
-        const pPass = r.querySelector('.fp-passport').value.trim() || '-';
+        const pName = r.querySelector('.fp-name').value.trim().toUpperCase() || '-';
+        const pPass = r.querySelector('.fp-passport').value.trim().toUpperCase() || '-';
         const pExp = r.querySelector('.fp-expiry').value || '-';
         
         if(pExp !== '-') {
@@ -531,14 +793,22 @@
       });
 
       const total = parseFloat(document.getElementById('totalAmount').value) || 0;
-      const record = {
+      const termsText = document.getElementById('termsAndConditionsText').value.trim();
+
+      return {
         id: Date.now(),
         type: document.getElementById('docTypeQuot').checked ? 'QUOTATION' : 'INVOICE',
         docNum: document.getElementById('docNum').value,
         date: document.getElementById('quoteDate').value || new Date().toISOString().split('T')[0],
         name: name,
-        contact: document.getElementById('clientContact').value || '-',
-        pkgTitle: document.getElementById('pkgTitle').value,
+        contact: document.getElementById('clientContact').value.toUpperCase() || '-',
+        pkgTitle: document.getElementById('pkgTitle').value.toUpperCase(),
+        adults: parseInt(document.getElementById('paxAdults').value) || 0,
+        children: parseInt(document.getElementById('paxChildren').value) || 0,
+        infants: parseInt(document.getElementById('paxInfants').value) || 0,
+        rateAdult: parseFloat(document.getElementById('rateAdult').value) || 0,
+        rateChild: parseFloat(document.getElementById('rateChild').value) || 0,
+        rateInfant: parseFloat(document.getElementById('rateInfant').value) || 0,
         total: total,
         totalExpenses: totalExp,
         netProfit: total - totalExp,
@@ -546,24 +816,108 @@
         status: 'PENDING',
         vendorExpenses: vendorExpenses,
         passengers: passengers,
-        paymentsHistory: [{ date: new Date().toISOString().split('T')[0], time: '12:00', amount: 0, note: 'Record Created' }]
+        terms: termsText,
+        expiringSoonCount: expiringSoonCount,
+        paymentsHistory: [{ date: new Date().toISOString().split('T')[0], time: '12:00', amount: 0, note: 'RECORD CREATED' }]
       };
+    }
 
-      crmRecords.push(record);
+    function previewRecordModal() {
+      const data = collectFormData();
+      if(!data) return;
+
+      let vendorHtml = data.vendorExpenses.map(ve => `<tr><td>${ve.vendorName}</td><td class="text-end">PKR ${ve.cost.toLocaleString()}</td></tr>`).join('') || '<tr><td colspan="2" class="text-center text-muted">NO VENDOR EXPENSES</td></tr>';
+      let paxHtml = data.passengers.map((p, i) => `<tr><td>${i+1}</td><td>${p.name}</td><td>${p.passport}</td><td>${p.expiry}</td></tr>`).join('') || '<tr><td colspan="4" class="text-center text-muted">NO PASSENGERS LISTED</td></tr>';
+
+      document.getElementById('printModalBody').innerHTML = `
+        <div class="p-4 border rounded-4 bg-white" style="font-size: 0.9rem;">
+          <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+            <div>
+              <h3 class="fw-extrabold text-primary mb-1">SKY WALK TOUR & TRAVELS</h3>
+              <p class="small text-muted mb-0">OFFICE LGF 56, AASHIANA CENTER, NEAR LIBERTY ROUNDABOUT, GULBERG, LAHORE</p>
+              <p class="small text-muted mb-0">PHONE: 03014414126 | EMAIL: INFO@SKYWALK.PK</p>
+            </div>
+            <div class="text-end">
+              <h4 class="fw-bold text-dark mb-1">${data.type}</h4>
+              <p class="fw-bold text-primary mb-0">DOC #: ${data.docNum}</p>
+              <p class="small text-muted mb-0">DATE: ${data.date}</p>
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-6">
+              <h6 class="fw-bold text-secondary small">CLIENT INFORMATION:</h6>
+              <p class="fw-bold mb-1">NAME: ${data.name}</p>
+              <p class="mb-0 text-muted">CONTACT: ${data.contact}</p>
+            </div>
+            <div class="col-6 text-end">
+              <h6 class="fw-bold text-secondary small">PACKAGE DETAILS:</h6>
+              <p class="fw-bold mb-1">${data.pkgTitle}</p>
+              <p class="mb-0 text-muted">STATUS: ${data.leadStatus}</p>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <h6 class="fw-bold text-secondary small">PASSENGER DETAILS:</h6>
+            <table class="table table-bordered table-sm mb-0">
+              <thead class="table-dark"><tr><th>#</th><th>PASSENGER NAME</th><th>PASSPORT NO</th><th>EXPIRY DATE</th></tr></thead>
+              <tbody>${paxHtml}</tbody>
+            </table>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-md-7">
+              <h6 class="fw-bold text-secondary small">PRICING BREAKDOWN:</h6>
+              <table class="table table-bordered table-sm mb-0">
+                <tr><td>ADULTS (${data.adults} X PKR ${data.rateAdult.toLocaleString()})</td><td class="text-end fw-bold">PKR ${(data.adults * data.rateAdult).toLocaleString()}</td></tr>
+                <tr><td>CHILDREN (${data.children} X PKR ${data.rateChild.toLocaleString()})</td><td class="text-end fw-bold">PKR ${(data.children * data.rateChild).toLocaleString()}</td></tr>
+                <tr><td>INFANTS (${data.infants} X PKR ${data.rateInfant.toLocaleString()})</td><td class="text-end fw-bold">PKR ${(data.infants * data.rateInfant).toLocaleString()}</td></tr>
+                <tr class="table-success fw-bold"><td>TOTAL REVENUE</td><td class="text-end">PKR ${data.total.toLocaleString()}</td></tr>
+              </table>
+            </div>
+            <div class="col-md-5">
+              <h6 class="fw-bold text-secondary small">VENDOR EXPENSES:</h6>
+              <table class="table table-bordered table-sm mb-0">
+                <thead class="table-light"><tr><th>VENDOR</th><th class="text-end">COST</th></tr></thead>
+                <tbody>${vendorHtml}</tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="p-3 bg-light border rounded-3 mb-4">
+            <h6 class="fw-bold text-dark small mb-2">TERMS & CONDITIONS:</h6>
+            <p class="small mb-0 text-secondary" style="white-space: pre-line; font-size: 0.85rem;">${data.terms}</p>
+          </div>
+
+          <div class="d-flex justify-content-between pt-4 border-top">
+            <div><p class="small text-muted mb-0">AUTHORIZED SIGNATURE</p><div style="height: 40px; border-bottom: 1px solid #000; width: 180px;"></div></div>
+            <div class="text-end"><p class="small text-muted mb-0">CLIENT SIGNATURE</p><div style="height: 40px; border-bottom: 1px solid #000; width: 180px;"></div></div>
+          </div>
+        </div>
+      `;
+
+      new bootstrap.Modal(document.getElementById('previewModal')).show();
+    }
+
+    function saveRecord() {
+      const data = collectFormData();
+      if(!data) return;
+
+      crmRecords.push(data);
       localStorage.setItem('skywalk_crm', JSON.stringify(crmRecords));
-      logAudit(`Created ${record.type} #${record.docNum} for ${record.name}`);
+      logAudit(`CREATED ${data.type} #${data.docNum} FOR ${data.name}`);
 
-      if(expiringSoonCount > 0) {
+      if(data.expiringSoonCount > 0) {
         document.getElementById('expiryAlertBanner').classList.remove('d-none');
-        document.getElementById('expiryAlertText').innerText = `${expiringSoonCount} passenger passport(s) expiring within 60 days! Check Document Vault.`;
+        document.getElementById('expiryAlertText').innerText = `${data.expiringSoonCount} PASSENGER PASSPORT(S) EXPIRING WITHIN 60 DAYS! CHECK DOCUMENT VAULT.`;
       }
 
       switchView('dashboard');
-      alert(`${record.type} saved successfully!`);
+      alert(`${data.type} SAVED SUCCESSFULLY!`);
     }
 
     function renderCRM() {
-      const keyword = document.getElementById('searchKeyword').value.trim().toLowerCase();
+      const keyword = document.getElementById('searchKeyword').value.trim().toUpperCase();
       let totRev = 0, totExp = 0, activeLeads = 0;
       const tbody = document.getElementById('crmTableBody');
 
@@ -571,7 +925,7 @@
         if(r.type === 'INVOICE') totRev += r.total;
         totExp += r.totalExpenses;
         if(r.leadStatus !== 'BOOKED') activeLeads++;
-        return !keyword || r.docNum.toLowerCase().includes(keyword) || r.name.toLowerCase().includes(keyword);
+        return !keyword || r.docNum.toUpperCase().includes(keyword) || r.name.toUpperCase().includes(keyword);
       });
 
       document.getElementById('kpiTotalRevenue').innerText = `PKR ${totRev.toLocaleString()}`;
@@ -579,7 +933,7 @@
       document.getElementById('kpiNetProfit').innerText = `PKR ${(totRev - totExp).toLocaleString()}`;
       document.getElementById('kpiActiveLeads').innerText = activeLeads;
 
-      if(filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted py-4">No records found.</td></tr>'; return; }
+      if(filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted py-4">NO RECORDS FOUND.</td></tr>'; return; }
 
       tbody.innerHTML = filtered.map(r => `
         <tr>
@@ -624,7 +978,7 @@
           });
         }
       });
-      tbody.innerHTML = rows || '<tr><td colspan="5" class="text-center text-muted py-4">No passports in vault.</td></tr>';
+      tbody.innerHTML = rows || '<tr><td colspan="5" class="text-center text-muted py-4">NO PASSPORTS IN VAULT.</td></tr>';
     }
 
     function renderPLStatement() {
@@ -637,7 +991,7 @@
 
     function renderAuditLogs() {
       const tbody = document.getElementById('auditTableBody');
-      tbody.innerHTML = auditLogs.map(l => `<tr><td>${l.timestamp}</td><td class="fw-bold text-primary">${l.user}</td><td>${l.action}</td></tr>`).join('') || '<tr><td colspan="3" class="text-center text-muted py-4">No logs found.</td></tr>';
+      tbody.innerHTML = auditLogs.map(l => `<tr><td>${l.timestamp}</td><td class="fw-bold text-primary">${l.user}</td><td>${l.action}</td></tr>`).join('') || '<tr><td colspan="3" class="text-center text-muted py-4">NO LOGS FOUND.</td></tr>';
     }
 
     function renderDailyCollectionReport() {
@@ -653,14 +1007,14 @@
           });
         }
       });
-      tbody.innerHTML = rows || '<tr><td colspan="4" class="text-center text-muted py-4">No collections on this date.</td></tr>';
+      tbody.innerHTML = rows || '<tr><td colspan="4" class="text-center text-muted py-4">NO COLLECTIONS ON THIS DATE.</td></tr>';
     }
 
     function deleteCRM(id) {
-      if(confirm("Are you sure you want to delete this record?")) {
+      if(confirm("ARE YOU SURE YOU WANT TO DELETE THIS RECORD?")) {
         crmRecords = crmRecords.filter(r => r.id !== id);
         localStorage.setItem('skywalk_crm', JSON.stringify(crmRecords));
-        logAudit(`Deleted CRM record ID ${id}`);
+        logAudit(`DELETED CRM RECORD ID ${id}`);
         renderCRM();
       }
     }
@@ -671,6 +1025,7 @@
 
     // Load Initial Data
     if(localStorage.getItem('skywalk_crm')) crmRecords = JSON.parse(localStorage.getItem('skywalk_crm'));
+    if(localStorage.getItem('skywalk_vendors')) vendorsList = JSON.parse(localStorage.getItem('skywalk_vendors'));
     if(localStorage.getItem('skywalk_audit')) auditLogs = JSON.parse(localStorage.getItem('skywalk_audit'));
     document.getElementById('quoteDate').valueAsDate = new Date();
     autoGenDocNum();
