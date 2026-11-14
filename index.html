@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>SkyWalk Tour & Travels - Enterprise SaaS CRM v6.5 Final</title>
+  <title>SkyWalk Tour & Travels - Enterprise SaaS CRM v6.7 Final</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -96,7 +96,7 @@
       <div class="text-center mb-4">
         <div class="rounded-3 d-inline-flex align-items-center justify-content-center mb-2" style="width:75px; height:75px; background:var(--accent-blue); color:white; font-size:2rem;"><i class="bi bi-airplane-fill"></i></div>
         <h3 class="fw-extrabold mb-1">SKY WALK CRM</h3>
-        <p class="text-primary fw-bold mb-0" style="font-size: 0.75rem;">ENTERPRISE V6.5 FINAL SUITE</p>
+        <p class="text-primary fw-bold mb-0" style="font-size: 0.75rem;">ENTERPRISE V6.7 SUITE</p>
       </div>
       <div class="alert alert-danger d-none py-2 px-3 small rounded-3" id="loginErrorMsg"></div>
       <form id="loginForm" onsubmit="handleLogin(event)">
@@ -112,7 +112,7 @@
     <div class="sidebar no-print">
       <div class="sidebar-brand">
         <span class="bg-primary p-2 rounded-3 text-white"><i class="bi bi-airplane-engines-fill"></i></span>
-        <span>SKY WALK V6.5</span>
+        <span>SKY WALK V6.7</span>
       </div>
       <div class="sidebar-menu">
         <div class="menu-label">CORE MODULES</div>
@@ -125,6 +125,7 @@
         <a class="sidebar-item" onclick="switchView('daily-report')" id="nav-daily-report"><i class="bi bi-calendar-check-fill fs-5"></i><span>DAILY COLLECTION</span></a>
         
         <div class="menu-label mt-3">ADMINISTRATION & SETTINGS</div>
+        <a class="sidebar-item" data-bs-toggle="modal" data-bs-target="#companyProfileModal" onclick="loadCompanyProfileModal()"><i class="bi bi-building-fill fs-5"></i><span>COMPANY PROFILE</span></a>
         <a class="sidebar-item" onclick="switchView('audit-logs')" id="nav-audit-logs"><i class="bi bi-journal-text fs-5"></i><span>AUDIT TRAIL LOGS</span></a>
         <a class="sidebar-item" data-bs-toggle="modal" data-bs-target="#currencyModal"><i class="bi bi-currency-exchange fs-5"></i><span>CURRENCY RATES</span></a>
         <a class="sidebar-item" data-bs-toggle="modal" data-bs-target="#userMgmtModal" onclick="renderUsersTable()"><i class="bi bi-people-fill fs-5"></i><span>USER MANAGEMENT</span></a>
@@ -442,6 +443,43 @@
     </div>
   </div>
 
+  <!-- COMPANY PROFILE MODAL (ADMIN CAN EDIT COMPANY DETAILS & LOGO) -->
+  <div class="modal fade" id="companyProfileModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header bg-primary text-white py-3">
+          <h5 class="modal-title fs-6 fw-bold"><i class="bi bi-building-fill me-2"></i> COMPANY PROFILE & SETTINGS</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="alert alert-info py-2 px-3 small rounded-3 mb-3" id="compProfileAlert">NOTE: ONLY MAIN ADMINISTRATOR CAN EDIT COMPANY DETAILS AND LOGO.</div>
+          <form id="companyProfileForm">
+            <div class="row g-3">
+              <div class="col-md-6"><label class="form-label small fw-bold">COMPANY NAME</label><input type="text" class="form-control" id="compName"></div>
+              <div class="col-md-6"><label class="form-label small fw-bold">CONTACT / PHONE NUMBER</label><input type="text" class="form-control" id="compContact"></div>
+              <div class="col-12"><label class="form-label small fw-bold">OFFICE ADDRESS</label><input type="text" class="form-control" id="compAddress"></div>
+              <div class="col-md-6"><label class="form-label small fw-bold">EMAIL ADDRESS</label><input type="text" class="form-control" id="compEmail"></div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">COMPANY LOGO IMAGE</label>
+                <input type="file" class="form-control form-control-sm" id="compLogoFile" accept="image/*" onchange="previewCompanyLogo(event)">
+              </div>
+              <div class="col-12 text-center my-2">
+                <div class="p-2 border rounded bg-light d-inline-block">
+                  <img id="compLogoPreview" src="" alt="LOGO PREVIEW" style="max-height: 70px; max-width: 200px; object-fit: contain; display: none;">
+                  <span id="compLogoPlaceholder" class="text-muted small">NO LOGO UPLOADED</span>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer px-0 pb-0 pt-3">
+              <button type="button" class="btn btn-secondary btn-sm px-4" data-bs-dismiss="modal">CLOSE</button>
+              <button type="button" class="btn btn-primary btn-sm px-4" id="saveCompProfileBtn" onclick="saveCompanyProfile()">SAVE COMPANY DETAILS</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ADD VENDOR MODAL -->
   <div class="modal fade" id="addVendorModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -521,7 +559,7 @@
     </div>
   </div>
 
-  <!-- USER MANAGEMENT MODAL (ADMIN ONLY CAN ADD USERS) -->
+  <!-- USER MANAGEMENT MODAL -->
   <div class="modal fade" id="userMgmtModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg rounded-4">
@@ -557,7 +595,7 @@
     </div>
   </div>
 
-  <!-- CHANGE PASSWORD MODAL (ACCESSIBLE BY ANY LOGGED-IN USER) -->
+  <!-- CHANGE PASSWORD MODAL -->
   <div class="modal fade" id="changePasswordModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg rounded-4">
@@ -588,9 +626,26 @@
     ];
     let crmRecords = JSON.parse(localStorage.getItem('skywalk_crm')) || [];
     let auditLogs = JSON.parse(localStorage.getItem('skywalk_audit')) || [];
-    let currentUser = null;
-    let formPassengerCount = 0;
-    let vendorExpenseRowCount = 0;
+    
+    // Default Company Profile
+    let companyProfile = JSON.parse(localStorage.getItem('skywalk_company_profile')) || {
+      name: 'SKY WALK TOUR & TRAVELS',
+      contact: '03014414126',
+      address: 'OFFICE LGF 56, AASHIANA CENTER, NEAR LIBERTY ROUNDABOUT, GULBERG, LAHORE',
+      email: 'INFO@SKYWALK.PK',
+      logo: ''
+    };
+
+    let currentUser = JSON.parse(sessionStorage.getItem('skywalk_current_user')) || null;
+
+    if (currentUser) {
+      document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById('loginScreen').style.setProperty('display', 'none', 'important');
+        document.getElementById('mainAppScreen').style.setProperty('display', 'block', 'important');
+        document.getElementById('currentLoggedInUserDisplay').innerText = `${currentUser.username} (${currentUser.role})`;
+        switchView('dashboard');
+      });
+    }
 
     function logAudit(action) {
       auditLogs.unshift({ timestamp: new Date().toLocaleString(), user: currentUser ? currentUser.username : 'SYSTEM', action: action.toUpperCase() });
@@ -620,6 +675,7 @@
       let found = systemUsers.find(x => x.username === u && x.password === p);
       if(found) {
         currentUser = found;
+        sessionStorage.setItem('skywalk_current_user', JSON.stringify(found));
         document.getElementById('loginScreen').style.setProperty('display', 'none', 'important');
         document.getElementById('mainAppScreen').style.setProperty('display', 'block', 'important');
         document.getElementById('currentLoggedInUserDisplay').innerText = `${found.username} (${found.role})`;
@@ -631,7 +687,89 @@
       }
     }
 
-    function handleLogout() { location.reload(); }
+    function handleLogout() {
+      sessionStorage.removeItem('skywalk_current_user');
+      location.reload();
+    }
+
+    // Company Profile Functions
+    let uploadedLogoBase64 = '';
+
+    function loadCompanyProfileModal() {
+      companyProfile = JSON.parse(localStorage.getItem('skywalk_company_profile')) || companyProfile;
+      document.getElementById('compName').value = companyProfile.name;
+      document.getElementById('compContact').value = companyProfile.contact;
+      document.getElementById('compAddress').value = companyProfile.address;
+      document.getElementById('compEmail').value = companyProfile.email;
+      uploadedLogoBase64 = companyProfile.logo || '';
+
+      const imgPrev = document.getElementById('compLogoPreview');
+      const placeholder = document.getElementById('compLogoPlaceholder');
+      const saveBtn = document.getElementById('saveCompProfileBtn');
+      const alertBox = document.getElementById('compProfileAlert');
+
+      const isAdmin = currentUser && currentUser.role === 'ADMIN';
+
+      if(uploadedLogoBase64) {
+        imgPrev.src = uploadedLogoBase64;
+        imgPrev.style.display = 'inline-block';
+        placeholder.style.display = 'none';
+      } else {
+        imgPrev.style.display = 'none';
+        placeholder.style.display = 'inline-block';
+      }
+
+      if(!isAdmin) {
+        document.getElementById('compName').setAttribute('readonly', true);
+        document.getElementById('compContact').setAttribute('readonly', true);
+        document.getElementById('compAddress').setAttribute('readonly', true);
+        document.getElementById('compEmail').setAttribute('readonly', true);
+        document.getElementById('compLogoFile').setAttribute('disabled', true);
+        saveBtn.style.display = 'none';
+        alertBox.className = 'alert alert-warning py-2 px-3 small rounded-3 mb-3';
+        alertBox.innerText = 'READ-ONLY MODE: ONLY MAIN ADMINISTRATOR CAN EDIT COMPANY PROFILE.';
+      } else {
+        document.getElementById('compName').removeAttribute('readonly');
+        document.getElementById('compContact').removeAttribute('readonly');
+        document.getElementById('compAddress').removeAttribute('readonly');
+        document.getElementById('compEmail').removeAttribute('readonly');
+        document.getElementById('compLogoFile').removeAttribute('disabled');
+        saveBtn.style.display = 'inline-block';
+        alertBox.className = 'alert alert-info py-2 px-3 small rounded-3 mb-3';
+        alertBox.innerText = 'ADMIN MODE: YOU CAN EDIT COMPANY ADDRESS, CONTACT AND UPLOAD LOGO.';
+      }
+    }
+
+    function previewCompanyLogo(event) {
+      const file = event.target.files[0];
+      if(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          uploadedLogoBase64 = e.target.result;
+          const imgPrev = document.getElementById('compLogoPreview');
+          const placeholder = document.getElementById('compLogoPlaceholder');
+          imgPrev.src = uploadedLogoBase64;
+          imgPrev.style.display = 'inline-block';
+          placeholder.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function saveCompanyProfile() {
+      if(!currentUser || currentUser.role !== 'ADMIN') { alert("ACCESS DENIED! ONLY MAIN ADMIN CAN SAVE COMPANY PROFILE."); return; }
+      
+      companyProfile.name = document.getElementById('compName').value.trim().toUpperCase() || 'SKY WALK TOUR & TRAVELS';
+      companyProfile.contact = document.getElementById('compContact').value.trim().toUpperCase() || '';
+      companyProfile.address = document.getElementById('compAddress').value.trim().toUpperCase() || '';
+      companyProfile.email = document.getElementById('compEmail').value.trim().toUpperCase() || '';
+      companyProfile.logo = uploadedLogoBase64;
+
+      localStorage.setItem('skywalk_company_profile', JSON.stringify(companyProfile));
+      logAudit(`UPDATED COMPANY PROFILE: ${companyProfile.name}`);
+      bootstrap.Modal.getInstance(document.getElementById('companyProfileModal')).hide();
+      alert("COMPANY PROFILE UPDATED SUCCESSFULLY!");
+    }
 
     function toggleTermsBox() {
       const box = document.getElementById('termsContentBox');
@@ -797,6 +935,9 @@
       alert(`PAYMENT OF PKR ${amt.toLocaleString()} (${cat}) RECORDED!`);
     }
 
+    let formPassengerCount = 0;
+    let vendorExpenseRowCount = 0;
+
     function addFormPassengerRow(p = { name: '', passport: '', expiry: '' }) {
       formPassengerCount++;
       const div = document.createElement('div');
@@ -874,6 +1015,10 @@
       const data = collectFormData();
       if(!data) return;
 
+      // Load latest company profile details for print header
+      companyProfile = JSON.parse(localStorage.getItem('skywalk_company_profile')) || companyProfile;
+
+      let logoHtml = companyProfile.logo ? `<img src="${companyProfile.logo}" style="max-height: 55px; max-width: 180px; object-fit: contain;" class="mb-2">` : '';
       let vendorHtml = data.vendorExpenses.map(ve => `<tr><td>${ve.vendorName}</td><td class="text-end">PKR ${ve.cost.toLocaleString()}</td></tr>`).join('') || '<tr><td colspan="2" class="text-center text-muted">NO VENDOR EXPENSES</td></tr>';
       let paxHtml = data.passengers.map((p, i) => `<tr><td>${i+1}</td><td>${p.name}</td><td>${p.passport}</td><td>${p.expiry}</td></tr>`).join('') || '<tr><td colspan="4" class="text-center text-muted">NO PASSENGERS LISTED</td></tr>';
 
@@ -881,9 +1026,10 @@
         <div class="p-4 border rounded-4 bg-white" style="font-size: 0.9rem;">
           <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
             <div>
-              <h3 class="fw-extrabold text-primary mb-1">SKY WALK TOUR & TRAVELS</h3>
-              <p class="small text-muted mb-0">OFFICE LGF 56, AASHIANA CENTER, NEAR LIBERTY ROUNDABOUT, GULBERG, LAHORE</p>
-              <p class="small text-muted mb-0">PHONE: 03014414126 | EMAIL: INFO@SKYWALK.PK</p>
+              ${logoHtml}
+              <h3 class="fw-extrabold text-primary mb-1">${companyProfile.name}</h3>
+              <p class="small text-muted mb-0">${companyProfile.address}</p>
+              <p class="small text-muted mb-0">PHONE: ${companyProfile.contact} | EMAIL: ${companyProfile.email}</p>
             </div>
             <div class="text-end">
               <h4 class="fw-bold text-dark mb-1">${data.type}</h4>
@@ -1131,7 +1277,7 @@
       }
 
       if(currentUser.password !== oldP) {
-        errBox.innerText = "CURRENT PASSWORD IS incorrect!";
+        errBox.innerText = "CURRENT PASSWORD IS INCORRECT!";
         errBox.classList.remove('d-none');
         return;
       }
@@ -1142,12 +1288,12 @@
         return;
       }
 
-      // Update current user password
       currentUser.password = newP;
       const targetUser = systemUsers.find(u => u.username === currentUser.username);
       if(targetUser) targetUser.password = newP;
 
       localStorage.setItem('skywalk_users', JSON.stringify(systemUsers));
+      sessionStorage.setItem('skywalk_current_user', JSON.stringify(currentUser));
       logAudit(`PASSWORD CHANGED FOR USER: ${currentUser.username}`);
       
       document.getElementById('cpOldPass').value = '';
@@ -1157,11 +1303,18 @@
       alert("PASSWORD UPDATED SUCCESSFULLY!");
     }
 
-    // Load Initial Data
-    document.getElementById('quoteDate').valueAsDate = new Date();
-    autoGenDocNum();
-    addVendorExpenseRow();
-    addFormPassengerRow();
+    // Initialize
+    if(!currentUser) {
+      document.getElementById('quoteDate').valueAsDate = new Date();
+      autoGenDocNum();
+      addVendorExpenseRow();
+      addFormPassengerRow();
+    } else {
+      document.getElementById('quoteDate').valueAsDate = new Date();
+      autoGenDocNum();
+      addVendorExpenseRow();
+      addFormPassengerRow();
+    }
   </script>
 </body>
 </html>
