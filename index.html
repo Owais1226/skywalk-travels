@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>SkyWalk Tour & Travels - Enterprise SaaS CRM v6.7 Final</title>
+  <title>SkyWalk Tour & Travels - Enterprise SaaS CRM v6.9 Final</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
       --sidebar-width: 260px;
@@ -79,7 +78,6 @@
     .kanban-card { background: #FFFFFF; border-radius: 12px; padding: 1rem; margin-bottom: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.04); border-left: 4px solid #2563EB; cursor: pointer; transition: transform 0.2s; }
     .kanban-card:hover { transform: translateY(-3px); }
 
-    #printArea { display: none !important; }
     @media print {
       body * { visibility: hidden !important; }
       #printModalBody, #printModalBody * { visibility: visible !important; }
@@ -96,7 +94,7 @@
       <div class="text-center mb-4">
         <div class="rounded-3 d-inline-flex align-items-center justify-content-center mb-2" style="width:75px; height:75px; background:var(--accent-blue); color:white; font-size:2rem;"><i class="bi bi-airplane-fill"></i></div>
         <h3 class="fw-extrabold mb-1">SKY WALK CRM</h3>
-        <p class="text-primary fw-bold mb-0" style="font-size: 0.75rem;">ENTERPRISE V6.7 SUITE</p>
+        <p class="text-primary fw-bold mb-0" style="font-size: 0.75rem;">ENTERPRISE V6.9 SUITE</p>
       </div>
       <div class="alert alert-danger d-none py-2 px-3 small rounded-3" id="loginErrorMsg"></div>
       <form id="loginForm" onsubmit="handleLogin(event)">
@@ -112,7 +110,7 @@
     <div class="sidebar no-print">
       <div class="sidebar-brand">
         <span class="bg-primary p-2 rounded-3 text-white"><i class="bi bi-airplane-engines-fill"></i></span>
-        <span>SKY WALK V6.7</span>
+        <span>SKY WALK V6.9</span>
       </div>
       <div class="sidebar-menu">
         <div class="menu-label">CORE MODULES</div>
@@ -128,7 +126,8 @@
         <a class="sidebar-item" data-bs-toggle="modal" data-bs-target="#companyProfileModal" onclick="loadCompanyProfileModal()"><i class="bi bi-building-fill fs-5"></i><span>COMPANY PROFILE</span></a>
         <a class="sidebar-item" onclick="switchView('audit-logs')" id="nav-audit-logs"><i class="bi bi-journal-text fs-5"></i><span>AUDIT TRAIL LOGS</span></a>
         <a class="sidebar-item" data-bs-toggle="modal" data-bs-target="#currencyModal"><i class="bi bi-currency-exchange fs-5"></i><span>CURRENCY RATES</span></a>
-        <a class="sidebar-item" data-bs-toggle="modal" data-bs-target="#userMgmtModal" onclick="renderUsersTable()"><i class="bi bi-people-fill fs-5"></i><span>USER MANAGEMENT</span></a>
+        <!-- Hidden for Non-Admins -->
+        <a class="sidebar-item" id="sidebarUserMgmtItem" data-bs-toggle="modal" data-bs-target="#userMgmtModal" onclick="renderUsersTable()"><i class="bi bi-people-fill fs-5"></i><span>USER MANAGEMENT</span></a>
         <a class="sidebar-item" data-bs-toggle="modal" data-bs-target="#changePasswordModal"><i class="bi bi-key-fill fs-5"></i><span>CHANGE PASSWORD</span></a>
       </div>
       <div class="sidebar-footer">
@@ -149,7 +148,7 @@
             <i class="bi bi-exclamation-triangle-fill fs-3 text-warning"></i>
             <div>
               <h6 class="fw-bold mb-0">PASSPORT EXPIRY ALERT!</h6>
-              <p class="small mb-0 text-dark" id="expiryAlertText">Some passenger passports are expiring within 60 days. Check Document Vault.</p>
+              <p class="small mb-0 text-dark" id="expiryAlertText">SOME PASSENGER PASSPORTS ARE EXPIRING WITHIN 60 DAYS. CHECK DOCUMENT VAULT.</p>
             </div>
           </div>
         </div>
@@ -181,7 +180,7 @@
       <div id="view-form" class="container-fluid px-4 my-4 app-view" style="display:none;">
         <div class="card shadow-lg border-0 mb-5">
           <div class="card-header d-flex justify-content-between align-items-center py-3">
-            <span class="fw-bold"><i class="bi bi-file-earmark-plus-fill me-2"></i> CREATE QUOTATION / INVOICE WITH MULTI-CURRENCY</span>
+            <span class="fw-bold"><i class="bi bi-file-earmark-plus-fill me-2"></i> CREATE QUOTATION / INVOICE</span>
             <button class="btn btn-sm btn-outline-light rounded-pill" onclick="switchView('dashboard')">BACK</button>
           </div>
           <div class="card-body p-4 bg-light">
@@ -224,6 +223,7 @@
                 </div>
               </div>
 
+              <!-- CLIENT & PACKAGE DETAILS -->
               <div class="section-card bg-white">
                 <h6 class="section-title">CLIENT & PACKAGE DETAILS</h6>
                 <div class="row g-3">
@@ -247,6 +247,143 @@
                   <div class="col-md-4"><label class="form-label small fw-bold">INFANT RATE (PKR)</label><input type="number" class="form-control" id="rateInfant" value="0" oninput="calcTotal()"></div>
 
                   <div class="col-12"><label class="form-label small fw-bold text-success">TOTAL REVENUE (PKR)</label><input type="number" class="form-control fw-bold text-success fs-5" id="totalAmount" readonly value="0"></div>
+                </div>
+              </div>
+
+              <!-- HOTEL ACCOMMODATION DETAILS (MAKKAH & MADINAH) -->
+              <div class="section-card bg-white border-primary border-opacity-25">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h6 class="section-title mb-0 text-primary"><i class="bi bi-building-check me-1"></i> HOTEL ACCOMMODATION DETAILS (MAKKAH & MADINAH)</h6>
+                  <button type="button" class="btn btn-sm btn-outline-primary py-1 px-3" onclick="addHotelRow()">+ ADD EXTRA HOTEL</button>
+                </div>
+                <div id="hotelRowsContainer">
+                  <!-- Default Makkah Hotel -->
+                  <div class="row g-2 mb-2 p-2 rounded bg-light border hotel-item-row">
+                    <div class="col-md-2">
+                      <label class="form-label small fw-bold">CITY</label>
+                      <select class="form-select form-select-sm h-city">
+                        <option value="MAKKAH" selected>MAKKAH</option>
+                        <option value="MADINAH">MADINAH</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label small fw-bold">HOTEL NAME</label>
+                      <input type="text" class="form-control form-control-sm h-name" placeholder="E.G. SWISSOTEL / PULLMAN">
+                    </div>
+                    <div class="col-md-2">
+                      <label class="form-label small fw-bold">DISTANCE</label>
+                      <input type="text" class="form-control form-control-sm h-dist" placeholder="E.G. 0 METER / 300M">
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label small fw-bold">ROOM TYPE</label>
+                      <select class="form-select form-select-sm h-room">
+                        <option value="SHARING">SHARING</option>
+                        <option value="QUAD BED">QUAD BED</option>
+                        <option value="TRIPLE BED">TRIPLE BED</option>
+                        <option value="DOUBLE BED">DOUBLE BED</option>
+                      </select>
+                    </div>
+                    <div class="col-md-2">
+                      <label class="form-label small fw-bold">NIGHTS</label>
+                      <input type="number" class="form-control form-control-sm h-nights" value="10" min="1">
+                    </div>
+                  </div>
+                  <!-- Default Madinah Hotel -->
+                  <div class="row g-2 mb-2 p-2 rounded bg-light border hotel-item-row">
+                    <div class="col-md-2">
+                      <label class="form-label small fw-bold">CITY</label>
+                      <select class="form-select form-select-sm h-city">
+                        <option value="MAKKAH">MAKKAH</option>
+                        <option value="MADINAH" selected>MADINAH</option>
+                      </select>
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label small fw-bold">HOTEL NAME</label>
+                      <input type="text" class="form-control form-control-sm h-name" placeholder="E.G. ANWAR AL MADINAH">
+                    </div>
+                    <div class="col-md-2">
+                      <label class="form-label small fw-bold">DISTANCE</label>
+                      <input type="text" class="form-control form-control-sm h-dist" placeholder="E.G. 50 METER">
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label small fw-bold">ROOM TYPE</label>
+                      <select class="form-select form-select-sm h-room">
+                        <option value="SHARING">SHARING</option>
+                        <option value="QUAD BED">QUAD BED</option>
+                        <option value="TRIPLE BED">TRIPLE BED</option>
+                        <option value="DOUBLE BED">DOUBLE BED</option>
+                      </select>
+                    </div>
+                    <div class="col-md-2">
+                      <label class="form-label small fw-bold">NIGHTS</label>
+                      <input type="number" class="form-control form-control-sm h-nights" value="10" min="1">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- TRAVELING / TRANSPORT ROUTES & ZIYARAT -->
+              <div class="section-card bg-white border-success border-opacity-25">
+                <h6 class="section-title text-success"><i class="bi bi-car-front-fill me-1"></i> TRAVELING ROUTES & ZIYARAT DETAILS</h6>
+                <div class="row g-3 mb-3">
+                  <div class="col-md-4">
+                    <label class="form-label small fw-bold">VEHICLE / TRANSPORT TYPE</label>
+                    <select class="form-select form-select-sm" id="transportVehicleType">
+                      <option value="LUXURY GMC">LUXURY GMC</option>
+                      <option value="TOYOTA HIACE">TOYOTA HIACE</option>
+                      <option value="SEDAN CAR (CAMRY/SONATA)">SEDAN CAR (CAMRY/SONATA)</option>
+                      <option value="SHARING AC BUS">SHARING AC BUS</option>
+                      <option value="HARAMAIN HIGH SPEED TRAIN">HARAMAIN HIGH SPEED TRAIN</option>
+                      <option value="NO TRANSPORT">NO TRANSPORT</option>
+                    </select>
+                  </div>
+                  <div class="col-md-8">
+                    <label class="form-label small fw-bold">SELECT TRAVELING SECTORS / ROUTES:</label>
+                    <div class="d-flex flex-wrap gap-3 p-2 bg-light rounded border">
+                      <div class="form-check">
+                        <input class="form-check-input route-cb" type="checkbox" value="JEDDAH AIRPORT TO MAKKAH HOTEL" id="rt1" checked>
+                        <label class="form-check-label small fw-bold" for="rt1">JEDDAH TO MAKKAH</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input route-cb" type="checkbox" value="MAKKAH TO MADINAH" id="rt2" checked>
+                        <label class="form-check-label small fw-bold" for="rt2">MAKKAH TO MADINAH</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input route-cb" type="checkbox" value="MADINAH TO MAKKAH" id="rt3">
+                        <label class="form-check-label small fw-bold" for="rt3">MADINAH TO MAKKAH</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input route-cb" type="checkbox" value="MADINAH HOTEL TO MADINAH AIRPORT" id="rt4">
+                        <label class="form-check-label small fw-bold" for="rt4">MADINAH TO MADINAH AIRPORT</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input route-cb" type="checkbox" value="MAKKAH HOTEL TO JEDDAH AIRPORT" id="rt5" checked>
+                        <label class="form-check-label small fw-bold" for="rt5">MAKKAH TO JEDDAH AIRPORT</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ZIYARAT SECTION -->
+                <div class="p-3 bg-warning bg-opacity-10 border border-warning rounded-3">
+                  <h6 class="fw-bold text-dark small mb-2"><i class="bi bi-geo-alt-fill text-danger me-1"></i> ZIYARAT INCLUSIONS</h6>
+                  <div class="row g-2 align-items-center">
+                    <div class="col-md-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="ziyaratMakkah" checked>
+                        <label class="form-check-label small fw-bold" for="ziyaratMakkah">MAKKAH ZIYARAT INCLUDED</label>
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="ziyaratMadinah" checked>
+                        <label class="form-check-label small fw-bold" for="ziyaratMadinah">MADINAH ZIYARAT INCLUDED</label>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <input type="text" class="form-control form-control-sm" id="ziyaratNotes" value="ALL HOLY PLACES IN MAKKAH & MADINAH WITH EXPERIENCED GUIDE">
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -443,7 +580,7 @@
     </div>
   </div>
 
-  <!-- COMPANY PROFILE MODAL (ADMIN CAN EDIT COMPANY DETAILS & LOGO) -->
+  <!-- COMPANY PROFILE MODAL -->
   <div class="modal fade" id="companyProfileModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg rounded-4">
@@ -559,7 +696,7 @@
     </div>
   </div>
 
-  <!-- USER MANAGEMENT MODAL -->
+  <!-- USER MANAGEMENT MODAL (ADMIN ONLY) -->
   <div class="modal fade" id="userMgmtModal" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content border-0 shadow-lg rounded-4">
@@ -627,22 +764,34 @@
     let crmRecords = JSON.parse(localStorage.getItem('skywalk_crm')) || [];
     let auditLogs = JSON.parse(localStorage.getItem('skywalk_audit')) || [];
     
-    // Default Company Profile
     let companyProfile = JSON.parse(localStorage.getItem('skywalk_company_profile')) || {
       name: 'SKY WALK TOUR & TRAVELS',
       contact: '03014414126',
-      address: 'OFFICE LGF 56, AASHIANA CENTER, NEAR LIBERTY ROUNDABOUT, GULBERG, LAHORE',
+      address: 'LGF 56, AASHIANA CENTER, NEAR LIBERTY ROUNDABOUT, GULBERG, LAHORE',
       email: 'INFO@SKYWALK.PK',
       logo: ''
     };
 
     let currentUser = JSON.parse(sessionStorage.getItem('skywalk_current_user')) || null;
+    let formPassengerCount = 0;
+    let vendorExpenseRowCount = 0;
+    let extraHotelCount = 0;
+
+    function applyUserRolePermissions() {
+      const userMgmtSidebarBtn = document.getElementById('sidebarUserMgmtItem');
+      if (currentUser && currentUser.role === 'ADMIN') {
+        userMgmtSidebarBtn.style.setProperty('display', 'flex', 'important');
+      } else {
+        userMgmtSidebarBtn.style.setProperty('display', 'none', 'important');
+      }
+    }
 
     if (currentUser) {
       document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('loginScreen').style.setProperty('display', 'none', 'important');
         document.getElementById('mainAppScreen').style.setProperty('display', 'block', 'important');
         document.getElementById('currentLoggedInUserDisplay').innerText = `${currentUser.username} (${currentUser.role})`;
+        applyUserRolePermissions();
         switchView('dashboard');
       });
     }
@@ -679,6 +828,7 @@
         document.getElementById('loginScreen').style.setProperty('display', 'none', 'important');
         document.getElementById('mainAppScreen').style.setProperty('display', 'block', 'important');
         document.getElementById('currentLoggedInUserDisplay').innerText = `${found.username} (${found.role})`;
+        applyUserRolePermissions();
         logAudit(`USER LOGGED IN: ${found.username}`);
         switchView('dashboard');
       } else {
@@ -690,6 +840,43 @@
     function handleLogout() {
       sessionStorage.removeItem('skywalk_current_user');
       location.reload();
+    }
+
+    // Hotel Dynamic Row
+    function addHotelRow() {
+      extraHotelCount++;
+      const div = document.createElement('div');
+      div.className = 'row g-2 mb-2 p-2 rounded bg-light border hotel-item-row';
+      div.id = `hotelRow_${extraHotelCount}`;
+      div.innerHTML = `
+        <div class="col-md-2">
+          <select class="form-select form-select-sm h-city">
+            <option value="MAKKAH">MAKKAH</option>
+            <option value="MADINAH">MADINAH</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <input type="text" class="form-control form-control-sm h-name" placeholder="HOTEL NAME">
+        </div>
+        <div class="col-md-2">
+          <input type="text" class="form-control form-control-sm h-dist" placeholder="DISTANCE">
+        </div>
+        <div class="col-md-2">
+          <select class="form-select form-select-sm h-room">
+            <option value="SHARING">SHARING</option>
+            <option value="QUAD BED">QUAD BED</option>
+            <option value="TRIPLE BED">TRIPLE BED</option>
+            <option value="DOUBLE BED">DOUBLE BED</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <input type="number" class="form-control form-control-sm h-nights" value="5" min="1" placeholder="NIGHTS">
+        </div>
+        <div class="col-md-1">
+          <button type="button" class="btn btn-sm btn-outline-danger w-100" onclick="document.getElementById('hotelRow_${extraHotelCount}').remove()"><i class="bi bi-trash"></i></button>
+        </div>
+      `;
+      document.getElementById('hotelRowsContainer').appendChild(div);
     }
 
     // Company Profile Functions
@@ -935,9 +1122,6 @@
       alert(`PAYMENT OF PKR ${amt.toLocaleString()} (${cat}) RECORDED!`);
     }
 
-    let formPassengerCount = 0;
-    let vendorExpenseRowCount = 0;
-
     function addFormPassengerRow(p = { name: '', passport: '', expiry: '' }) {
       formPassengerCount++;
       const div = document.createElement('div');
@@ -956,6 +1140,31 @@
       const name = document.getElementById('clientName').value.trim().toUpperCase();
       if(!name) { alert("PLEASE ENTER CLIENT NAME!"); return null; }
 
+      // Collect Hotels
+      const hotels = [];
+      document.querySelectorAll('.hotel-item-row').forEach(r => {
+        const hName = r.querySelector('.h-name').value.trim().toUpperCase();
+        if(hName) {
+          hotels.push({
+            city: r.querySelector('.h-city').value,
+            name: hName,
+            distance: r.querySelector('.h-dist').value.trim().toUpperCase() || '-',
+            roomType: r.querySelector('.h-room').value,
+            nights: r.querySelector('.h-nights').value || '0'
+          });
+        }
+      });
+
+      // Collect Traveling Routes
+      const selectedRoutes = [];
+      document.querySelectorAll('.route-cb:checked').forEach(cb => selectedRoutes.push(cb.value));
+
+      const transportType = document.getElementById('transportVehicleType').value;
+      const ziyaratMakkah = document.getElementById('ziyaratMakkah').checked;
+      const ziyaratMadinah = document.getElementById('ziyaratMadinah').checked;
+      const ziyaratNotes = document.getElementById('ziyaratNotes').value.trim().toUpperCase();
+
+      // Collect Vendor Expenses
       let totalExp = 0;
       const vendorExpenses = [];
       document.querySelectorAll('.vendor-expense-row').forEach(r => {
@@ -965,6 +1174,7 @@
         totalExp += c;
       });
 
+      // Collect Passengers
       const passengers = [];
       let expiringSoonCount = 0;
       document.querySelectorAll('.form-pax-item').forEach(r => {
@@ -1003,6 +1213,12 @@
         netProfit: total - totalExp,
         leadStatus: document.getElementById('clientLeadStatus').value,
         status: 'PENDING',
+        hotels: hotels,
+        transportType: transportType,
+        selectedRoutes: selectedRoutes,
+        ziyaratMakkah: ziyaratMakkah,
+        ziyaratMadinah: ziyaratMadinah,
+        ziyaratNotes: ziyaratNotes,
         vendorExpenses: vendorExpenses,
         passengers: passengers,
         terms: termsText,
@@ -1015,16 +1231,35 @@
       const data = collectFormData();
       if(!data) return;
 
-      // Load latest company profile details for print header
       companyProfile = JSON.parse(localStorage.getItem('skywalk_company_profile')) || companyProfile;
 
       let logoHtml = companyProfile.logo ? `<img src="${companyProfile.logo}" style="max-height: 55px; max-width: 180px; object-fit: contain;" class="mb-2">` : '';
+      
+      let hotelsHtml = data.hotels.map(h => `
+        <tr>
+          <td class="fw-bold text-primary">${h.city}</td>
+          <td class="fw-bold">${h.name}</td>
+          <td>${h.distance}</td>
+          <td>${h.roomType}</td>
+          <td class="text-center fw-bold">${h.nights} NIGHTS</td>
+        </tr>
+      `).join('') || '<tr><td colspan="5" class="text-center text-muted">NO HOTELS SPECIFIED</td></tr>';
+
+      let routesHtml = data.selectedRoutes.length > 0 
+        ? data.selectedRoutes.map(rt => `<span class="badge bg-primary me-1 mb-1">${rt}</span>`).join('') 
+        : '<span class="text-muted">NO TRANSPORT ROUTES SELECTED</span>';
+
+      let ziyaratList = [];
+      if(data.ziyaratMakkah) ziyaratList.push('MAKKAH ZIYARAT');
+      if(data.ziyaratMadinah) ziyaratList.push('MADINAH ZIYARAT');
+      let ziyaratText = ziyaratList.length > 0 ? `${ziyaratList.join(' & ')} (${data.ziyaratNotes})` : 'NOT INCLUDED';
+
       let vendorHtml = data.vendorExpenses.map(ve => `<tr><td>${ve.vendorName}</td><td class="text-end">PKR ${ve.cost.toLocaleString()}</td></tr>`).join('') || '<tr><td colspan="2" class="text-center text-muted">NO VENDOR EXPENSES</td></tr>';
       let paxHtml = data.passengers.map((p, i) => `<tr><td>${i+1}</td><td>${p.name}</td><td>${p.passport}</td><td>${p.expiry}</td></tr>`).join('') || '<tr><td colspan="4" class="text-center text-muted">NO PASSENGERS LISTED</td></tr>';
 
       document.getElementById('printModalBody').innerHTML = `
-        <div class="p-4 border rounded-4 bg-white" style="font-size: 0.9rem;">
-          <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+        <div class="p-4 border rounded-4 bg-white" style="font-size: 0.85rem;">
+          <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
             <div>
               ${logoHtml}
               <h3 class="fw-extrabold text-primary mb-1">${companyProfile.name}</h3>
@@ -1038,39 +1273,62 @@
             </div>
           </div>
 
-          <div class="row mb-4">
+          <div class="row mb-3">
             <div class="col-6">
-              <h6 class="fw-bold text-secondary small">CLIENT INFORMATION:</h6>
-              <p class="fw-bold mb-1">NAME: ${data.name}</p>
+              <h6 class="fw-bold text-secondary small mb-1">CLIENT INFORMATION:</h6>
+              <p class="fw-bold mb-0">NAME: ${data.name}</p>
               <p class="mb-0 text-muted">CONTACT: ${data.contact}</p>
             </div>
             <div class="col-6 text-end">
-              <h6 class="fw-bold text-secondary small">PACKAGE DETAILS:</h6>
-              <p class="fw-bold mb-1">${data.pkgTitle}</p>
+              <h6 class="fw-bold text-secondary small mb-1">PACKAGE DETAILS:</h6>
+              <p class="fw-bold mb-0">${data.pkgTitle}</p>
               <p class="mb-0 text-muted">STATUS: ${data.leadStatus}</p>
             </div>
           </div>
 
-          <div class="mb-4">
-            <h6 class="fw-bold text-secondary small">PASSENGER DETAILS:</h6>
+          <!-- HOTEL ACCOMMODATION TABLE -->
+          <div class="mb-3">
+            <h6 class="fw-bold text-primary small mb-1">HOTEL ACCOMMODATION DETAILS:</h6>
+            <table class="table table-bordered table-sm mb-0">
+              <thead class="table-light"><tr><th>CITY</th><th>HOTEL NAME</th><th>DISTANCE</th><th>ROOM TYPE</th><th class="text-center">DURATION</th></tr></thead>
+              <tbody>${hotelsHtml}</tbody>
+            </table>
+          </div>
+
+          <!-- TRANSPORT & ZIYARAT -->
+          <div class="mb-3 p-2 border rounded bg-light">
+            <div class="row">
+              <div class="col-md-12 mb-1">
+                <span class="fw-bold text-dark small">TRANSPORT (${data.transportType}): </span>
+                ${routesHtml}
+              </div>
+              <div class="col-md-12">
+                <span class="fw-bold text-danger small">ZIYARAT: </span>
+                <span class="fw-bold text-dark small">${ziyaratText}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <h6 class="fw-bold text-secondary small mb-1">PASSENGER DETAILS:</h6>
             <table class="table table-bordered table-sm mb-0">
               <thead class="table-dark"><tr><th>#</th><th>PASSENGER NAME</th><th>PASSPORT NO</th><th>EXPIRY DATE</th></tr></thead>
               <tbody>${paxHtml}</tbody>
             </table>
           </div>
 
-          <div class="row mb-4">
+          <div class="row mb-3">
             <div class="col-md-7">
-              <h6 class="fw-bold text-secondary small">PRICING BREAKDOWN:</h6>
+              <h6 class="fw-bold text-secondary small mb-1">PRICING BREAKDOWN:</h6>
               <table class="table table-bordered table-sm mb-0">
                 <tr><td>ADULTS (${data.adults} X PKR ${data.rateAdult.toLocaleString()})</td><td class="text-end fw-bold">PKR ${(data.adults * data.rateAdult).toLocaleString()}</td></tr>
                 <tr><td>CHILDREN (${data.children} X PKR ${data.rateChild.toLocaleString()})</td><td class="text-end fw-bold">PKR ${(data.children * data.rateChild).toLocaleString()}</td></tr>
                 <tr><td>INFANTS (${data.infants} X PKR ${data.rateInfant.toLocaleString()})</td><td class="text-end fw-bold">PKR ${(data.infants * data.rateInfant).toLocaleString()}</td></tr>
-                <tr class="table-success fw-bold"><td>TOTAL REVENUE</td><td class="text-end">PKR ${data.total.toLocaleString()}</td></tr>
+                <tr class="table-success fw-bold"><td>TOTAL PACKAGE AMOUNT</td><td class="text-end">PKR ${data.total.toLocaleString()}</td></tr>
               </table>
             </div>
-            <div class="col-md-5">
-              <h6 class="fw-bold text-secondary small">VENDOR EXPENSES:</h6>
+            <div class="col-md-5 no-print">
+              <h6 class="fw-bold text-danger small mb-1">INTERNAL VENDOR COST:</h6>
               <table class="table table-bordered table-sm mb-0">
                 <thead class="table-light"><tr><th>VENDOR</th><th class="text-end">COST</th></tr></thead>
                 <tbody>${vendorHtml}</tbody>
@@ -1078,14 +1336,14 @@
             </div>
           </div>
 
-          <div class="p-3 bg-light border rounded-3 mb-4">
-            <h6 class="fw-bold text-dark small mb-2">TERMS & CONDITIONS:</h6>
-            <p class="small mb-0 text-secondary" style="white-space: pre-line; font-size: 0.85rem;">${data.terms}</p>
+          <div class="p-2 bg-light border rounded-3 mb-3">
+            <h6 class="fw-bold text-dark small mb-1">TERMS & CONDITIONS:</h6>
+            <p class="small mb-0 text-secondary" style="white-space: pre-line; font-size: 0.82rem;">${data.terms}</p>
           </div>
 
-          <div class="d-flex justify-content-between pt-4 border-top">
-            <div><p class="small text-muted mb-0">AUTHORIZED SIGNATURE</p><div style="height: 40px; border-bottom: 1px solid #000; width: 180px;"></div></div>
-            <div class="text-end"><p class="small text-muted mb-0">CLIENT SIGNATURE</p><div style="height: 40px; border-bottom: 1px solid #000; width: 180px;"></div></div>
+          <div class="d-flex justify-content-between pt-3 border-top">
+            <div><p class="small text-muted mb-0">AUTHORIZED SIGNATURE</p><div style="height: 35px; border-bottom: 1px solid #000; width: 170px;"></div></div>
+            <div class="text-end"><p class="small text-muted mb-0">CLIENT SIGNATURE</p><div style="height: 35px; border-bottom: 1px solid #000; width: 170px;"></div></div>
           </div>
         </div>
       `;
@@ -1303,18 +1561,11 @@
       alert("PASSWORD UPDATED SUCCESSFULLY!");
     }
 
-    // Initialize
-    if(!currentUser) {
-      document.getElementById('quoteDate').valueAsDate = new Date();
-      autoGenDocNum();
-      addVendorExpenseRow();
-      addFormPassengerRow();
-    } else {
-      document.getElementById('quoteDate').valueAsDate = new Date();
-      autoGenDocNum();
-      addVendorExpenseRow();
-      addFormPassengerRow();
-    }
+    // Initialize Default Fields
+    document.getElementById('quoteDate').valueAsDate = new Date();
+    autoGenDocNum();
+    addVendorExpenseRow();
+    addFormPassengerRow();
   </script>
 </body>
 </html>
